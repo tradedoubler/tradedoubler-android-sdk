@@ -1,0 +1,3 @@
+include ':tradedoublerandroid'
+include ':app'
+rootProject.name = "TradeDoublerSdk"
