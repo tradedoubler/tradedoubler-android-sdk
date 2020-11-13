@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-android-extensions'
 }
 
 android {
@@ -9,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.tradedouble.tradedoublersdk"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -41,6 +42,11 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
     implementation project(path: ':tradedoublerandroid')
     testImplementation 'junit:junit:4.+'
+    implementation 'androidx.ads:ads-identifier:1.0.0-alpha04'
+
+    // Used for the calls to addCallback() in the snippets on this page.
+    implementation 'com.google.guava:guava:28.0-android'
+    implementation 'com.android.installreferrer:installreferrer:2.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }

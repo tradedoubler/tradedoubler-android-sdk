@@ -10,4 +10,11 @@ public class Constans {
     public static String EXT_TYP = "exttype";
     public static String EXT_ID = "extid";
     public static String EVENT = "event";
+
+    public static String ORDER_NUMBER = "orderNumber";
+    public static String ORDER_VALUE = "orderValue";
+    public static String CURRENCY = "currency";
+    public static String VOUCHER = "voucher";
+    public static String REPORT_INFO = "reportinfo";
+
 }
