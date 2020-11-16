@@ -11,7 +11,6 @@ public class Constans {
     public static String EXT_TYP = "exttype";
     public static String EXT_ID = "extid";
     public static String EVENT = "event";
-
     public static String ORDER_NUMBER = "orderNumber";
     public static String ORDER_VALUE = "orderValue";
     public static String CURRENCY = "currency";
@@ -19,7 +18,14 @@ public class Constans {
     public static String REPORT_INFO = "reportinfo";
 
     public static String ORGANIZATION = "o";
-
     public static String VERIFY ="verify";
 
+    public static String TDUDID_VALUE = "TDUDID_VLAUE";
+    public static String GAID_VALUE = "GAID_VALUE";
+
+
+    public final static String TRACKING_FILE = "td-app-download-tracking.dat";
+
+    public static int DEFAULT_LIFE_TIME_VALUE_DAYS = 365;
+    public final static String LTV_EXPIRY = "ltvExpiry";
 }
