@@ -16,6 +16,7 @@ import static com.tradedouble.tradedoublerandroid.utils.Constans.ORGANIZATION_ID
 import static com.tradedouble.tradedoublerandroid.utils.Constans.LEAD_NUMBER;
 import static com.tradedouble.tradedoublerandroid.utils.Constans.REPORT_INFO;
 import static com.tradedouble.tradedoublerandroid.utils.Constans.TDUID;
+import static com.tradedouble.tradedoublerandroid.utils.Constans.VERIFY;
 import static com.tradedouble.tradedoublerandroid.utils.Constans.VOUCHER;
 
 public class HttpRequest {
@@ -58,7 +59,9 @@ public class HttpRequest {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constans.BASE_URL_TRACKING_OPEN).newBuilder();
         urlBuilder.addQueryParameter(ORGANIZATION, organizationId);
         urlBuilder.addQueryParameter(EXT_ID, extId);
-
+        urlBuilder.addQueryParameter(EXT_TYP, "1");
+        urlBuilder.addQueryParameter(TDUID, tduid);
+        urlBuilder.addQueryParameter(VERIFY, "true");
         return urlBuilder.toString();
     }
 

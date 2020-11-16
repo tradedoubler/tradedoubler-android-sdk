@@ -20,4 +20,6 @@ public class Constans {
 
     public static String ORGANIZATION = "o";
 
+    public static String VERIFY ="verify";
+
 }
