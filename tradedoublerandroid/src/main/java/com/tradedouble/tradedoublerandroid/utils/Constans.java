@@ -20,7 +20,7 @@ public class Constans {
     public static String ORGANIZATION = "o";
     public static String VERIFY ="verify";
 
-    public static String TDUDID_VALUE = "TDUDID_VLAUE";
+    public static String TDUIC_VALUE = "TDUDID_VLAUE";
     public static String GAID_VALUE = "GAID_VALUE";
 
 

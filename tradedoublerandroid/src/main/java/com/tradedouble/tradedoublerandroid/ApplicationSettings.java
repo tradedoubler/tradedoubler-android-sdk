@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import static com.tradedouble.tradedoublerandroid.utils.Constans.DEFAULT_LIFE_TIME_VALUE_DAYS;
 import static com.tradedouble.tradedoublerandroid.utils.Constans.GAID_VALUE;
 import static com.tradedouble.tradedoublerandroid.utils.Constans.LTV_EXPIRY;
-import static com.tradedouble.tradedoublerandroid.utils.Constans.TDUDID_VALUE;
+import static com.tradedouble.tradedoublerandroid.utils.Constans.TDUIC_VALUE;
 import static com.tradedouble.tradedoublerandroid.utils.Constans.TRACKING_FILE;
 
 public class ApplicationSettings {
@@ -22,7 +22,7 @@ public class ApplicationSettings {
         SharedPreferences settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
 
-        if(tduidValue != null) editor.putString(TDUDID_VALUE, tduidValue);
+        if(tduidValue != null) editor.putString(TDUIC_VALUE, tduidValue);
 
         editor.apply();
     }
@@ -57,8 +57,12 @@ public class ApplicationSettings {
 
     public String getTduidValue() {
         SharedPreferences settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE);
-        return settings.getString(TDUDID_VALUE, null);
+        return settings.getString(TDUIC_VALUE, null);
     }
 
+    public String getGoogleAdvertisingId() {
+        SharedPreferences settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE);
+        return settings.getString(GAID_VALUE, null);
+    }
 
 }

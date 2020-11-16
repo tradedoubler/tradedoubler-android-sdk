@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 public class TraderDoublerSDK {
 
+    private static ApplicationSettings settings;
     private static Context context;
 
     private static volatile TraderDoublerSDK instance;
@@ -28,9 +29,11 @@ public class TraderDoublerSDK {
     private TraderDoublerSDK(Context context) {
     }
 
+
     public static synchronized void init(final Context ctx) {
         if (context == null) {
             context = ctx.getApplicationContext();
+            settings = new ApplicationSettings(context);
         }
     }
 
@@ -38,23 +41,31 @@ public class TraderDoublerSDK {
         if (instance == null) {
             synchronized (TraderDoublerSDK.class) {
                 if (instance == null) {
-
                     instance = new TraderDoublerSDK(context);
+                    settings = new ApplicationSettings(context);
                 }
             }
         }
         return instance;
     }
 
-
     public void setTduid(String tduid) {
         this.tudid = tduid;
+        settings.storeTduid(tudid);
     }
-
 
     public void setGoogleAdvertisingId(String googleAdvertisingId) {
         this.googleAdvertisingId = googleAdvertisingId;
+        settings.storeGoogleAdvertisingId(googleAdvertisingId);
     }
 
+
+    public String getTudid() {
+        return settings.getTduidValue();
+    }
+
+    public String getGoogleAdvertisingId() {
+        return settings.getGoogleAdvertisingId();
+    }
 
 }
