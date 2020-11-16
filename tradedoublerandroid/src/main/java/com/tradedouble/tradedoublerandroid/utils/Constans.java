@@ -3,6 +3,7 @@ package com.tradedouble.tradedoublerandroid.utils;
 public class Constans {
     public static String BASE_URL = "http://tbl.tradedoubler.com/report";
     public static String BASE_URL_SALE = "http://tbs.tradedoubler.com/report";
+    public static String BASE_URL_TRACKING_OPEN = "http://tbs.tradedoubler.com/users";
     public static String ORGANIZATION_ID = "organization";
     public static String EVENT_ID = "event";
     public static String LEAD_NUMBER = "leadNumber";
@@ -16,5 +17,7 @@ public class Constans {
     public static String CURRENCY = "currency";
     public static String VOUCHER = "voucher";
     public static String REPORT_INFO = "reportinfo";
+
+    public static String ORGANIZATION = "o";
 
 }

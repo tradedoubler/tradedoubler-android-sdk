@@ -11,6 +11,7 @@ import static com.tradedouble.tradedoublerandroid.utils.Constans.EXT_ID;
 import static com.tradedouble.tradedoublerandroid.utils.Constans.EXT_TYP;
 import static com.tradedouble.tradedoublerandroid.utils.Constans.ORDER_NUMBER;
 import static com.tradedouble.tradedoublerandroid.utils.Constans.ORDER_VALUE;
+import static com.tradedouble.tradedoublerandroid.utils.Constans.ORGANIZATION;
 import static com.tradedouble.tradedoublerandroid.utils.Constans.ORGANIZATION_ID;
 import static com.tradedouble.tradedoublerandroid.utils.Constans.LEAD_NUMBER;
 import static com.tradedouble.tradedoublerandroid.utils.Constans.REPORT_INFO;
@@ -47,11 +48,18 @@ public class HttpRequest {
     }
 
 
-    public String trackingSalePLT(){
+    public String trackingSalePLT() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constans.BASE_URL_SALE).newBuilder();
         return urlBuilder.toString();
     }
 
 
+    public String trackingOpen(String organizationId, String extId, String tduid) {
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(Constans.BASE_URL_TRACKING_OPEN).newBuilder();
+        urlBuilder.addQueryParameter(ORGANIZATION, organizationId);
+        urlBuilder.addQueryParameter(EXT_ID, extId);
+
+        return urlBuilder.toString();
+    }
 
 }
