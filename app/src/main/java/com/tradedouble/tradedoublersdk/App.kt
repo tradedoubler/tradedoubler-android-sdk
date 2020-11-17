@@ -19,33 +19,21 @@ class App : Application() {
 
     private lateinit var referrerClient: InstallReferrerClient
 
-    var tduidId: String = ""
+    private var tduidId: String = ""
 
     override fun onCreate() {
         super.onCreate()
+
+        TraderDoublerSDK.create(this)
 
         referrerClient = InstallReferrerClient.newBuilder(this).build()
         referrerClient.startConnection(object : InstallReferrerStateListener {
             override fun onInstallReferrerSetupFinished(responseCode: Int) {
                 when (responseCode) {
                     InstallReferrerClient.InstallReferrerResponse.OK -> {
-
-                        try {
-                            val response: ReferrerDetails = referrerClient.installReferrer
-                            tduidId = response.installReferrer
-
-                            Toast.makeText(
-                                applicationContext,
-                                "ReferrerUrl $tduidId",
-                                Toast.LENGTH_SHORT
-                            ).show()
-
-                            referrerClient.endConnection()
-
-                        } catch (e: RemoteException) {
-                            val errorMessage = e.message ?: ""
-                            Log.e(LOG_TAG, "Error Message ${errorMessage}")
-                        }
+                        val response: ReferrerDetails = referrerClient.installReferrer
+                        tduidId = response.installReferrer
+                        TraderDoublerSDK.getInstance().setTduid(tduidId)
                     }
 
                     InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {
@@ -64,6 +52,7 @@ class App : Application() {
 
                     }
                 }
+
             }
 
             override fun onInstallReferrerServiceDisconnected() {
@@ -76,6 +65,9 @@ class App : Application() {
 
         })
 
-        TraderDoublerSDK.create(this)
+
+
+
+
     }
 }
