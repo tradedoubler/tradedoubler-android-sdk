@@ -18,13 +18,10 @@ public class ApplicationSettings {
         this.context = context;
     }
 
-
     public void storeTduid(String tduidValue) {
         SharedPreferences settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
-
         if(tduidValue != null) editor.putString(TDUIC_VALUE, tduidValue);
-
         editor.apply();
     }
 
