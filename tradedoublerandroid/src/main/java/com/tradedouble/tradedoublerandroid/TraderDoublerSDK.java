@@ -1,6 +1,7 @@
 package com.tradedouble.tradedoublerandroid;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 
 import androidx.annotation.NonNull;
 
@@ -33,7 +34,11 @@ public class TraderDoublerSDK {
     public static synchronized void init(final Context ctx) {
         if (context == null) {
             context = ctx.getApplicationContext();
-            settings = new ApplicationSettings(context);
+            try {
+                settings = new ApplicationSettings(context);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -42,7 +47,11 @@ public class TraderDoublerSDK {
             synchronized (TraderDoublerSDK.class) {
                 if (instance == null) {
                     instance = new TraderDoublerSDK(context);
-                    settings = new ApplicationSettings(context);
+                    try {
+                        settings = new ApplicationSettings(context);
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
