@@ -2,6 +2,7 @@ package com.tradedouble.tradedoublerandroid;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 
 import static com.tradedouble.tradedoublerandroid.utils.Constans.DEFAULT_LIFE_TIME_VALUE_DAYS;
 import static com.tradedouble.tradedoublerandroid.utils.Constans.GAID_VALUE;
@@ -13,7 +14,7 @@ public class ApplicationSettings {
 
     private Context context;
 
-    public ApplicationSettings(Context context) {
+    public ApplicationSettings(Context context) throws PackageManager.NameNotFoundException {
         this.context = context;
     }
 

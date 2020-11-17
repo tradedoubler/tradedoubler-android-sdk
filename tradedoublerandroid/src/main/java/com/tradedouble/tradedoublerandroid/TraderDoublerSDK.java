@@ -11,9 +11,9 @@ public class TraderDoublerSDK {
 
     private static volatile TraderDoublerSDK instance;
 
-    public String tudid;
+    private String tudid;
 
-    public String googleAdvertisingId;
+    private String googleAdvertisingId;
 
     public static TraderDoublerSDK getInstance() {
         if (instance == null) {

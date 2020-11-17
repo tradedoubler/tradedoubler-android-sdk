@@ -11,5 +11,8 @@ class App : Application() {
 
         TraderDoublerSDK.create(this);
 
+        TraderDoublerSDK.getInstance().setTduid("Magdalena")
+        TraderDoublerSDK.getInstance().googleAdvertisingId = "Klasa123"
+
     }
 }
