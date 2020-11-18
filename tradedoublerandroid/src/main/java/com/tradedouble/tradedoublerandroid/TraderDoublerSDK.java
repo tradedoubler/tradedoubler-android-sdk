@@ -16,6 +16,10 @@ public class TraderDoublerSDK {
 
     private String googleAdvertisingId;
 
+    private String email;
+
+    private String organizationId;
+
     public static TraderDoublerSDK getInstance() {
         if (instance == null) {
             synchronized (TraderDoublerSDK.class) {
@@ -68,10 +72,22 @@ public class TraderDoublerSDK {
         settings.storeGoogleAdvertisingId(googleAdvertisingId);
     }
 
+    public void setUserEmail(String userEmail){
+        this.email = userEmail;
+    }
+
+    public void setOrganizationId(String organizationId) {
+        this.organizationId = organizationId;
+    }
+
+    public String getOrganizationId() {
+        return organizationId;
+    }
 
     public String getTudid() {
         return settings.getTduidValue();
     }
+
 
     public String getGoogleAdvertisingId() {
         return settings.getGoogleAdvertisingId();
