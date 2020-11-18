@@ -18,11 +18,13 @@ public class Constans {
     public static String REPORT_INFO = "reportinfo";
 
     public static String ORGANIZATION = "o";
-    public static String VERIFY ="verify";
+    public static String VERIFY = "verify";
 
     public static String TDUIC_VALUE = "TDUDID_VLAUE";
     public static String GAID_VALUE = "GAID_VALUE";
 
+    public static String USER_EMAIL_VALUE = "USER_EMAIL";
+    public static String ORGANIZATION_ID_VALUE = "ORGANIZATION_ID_VALUE";
 
     public final static String TRACKING_FILE = "td-app-download-tracking.dat";
 

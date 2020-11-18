@@ -2,21 +2,18 @@ package com.tradedouble.tradedoublerandroid;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.util.Patterns;
 
 import androidx.annotation.NonNull;
+
+import java.util.regex.Pattern;
 
 public class TraderDoublerSDK {
 
     private static ApplicationSettings settings;
     private static Context context;
-
+    private static NetworkConnection networkConnection;
     private static volatile TraderDoublerSDK instance;
-
-    private String tudid;
-
-    private String googleAdvertisingId;
-
-    private String email;
 
     private String organizationId;
 
@@ -56,6 +53,7 @@ public class TraderDoublerSDK {
                     } catch (PackageManager.NameNotFoundException e) {
                         e.printStackTrace();
                     }
+                    networkConnection = new NetworkConnection(context);
                 }
             }
         }
@@ -63,21 +61,25 @@ public class TraderDoublerSDK {
     }
 
     public void setTduid(String tduid) {
-        this.tudid = tduid;
-        settings.storeTduid(tudid);
+        settings.storeTduid(tduid);
     }
 
     public void setGoogleAdvertisingId(String googleAdvertisingId) {
-        this.googleAdvertisingId = googleAdvertisingId;
-        settings.storeGoogleAdvertisingId(googleAdvertisingId);
+        String generateSHA56Hash = Cryptography.generateSHA56Hash(googleAdvertisingId);
+        settings.storeGoogleAdvertisingId(generateSHA56Hash);
     }
 
-    public void setUserEmail(String userEmail){
-        this.email = userEmail;
+    public void setUserEmail(String userEmail) {
+        if (userEmail != null && userEmail.isEmpty()) {
+            if (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
+                String generateSHA56HashEmail = Cryptography.generateSHA56Hash(userEmail);
+                settings.storeUserEmail(generateSHA56HashEmail);
+            }
+        }
     }
 
     public void setOrganizationId(String organizationId) {
-        this.organizationId = organizationId;
+       settings.storeOrganizationId(organizationId);
     }
 
     public String getOrganizationId() {
