@@ -14,7 +14,7 @@ import static com.tradedouble.tradedoublerandroid.utils.Constans.USER_EMAIL_VALU
 
 public class ApplicationSettings {
 
-    private Context context;
+    private final Context context;
 
     public ApplicationSettings(Context context) throws PackageManager.NameNotFoundException {
         this.context = context;
@@ -80,6 +80,12 @@ public class ApplicationSettings {
         SharedPreferences settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE);
         return settings.getString(TDUIC_VALUE, null);
     }
+
+    public String getUserEmail(){
+        SharedPreferences settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE);
+        return settings.getString(USER_EMAIL_VALUE, null);
+    }
+
 
     public String getGoogleAdvertisingId() {
         SharedPreferences settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE);

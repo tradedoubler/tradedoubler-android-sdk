@@ -59,7 +59,11 @@ public class NetClient {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-
+                if (response.code() >= 200 && response.code() <=300) {
+                    resultRequest.onResponseSuccess(response.code() );
+                }else{
+                    resultRequest.onFailure(response.code());
+                }
             }
         });
 

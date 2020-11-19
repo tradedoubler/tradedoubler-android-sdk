@@ -82,17 +82,33 @@ public class TraderDoublerSDK {
        settings.storeOrganizationId(organizationId);
     }
 
-    public String getOrganizationId() {
+    private String getOrganizationId() {
         return organizationId;
     }
 
-    public String getTudid() {
+    private String getTudid() {
         return settings.getTduidValue();
     }
 
+    public String getUserEmail() {
+        return settings.getUserEmail();
+    }
 
     public String getGoogleAdvertisingId() {
         return settings.getGoogleAdvertisingId();
+    }
+
+
+    private void callResponse(){
+
+        String organizationId = getOrganizationId();
+        String tudid = getTudid();
+        String userEmail = getUserEmail();
+        String googleAdvertisingId = getGoogleAdvertisingId();
+
+        if (userEmail )
+
+
     }
 
 }
