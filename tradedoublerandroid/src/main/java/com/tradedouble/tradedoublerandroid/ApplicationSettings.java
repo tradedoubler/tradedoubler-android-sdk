@@ -81,6 +81,12 @@ public class ApplicationSettings {
         return settings.getString(TDUIC_VALUE, null);
     }
 
+    public String getOrganizationId() {
+        SharedPreferences settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE);
+        return settings.getString(ORGANIZATION_ID_VALUE, null);
+    }
+
+
     public String getUserEmail(){
         SharedPreferences settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE);
         return settings.getString(USER_EMAIL_VALUE, null);

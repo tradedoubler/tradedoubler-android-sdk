@@ -6,16 +6,16 @@ import android.util.Patterns;
 
 import androidx.annotation.NonNull;
 
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class TraderDoublerSDK {
 
-    private static ApplicationSettings settings;
     private static Context context;
+    private static ApplicationSettings settings;
     private static NetworkConnection networkConnection;
     private static volatile TraderDoublerSDK instance;
 
-    private String organizationId;
 
     public static TraderDoublerSDK getInstance() {
         if (instance == null) {
@@ -29,10 +29,11 @@ public class TraderDoublerSDK {
     }
 
     private TraderDoublerSDK(Context context) {
+        init(context);
     }
 
 
-    public static synchronized void init(final Context ctx) {
+    public synchronized void init(final Context ctx) {
         if (context == null) {
             context = ctx.getApplicationContext();
             try {
@@ -40,20 +41,16 @@ public class TraderDoublerSDK {
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
+            networkConnection = new NetworkConnection(context);
+            callResponse();
         }
     }
 
-    public static TraderDoublerSDK create(@NonNull final Context context) {
+    public static TraderDoublerSDK createLibrary(@NonNull final Context context) {
         if (instance == null) {
             synchronized (TraderDoublerSDK.class) {
                 if (instance == null) {
                     instance = new TraderDoublerSDK(context);
-                    try {
-                        settings = new ApplicationSettings(context);
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    networkConnection = new NetworkConnection(context);
                 }
             }
         }
@@ -79,35 +76,49 @@ public class TraderDoublerSDK {
     }
 
     public void setOrganizationId(String organizationId) {
-       settings.storeOrganizationId(organizationId);
+        settings.storeOrganizationId(organizationId);
     }
 
     private String getOrganizationId() {
-        return organizationId;
+        return settings.getOrganizationId();
     }
 
     private String getTudid() {
         return settings.getTduidValue();
     }
 
-    public String getUserEmail() {
+    private String getUserEmail() {
         return settings.getUserEmail();
     }
 
-    public String getGoogleAdvertisingId() {
+    private String getGoogleAdvertisingId() {
         return settings.getGoogleAdvertisingId();
     }
-
-
-    private void callResponse(){
+    
+    private void callResponse() {
 
         String organizationId = getOrganizationId();
         String tudid = getTudid();
         String userEmail = getUserEmail();
         String googleAdvertisingId = getGoogleAdvertisingId();
 
-        if (userEmail )
 
+        String url = HttpRequest.trackingOpen(organizationId, googleAdvertisingId, tudid);
+        try {
+            NetClient.getNetClient().callResponse(url, new ResultRequest() {
+                @Override
+                public void onFailure(int code) {
+
+                }
+
+                @Override
+                public void onResponseSuccess(int code) {
+
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
