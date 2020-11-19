@@ -23,30 +23,35 @@ public class ApplicationSettings {
     public void storeTduid(String tduidValue) {
         SharedPreferences settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
-        if(tduidValue != null) editor.putString(TDUIC_VALUE, tduidValue);
+        String previousTduidValue = getTduidValue();
+        if (tduidValue != null) {
+            if (!tduidValue.equals(previousTduidValue)) {
+                editor.putString(TDUIC_VALUE, tduidValue);
+            }
+        }
         editor.apply();
     }
 
-    public void storeGoogleAdvertisingId(String googleAdvertisingId){
+    public void storeGoogleAdvertisingId(String googleAdvertisingId) {
         SharedPreferences settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
-        if(googleAdvertisingId != null) editor.putString(GAID_VALUE, googleAdvertisingId);
+        if (googleAdvertisingId != null) editor.putString(GAID_VALUE, googleAdvertisingId);
         editor.apply();
     }
 
 
-    public void storeOrganizationId(String organizationId){
+    public void storeOrganizationId(String organizationId) {
         SharedPreferences settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
-        if(organizationId != null) editor.putString(ORGANIZATION_ID_VALUE, organizationId);
+        if (organizationId != null) editor.putString(ORGANIZATION_ID_VALUE, organizationId);
         editor.apply();
     }
 
 
-    public void storeUserEmail(String userEmail){
+    public void storeUserEmail(String userEmail) {
         SharedPreferences settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
-        if(userEmail != null) editor.putString(USER_EMAIL_VALUE, userEmail);
+        if (userEmail != null) editor.putString(USER_EMAIL_VALUE, userEmail);
         editor.apply();
     }
 
@@ -55,7 +60,7 @@ public class ApplicationSettings {
         SharedPreferences settings;
         settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE);
 
-        if(settings != null) {
+        if (settings != null) {
             return settings.getString(LTV_EXPIRY, "");
         } else {
             return null;
@@ -64,7 +69,7 @@ public class ApplicationSettings {
 
     public long calculateLtvExpiry(long ltvDays) {
         long days = ltvDays;
-        if(days <= 0) {
+        if (days <= 0) {
             days = DEFAULT_LIFE_TIME_VALUE_DAYS;
         }
         return System.currentTimeMillis() + (days * 24 * 60 * 60 * 1000);

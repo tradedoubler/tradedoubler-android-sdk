@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -15,10 +17,14 @@ import okhttp3.logging.HttpLoggingInterceptor;
 
 public class NetClient {
 
+    public final OkHttpClient client;
+    private static NetClient netClient;
+
     public NetClient() {
+        client = initOkHttpClient();
     }
 
-    private OkHttpClient initOkHttpClient(){
+    private OkHttpClient initOkHttpClient() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -30,18 +36,35 @@ public class NetClient {
         return okHttpClient;
     }
 
+    public static NetClient getNetClient() {
+        if (netClient == null) {
+            netClient = new NetClient();
+        }
+        return netClient;
+    }
 
 
- public String callResponse(String url, OkHttpClient client) throws IOException {
-     Request request = new Request.Builder()
-             .url(url)
-             .get()
-             .build();
-     Response response = client.newCall(request).execute();
+    public void callResponse(String url, ResultRequest resultRequest) throws IOException {
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .build();
 
-     return Objects.requireNonNull(request.body()).toString();
+        Call call = getNetClient().initOkHttpClient().newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                resultRequest.onFailure(-1);
+            }
 
- }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+            }
+        });
+
+
+    }
 
 
 }

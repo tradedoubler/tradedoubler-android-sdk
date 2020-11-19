@@ -21,8 +21,10 @@ import static com.tradedouble.tradedoublerandroid.utils.Constans.VOUCHER;
 
 public class HttpRequest {
 
+    public HttpRequest() {
+    }
 
-    public String trackingLead(String organizationId, String leadEventId, String leadId, String tduid, String extId) {
+    public static String trackingLead(String organizationId, String leadEventId, String leadId, String tduid, String extId) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constans.BASE_URL_SALE).newBuilder();
         urlBuilder.addQueryParameter(ORGANIZATION_ID, organizationId);
         urlBuilder.addQueryParameter(EVENT, leadEventId);
@@ -33,7 +35,7 @@ public class HttpRequest {
         return urlBuilder.toString();
     }
 
-    public String trackingSale(String organizationId, String saleEventId, String orderNumber, String orderValue, String currency, String voucherCode, String tduid, String extId, String reportInfo) {
+    public static String trackingSale(String organizationId, String saleEventId, String orderNumber, String orderValue, String currency, String voucherCode, String tduid, String extId, String reportInfo) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constans.BASE_URL_SALE).newBuilder();
         urlBuilder.addQueryParameter(ORGANIZATION_ID, organizationId);
         urlBuilder.addQueryParameter(EVENT, saleEventId);
@@ -49,13 +51,13 @@ public class HttpRequest {
     }
 
 
-    public String trackingSalePLT() {
+    public static String trackingSalePLT() {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constans.BASE_URL_SALE).newBuilder();
         return urlBuilder.toString();
     }
 
 
-    public String trackingOpen(String organizationId, String extId, String tduid) {
+    public static String trackingOpen(String organizationId, String extId, String tduid) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constans.BASE_URL_TRACKING_OPEN).newBuilder();
         urlBuilder.addQueryParameter(ORGANIZATION, organizationId);
         urlBuilder.addQueryParameter(EXT_ID, extId);
