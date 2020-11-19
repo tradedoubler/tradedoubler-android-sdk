@@ -34,7 +34,7 @@ class App : Application() {
                     InstallReferrerClient.InstallReferrerResponse.OK -> {
                         val response: ReferrerDetails = referrerClient.installReferrer
                         tduidId = response.installReferrer
-                        TraderDoublerSDK.getInstance().setTduid(tduidId)
+
                     }
 
                     InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {
@@ -66,11 +66,13 @@ class App : Application() {
 
         })
 
-
+        TraderDoublerSDK.getInstance().setTduid("4e8241cd1b66e8a8d2a55c666129cccc")
         TraderDoublerSDK.getInstance().setGoogleAdvertisingId("38400000-8cf0-11bd-b23e-10b96e40000d")
         TraderDoublerSDK.getInstance().setOrganizationId("945630")
         TraderDoublerSDK.getInstance().setUserEmail("magdalena.dziesinska@britenet.com.pl")
 
 
     }
+
+
 }

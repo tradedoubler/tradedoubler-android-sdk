@@ -7,11 +7,15 @@ import android.util.Patterns;
 
 import androidx.annotation.NonNull;
 
+import com.tradedouble.tradedoublerandroid.network.HttpRequest;
+import com.tradedouble.tradedoublerandroid.network.NetClient;
+import com.tradedouble.tradedoublerandroid.network.NetworkConnection;
+import com.tradedouble.tradedoublerandroid.network.ResultRequest;
+
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 public class TraderDoublerSDK {
-
+    private ReferralListener referralListener = null;
     private static Context context;
     private static ApplicationSettings settings;
     private static NetworkConnection networkConnection;
@@ -98,50 +102,6 @@ public class TraderDoublerSDK {
 
     public void callResponse() {
 
-        String organizationId = getOrganizationId();
-        String tudid = getTudid();
-        String userEmail = getUserEmail();
-        String googleAdvertisingId = getGoogleAdvertisingId();
-
-        if (userEmail != null && !userEmail.isEmpty()){
-            String url  = HttpRequest.trackingOpen(organizationId, userEmail, tudid, "1");
-            try {
-
-                NetClient.getNetClient().callResponse(url, new ResultRequest() {
-                    @Override
-                    public void onFailure(int code) {
-
-                        Log.e("Response Error", "Problem with reqest" + code);
-                    }
-
-                    @Override
-                    public void onResponseSuccess(int code) {
-
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        String url = HttpRequest.trackingOpen(organizationId, googleAdvertisingId, tudid,"0");
-        try {
-
-            NetClient.getNetClient().callResponse(url, new ResultRequest() {
-                @Override
-                public void onFailure(int code) {
-
-                    Log.e("Response Error", "Problem with reqest" + code);
-                }
-
-                @Override
-                public void onResponseSuccess(int code) {
-
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 
