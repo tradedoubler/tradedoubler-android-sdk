@@ -57,11 +57,11 @@ public class HttpRequest {
     }
 
 
-    public static String trackingOpen(String organizationId, String extId, String tduid) {
+    public static String trackingOpen(String organizationId, String extId, String tduid, String exttype) {
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constans.BASE_URL_TRACKING_OPEN).newBuilder();
         urlBuilder.addQueryParameter(ORGANIZATION, organizationId);
         urlBuilder.addQueryParameter(EXT_ID, extId);
-        urlBuilder.addQueryParameter(EXT_TYP, "1");
+        urlBuilder.addQueryParameter(EXT_TYP, exttype);
         urlBuilder.addQueryParameter(TDUID, tduid);
         urlBuilder.addQueryParameter(VERIFY, "true");
         return urlBuilder.toString();

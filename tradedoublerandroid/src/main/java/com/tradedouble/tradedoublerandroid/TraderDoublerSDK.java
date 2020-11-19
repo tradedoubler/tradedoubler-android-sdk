@@ -2,6 +2,7 @@ package com.tradedouble.tradedoublerandroid;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.util.Log;
 import android.util.Patterns;
 
 import androidx.annotation.NonNull;
@@ -67,7 +68,7 @@ public class TraderDoublerSDK {
     }
 
     public void setUserEmail(String userEmail) {
-        if (userEmail != null && userEmail.isEmpty()) {
+        if (userEmail != null && !userEmail.isEmpty()) {
             if (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
                 String generateSHA56HashEmail = Cryptography.generateSHA56Hash(userEmail);
                 settings.storeUserEmail(generateSHA56HashEmail);
@@ -94,21 +95,43 @@ public class TraderDoublerSDK {
     private String getGoogleAdvertisingId() {
         return settings.getGoogleAdvertisingId();
     }
-    
-    private void callResponse() {
+
+    public void callResponse() {
 
         String organizationId = getOrganizationId();
         String tudid = getTudid();
         String userEmail = getUserEmail();
         String googleAdvertisingId = getGoogleAdvertisingId();
 
+        if (userEmail != null && !userEmail.isEmpty()){
+            String url  = HttpRequest.trackingOpen(organizationId, userEmail, tudid, "1");
+            try {
 
-        String url = HttpRequest.trackingOpen(organizationId, googleAdvertisingId, tudid);
+                NetClient.getNetClient().callResponse(url, new ResultRequest() {
+                    @Override
+                    public void onFailure(int code) {
+
+                        Log.e("Response Error", "Problem with reqest" + code);
+                    }
+
+                    @Override
+                    public void onResponseSuccess(int code) {
+
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        String url = HttpRequest.trackingOpen(organizationId, googleAdvertisingId, tudid,"0");
         try {
+
             NetClient.getNetClient().callResponse(url, new ResultRequest() {
                 @Override
                 public void onFailure(int code) {
 
+                    Log.e("Response Error", "Problem with reqest" + code);
                 }
 
                 @Override

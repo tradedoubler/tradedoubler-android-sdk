@@ -1,9 +1,9 @@
 package com.tradedouble.tradedoublerandroid.utils;
 
 public class Constans {
-    public static String BASE_URL = "http://tbl.tradedoubler.com/report";
-    public static String BASE_URL_SALE = "http://tbs.tradedoubler.com/report";
-    public static String BASE_URL_TRACKING_OPEN = "http://tbs.tradedoubler.com/users";
+    public static String BASE_URL = "https://tbl.tradedoubler.com/report";
+    public static String BASE_URL_SALE = "https://tbs.tradedoubler.com/report";
+    public static String BASE_URL_TRACKING_OPEN = "https://tbs.tradedoubler.com/users";
     public static String ORGANIZATION_ID = "organization";
     public static String EVENT_ID = "event";
     public static String LEAD_NUMBER = "leadNumber";

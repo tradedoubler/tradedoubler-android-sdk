@@ -1,6 +1,6 @@
 package com.tradedouble.tradedoublersdk
 
-
+//Todo: This class witch extras AdvertisingId
 
 object AdvertisingId {
 
