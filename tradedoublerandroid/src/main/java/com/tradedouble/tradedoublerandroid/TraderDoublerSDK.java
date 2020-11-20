@@ -15,7 +15,7 @@ import com.tradedouble.tradedoublerandroid.network.ResultRequest;
 import java.io.IOException;
 
 public class TraderDoublerSDK {
-    private ReferralListener referralListener = null;
+
     private static Context context;
     private static ApplicationSettings settings;
     private static NetworkConnection networkConnection;
@@ -47,7 +47,6 @@ public class TraderDoublerSDK {
                 e.printStackTrace();
             }
             networkConnection = new NetworkConnection(context);
-            callResponse();
         }
     }
 
@@ -100,9 +99,50 @@ public class TraderDoublerSDK {
         return settings.getGoogleAdvertisingId();
     }
 
-    public void callResponse() {
+    public void trackingOpenURl() {
+        String organizationId = settings.getOrganizationId();
+        String tudid = settings.getTduidValue();
+        String userEmail = settings.getUserEmail();
+        String googleAdvertisingId = settings.getGoogleAdvertisingId();
 
+        if (userEmail != null && !userEmail.isEmpty()){
+            String url  = HttpRequest.trackingOpen(organizationId, userEmail, tudid, "1");
+            try {
 
+                NetClient.getNetClient().callResponse(url, new ResultRequest() {
+                    @Override
+                    public void onFailure(int code) {
+
+                        Log.e("Response Error", "Problem with reqest" + code);
+                    }
+
+                    @Override
+                    public void onResponseSuccess(int code) {
+
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        String url = HttpRequest.trackingOpen(organizationId, googleAdvertisingId, tudid,"0");
+        try {
+            NetClient.getNetClient().callResponse(url, new ResultRequest() {
+                @Override
+                public void onFailure(int code) {
+
+                    Log.e("Response Error", "Problem with reqest" + code);
+                }
+
+                @Override
+                public void onResponseSuccess(int code) {
+
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
