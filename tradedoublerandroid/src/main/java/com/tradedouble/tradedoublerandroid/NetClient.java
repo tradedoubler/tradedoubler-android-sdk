@@ -1,14 +1,14 @@
 package com.tradedouble.tradedoublerandroid;
 
+import com.tradedouble.tradedoublerandroid.network.ResultRequest;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
+import java.util.concurrent.TimeUnit;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
