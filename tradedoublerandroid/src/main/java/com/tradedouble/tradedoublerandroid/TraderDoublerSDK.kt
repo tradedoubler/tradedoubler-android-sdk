@@ -96,7 +96,75 @@ class TraderDoublerSDK private constructor(context: Context?) {
             settings.storeGoogleAdvertisingId(generateSHA56Hash)
         }
 
+    var currencyValue: String? = null
+        get() = currencyValue
+        set(value) {
+            field = currencyValue
+        }
+
+    var leadEventId: String? = null
+        get() = leadEventId
+        set(value) {
+            field = leadEventId
+        }
+
+    var leadId: String? = null
+        get() = leadId
+        set(value) {
+            field = leadId
+        }
+
+    var saleEventId: String? = null
+        get() = saleEventId
+        set(value) {
+            field = saleEventId
+        }
+
+    var orderNumber: String? = null
+        get() = orderNumber
+        set(value) {
+            field = orderNumber
+        }
+
+    var orderValue: String? = null
+        get() = orderValue
+        set(value) {
+            field = orderValue
+        }
+
+    var voucherCode: String? = null
+        get() = voucherCode
+        set(value) {
+            field = voucherCode
+        }
+
+    var reportInfo: String? = null
+        get() = reportInfo
+        set(value) {
+            field = reportInfo
+        }
+
+
+    var pltEventId: String? = null
+        get() = pltEventId
+        set(value) {
+            field = pltEventId
+        }
+
+    var orderId: String? = null
+        get() = orderId
+        set(value) {
+            field = orderId
+        }
+
+    var basket: String? = null
+        get() = basket
+        set(value) {
+            field = orderId
+        }
+
     fun callTrackingOpenURl() {
+
         val organizationId = settings.organizationId
         val tudid = settings.tduidValue
         val userEmail = settings.userEmail
@@ -133,16 +201,6 @@ class TraderDoublerSDK private constructor(context: Context?) {
         }
     }
 
-    fun callTrackingLeadUrl() {
-        val organizationId = settings.organizationId
-        val tudid = settings.tduidValue
-        val userEmail = settings.userEmail
-        val googleAdvertisingId =
-            settings.googleAdvertisingId
-
-
-    }
-
     fun generateTUDID() {
         val url = HttpRequest.clickLinkAffiliate()
         try {
@@ -161,6 +219,7 @@ class TraderDoublerSDK private constructor(context: Context?) {
 
 
     fun callTrackingLead() {
+
         val organizationId = settings.organizationId
         val tudid = settings.tduidValue
         val userEmail = settings.userEmail
