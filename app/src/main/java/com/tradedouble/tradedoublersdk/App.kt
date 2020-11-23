@@ -5,6 +5,7 @@ import android.widget.Toast
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
 import com.android.installreferrer.api.ReferrerDetails
+import com.tradedouble.tradedoublerandroid.TraderDoublerSDK
 
 class App : Application() {
 
@@ -20,7 +21,7 @@ class App : Application() {
         super.onCreate()
 
 
-        TraderDoublerSDK.createLibrary(this)
+        TraderDoublerSDK.create(this)
 
         referrerClient = InstallReferrerClient.newBuilder(this).build()
         referrerClient.startConnection(object : InstallReferrerStateListener {
@@ -61,10 +62,10 @@ class App : Application() {
 
         })
 
-        TraderDoublerSDK.getInstance().setTduid("4e8241cd1b66e8a8d2a55c666129cccc")
-        TraderDoublerSDK.getInstance().setGoogleAdvertisingId("38400000-8cf0-11bd-b23e-10b96e40000d")
-        TraderDoublerSDK.getInstance().setOrganizationId("945630")
-        TraderDoublerSDK.getInstance().setUserEmail("magdalena.dziesinska@britenet.com.pl")
+        TraderDoublerSDK.getInstance()?.setTduid("4e8241cd1b66e8a8d2a55c666129cccc")
+        TraderDoublerSDK.getInstance()?.googleAdvertisingId = "38400000-8cf0-11bd-b23e-10b96e40000d"
+        TraderDoublerSDK.getInstance()?.organizationId = "945630"
+        TraderDoublerSDK.getInstance()?.userEmail = "magdalena.dziesinska@britenet.com.pl"
 
 
     }
