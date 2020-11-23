@@ -15,7 +15,7 @@ class App : Application() {
 
     private lateinit var referrerClient: InstallReferrerClient
 
-    private var tduidId: String = ""
+    private var tduidId: String? = ""
 
     override fun onCreate() {
         super.onCreate()
@@ -30,7 +30,6 @@ class App : Application() {
                     InstallReferrerClient.InstallReferrerResponse.OK -> {
                         val response: ReferrerDetails = referrerClient.installReferrer
                         tduidId = response.installReferrer
-
                     }
 
                     InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {

@@ -11,5 +11,4 @@ class NetworkConnection(private val context: Context) {
             val networkInfo = connMgr.activeNetworkInfo
             return networkInfo != null && networkInfo.isConnected
         }
-
 }

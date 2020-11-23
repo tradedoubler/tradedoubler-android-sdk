@@ -11,6 +11,7 @@ import com.tradedouble.tradedoublerandroid.utils.Constant.TRACKING_FILE
 import com.tradedouble.tradedoublerandroid.utils.Constant.USER_EMAIL_VALUE
 
 class ApplicationSettings(private val context: Context) {
+
     fun storeTduid(tduidValue: String?) {
         val settings =
             context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE)

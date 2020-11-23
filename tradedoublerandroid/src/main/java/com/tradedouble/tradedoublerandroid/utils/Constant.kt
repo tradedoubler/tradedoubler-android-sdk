@@ -1,6 +1,8 @@
 package com.tradedouble.tradedoublerandroid.utils
 
 object Constant {
+
+    const val BASE_CLK_URL = "https://clk.tradedoubler.com/click"
     const val BASE_URL = "https://tbl.tradedoubler.com/report"
     const val BASE_URL_SALE = "https://tbs.tradedoubler.com/report"
     const val BASE_URL_TRACKING_OPEN = "https://tbs.tradedoubler.com/user"
@@ -11,6 +13,9 @@ object Constant {
     const val EXT_TYP = "exttype"
     const val EXT_ID = "extid"
     const val EVENT = "event"
+    const val P = "p"
+    const val A = "a"
+    const val G = "g"
     const val ORDER_NUMBER = "orderNumber"
     const val ORDER_VALUE = "orderValue"
     const val CURRENCY = "currency"
@@ -25,4 +30,13 @@ object Constant {
     const val TRACKING_FILE = "td-app-download-tracking.dat"
     const val DEFAULT_LIFE_TIME_VALUE_DAYS = 365L
     const val LTV_EXPIRY = "ltvExpiry"
+
+    const val Q = "q"
+    const val ORDNUM = "ordnum"
+    const val CURR = "curr"
+    const val ENC = "enc"
+    const val BASKET = "basket"
+    const val QUANTITY = "q"
+    const val UNIT_VALUE = "v"
+
 }
