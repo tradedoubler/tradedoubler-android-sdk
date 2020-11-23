@@ -38,7 +38,7 @@ class NetClient {
             ) {
                 if (response.isSuccessful) {
                     if (response.code in 200..300) {
-                        resultRequest.onResponseSuccess(response.code)
+                        resultRequest.onResponseSuccess(response.code, responseBody = response.body.toString())
                     } else {
                         resultRequest.onFailure(response.code)
                     }

@@ -74,13 +74,13 @@ class TraderDoublerSDK private constructor(context: Context?) {
             settings!!.storeOrganizationId(organizationId)
         }
 
-     val tudid: String?
+    val tudid: String?
         get() = settings!!.tduidValue
 
     var userEmail: String?
-      get() = settings!!.userEmail
+        get() = settings!!.userEmail
         set(userEmail) {
-            if (userEmail != null && !userEmail.isEmpty()) {
+            if (userEmail != null && userEmail.isNotEmpty()) {
                 if (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
                     val generateSHA56HashEmail =
                         Cryptography.generateSHA56Hash(userEmail)
@@ -111,7 +111,7 @@ class TraderDoublerSDK private constructor(context: Context?) {
                             Log.e("Response Error", "Problem with reqest$code")
                         }
 
-                        override fun onResponseSuccess(code: Int) {}
+                        override fun onResponseSuccess(code: Int, responseBody: String?) {}
                     })
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -126,7 +126,7 @@ class TraderDoublerSDK private constructor(context: Context?) {
                         Log.e("Response Error", "Problem with reqest$code")
                     }
 
-                    override fun onResponseSuccess(code: Int) {}
+                    override fun onResponseSuccess(code: Int, responseBody: String?) {}
                 })
         } catch (e: IOException) {
             e.printStackTrace()
