@@ -1,6 +1,6 @@
 package com.tradedouble.tradedoublerandroid.utils;
 
-public class Constans {
+public class Constant {
     public static String BASE_URL = "https://tbl.tradedoubler.com/report";
     public static String BASE_URL_SALE = "https://tbs.tradedoubler.com/report";
     public static String BASE_URL_TRACKING_OPEN = "https://tbs.tradedoubler.com/user";
