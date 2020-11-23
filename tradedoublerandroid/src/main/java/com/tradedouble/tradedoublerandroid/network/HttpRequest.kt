@@ -19,6 +19,7 @@ import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 object HttpRequest {
+
     fun trackingLead(
         organizationId: String?,
         leadEventId: String?,

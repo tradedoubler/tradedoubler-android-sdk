@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 
 object Cryptography {
+
     fun generateSHA56Hash(base: String?): String {
 
         if (base != null) {

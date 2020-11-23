@@ -102,7 +102,7 @@ class TraderDoublerSDK private constructor(context: Context?) {
         val userEmail = settings!!.userEmail
         val googleAdvertisingId =
             settings!!.googleAdvertisingId
-        if (userEmail != null && !userEmail.isEmpty()) {
+        if (userEmail != null && userEmail.isNotEmpty()) {
             val url = HttpRequest.trackingOpen(organizationId, userEmail, tudid, "1")
             try {
                 NetClient.netClient
