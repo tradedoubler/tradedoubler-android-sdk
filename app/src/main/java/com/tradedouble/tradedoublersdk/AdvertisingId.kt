@@ -41,15 +41,13 @@ object AdvertisingId {
                     )
                 }
                 if (adInfo != null) {
-                    var id: String? = null
                     try {
-                        id = adInfo.id
+                        AAID = adInfo.id
                     } catch (e: ExecutionException) {
                         e.printStackTrace()
                     } catch (e: InterruptedException) {
                         e.printStackTrace()
                     }
-                    AAID = id
                 }
             }
         }
