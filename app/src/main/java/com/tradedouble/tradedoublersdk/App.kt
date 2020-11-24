@@ -1,11 +1,22 @@
 package com.tradedouble.tradedoublersdk
 
 import android.app.Application
+import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
 import com.android.installreferrer.api.ReferrerDetails
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
+import com.google.common.util.concurrent.FutureCallback
+import com.google.common.util.concurrent.Futures.addCallback
 import com.tradedouble.tradedoublerandroid.TraderDoublerSDK
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
+
 
 class App : Application() {
 
@@ -22,6 +33,15 @@ class App : Application() {
 
 
         TraderDoublerSDK.create(this)
+
+
+        val advertisingId = AdvertisingId.getAdvertisingId(applicationContext)
+
+        Toast.makeText(
+            applicationContext,
+            " Google Adverasing Id ${advertisingId}",
+            Toast.LENGTH_SHORT
+        ).show()
 
         referrerClient = InstallReferrerClient.newBuilder(this).build()
         referrerClient.startConnection(object : InstallReferrerStateListener {
@@ -68,6 +88,5 @@ class App : Application() {
 
 
     }
-
 
 }
