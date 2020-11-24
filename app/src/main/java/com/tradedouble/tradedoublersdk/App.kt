@@ -1,7 +1,6 @@
 package com.tradedouble.tradedoublersdk
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.android.installreferrer.api.InstallReferrerClient
@@ -10,8 +9,6 @@ import com.android.installreferrer.api.ReferrerDetails
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.google.common.util.concurrent.FutureCallback
-import com.google.common.util.concurrent.Futures.addCallback
 import com.tradedouble.tradedoublerandroid.TraderDoublerSDK
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executor
@@ -19,6 +16,9 @@ import java.util.concurrent.Executors
 
 
 class App : Application() {
+
+    var TAG = "AdvertisingId"
+
 
     companion object {
         private val LOG_TAG = App::class.java.simpleName
@@ -34,14 +34,7 @@ class App : Application() {
 
         TraderDoublerSDK.create(this)
 
-
-        val advertisingId = AdvertisingId.getAdvertisingId(applicationContext)
-
-        Toast.makeText(
-            applicationContext,
-            " Google Adverasing Id ${advertisingId}",
-            Toast.LENGTH_SHORT
-        ).show()
+        getGoogleAdvertisingId()
 
         referrerClient = InstallReferrerClient.newBuilder(this).build()
         referrerClient.startConnection(object : InstallReferrerStateListener {
@@ -81,12 +74,52 @@ class App : Application() {
 
         })
 
+
+
         TraderDoublerSDK.getInstance()?.setTduid("4e8241cd1b66e8a8d2a55c666129cccc")
-        TraderDoublerSDK.getInstance()?.googleAdvertisingId = "38400000-8cf0-11bd-b23e-10b96e40000d"
+
         TraderDoublerSDK.getInstance()?.organizationId = "945630"
         TraderDoublerSDK.getInstance()?.userEmail = "magdalena.dziesinska@britenet.com.pl"
 
 
     }
+
+    private fun getGoogleAdvertisingId() {
+        val executor: Executor =
+            Executors.newSingleThreadExecutor()
+        executor.execute {
+            var adInfo: AdvertisingIdClient.Info? = null
+
+            try {
+                adInfo = AdvertisingIdClient.getAdvertisingIdInfo(applicationContext)
+            } catch (e: Exception) {
+                Log.e(TAG, "Could not fetch advertising id", e)
+            } catch (e: GooglePlayServicesNotAvailableException) {
+                Log.e(
+                    TAG,
+                    "Could not fetch advertising id, Google Play Service not available",
+                    e
+                )
+            } catch (e: GooglePlayServicesRepairableException) {
+                Log.e(
+                    TAG,
+                    "Could not fetch advertising id, Google Play Service need repairing",
+                    e
+                )
+            }
+            if (adInfo != null) {
+                try {
+
+                    TraderDoublerSDK.getInstance()?.googleAdvertisingId = adInfo.id
+                } catch (e: ExecutionException) {
+                    e.printStackTrace()
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+}
 
 }
