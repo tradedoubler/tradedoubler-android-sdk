@@ -30,7 +30,7 @@ object Constant {
     const val TRACKING_FILE = "td-app-download-tracking.dat"
     const val DEFAULT_LIFE_TIME_VALUE_DAYS = 365L
     const val LTV_EXPIRY = "ltvExpiry"
-
+    const val CHECK_SUM = "checksum"
     const val Q = "q"
     const val ORDNUM = "ordnum"
     const val CURR = "curr"

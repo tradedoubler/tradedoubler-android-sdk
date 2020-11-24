@@ -228,8 +228,8 @@ class TraderDoublerSDK private constructor(context: Context?) {
 
         val url = HttpRequest.trackingLead(
             organizationId = organizationId,
-            leadEventId = "",
-            leadId = "",
+            leadEventId = "403765",
+            leadId = "5",
             tduid = tudid,
             extId = googleAdvertisingId
         )
@@ -249,8 +249,8 @@ class TraderDoublerSDK private constructor(context: Context?) {
         if (userEmail != null && userEmail.isNotEmpty()) {
             val url = HttpRequest.trackingLead(
                 organizationId = organizationId,
-                leadEventId = "",
-                leadId = "",
+                leadEventId = "403765",
+                leadId = "5",
                 tduid = tudid,
                 extId = userEmail
             )
@@ -279,16 +279,19 @@ class TraderDoublerSDK private constructor(context: Context?) {
         val googleAdvertisingId =
             settings.googleAdvertisingId
 
+
+
         val url = HttpRequest.trackingSale(
             organizationId = organizationId,
-            saleEventId = "",
-            orderNumber = "",
-            orderValue = "",
-            currency = "",
-            voucherCode = "",
+            saleEventId = "403759",
+            orderNumber = "15645654",
+            orderValue = "81830",
+            currency = "EUR",
+            voucherCode = null,
             tduid = tudid,
             extId = googleAdvertisingId,
-            reportInfo = ""
+            reportInfo = null,
+            secretCode = "123456789"
         )
 
         try {
@@ -315,7 +318,8 @@ class TraderDoublerSDK private constructor(context: Context?) {
                 voucherCode = "",
                 tduid = tudid,
                 extId = userEmail,
-                reportInfo = ""
+                reportInfo = "",
+                secretCode = "123456789"
             )
 
             try {

@@ -1,9 +1,11 @@
 package com.tradedouble.tradedoublerandroid.network
 
+import com.tradedouble.tradedoublerandroid.Cryptography
 import com.tradedouble.tradedoublerandroid.utils.Constant.A
 import com.tradedouble.tradedoublerandroid.utils.Constant.BASE_URL_SALE
 import com.tradedouble.tradedoublerandroid.utils.Constant.BASE_URL_TRACKING_OPEN
 import com.tradedouble.tradedoublerandroid.utils.Constant.BASKET
+import com.tradedouble.tradedoublerandroid.utils.Constant.CHECK_SUM
 import com.tradedouble.tradedoublerandroid.utils.Constant.CURR
 import com.tradedouble.tradedoublerandroid.utils.Constant.CURRENCY
 import com.tradedouble.tradedoublerandroid.utils.Constant.ENC
@@ -76,22 +78,31 @@ object HttpRequest {
         orderNumber: String,
         orderValue: String,
         currency: String,
-        voucherCode: String,
+        secretCode: String,
+        voucherCode: String?,
         tduid: String?,
         extId: String?,
-        reportInfo: String
+        reportInfo: String?
     ): String {
+
+        val checksum  = Cryptography.generateCheckSum(secretCode, orderNumber, orderValue)
+
         val urlBuilder = BASE_URL_SALE.toHttpUrlOrNull()!!.newBuilder()
         urlBuilder.addQueryParameter(ORGANIZATION_ID, organizationId)
         urlBuilder.addQueryParameter(EVENT, saleEventId)
         urlBuilder.addQueryParameter(ORDER_NUMBER, orderNumber)
         urlBuilder.addQueryParameter(ORDER_VALUE, orderValue)
         urlBuilder.addQueryParameter(CURRENCY, currency)
-        urlBuilder.addQueryParameter(VOUCHER, voucherCode)
+        urlBuilder.addQueryParameter(CHECK_SUM, checksum)
+        if (voucherCode != null){
+            urlBuilder.addQueryParameter(VOUCHER, voucherCode)
+        }
         urlBuilder.addQueryParameter(TDUID, tduid)
         urlBuilder.addQueryParameter(EXT_TYP, "1")
         urlBuilder.addQueryParameter(EXT_ID, extId)
-        urlBuilder.addQueryParameter(REPORT_INFO, reportInfo)
+        if (reportInfo != null){
+            urlBuilder.addQueryParameter(REPORT_INFO, reportInfo)
+        }
         return urlBuilder.toString()
     }
 

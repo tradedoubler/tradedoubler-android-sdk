@@ -77,11 +77,10 @@ class App : Application() {
 
 
         TraderDoublerSDK.getInstance()?.setTduid("4e8241cd1b66e8a8d2a55c666129cccc")
-
         TraderDoublerSDK.getInstance()?.organizationId = "945630"
         TraderDoublerSDK.getInstance()?.userEmail = "magdalena.dziesinska@britenet.com.pl"
 
-
+        TraderDoublerSDK.getInstance()?.callTrackingLead()
     }
 
     private fun getGoogleAdvertisingId() {
@@ -89,7 +88,6 @@ class App : Application() {
             Executors.newSingleThreadExecutor()
         executor.execute {
             var adInfo: AdvertisingIdClient.Info? = null
-
             try {
                 adInfo = AdvertisingIdClient.getAdvertisingIdInfo(applicationContext)
             } catch (e: Exception) {
@@ -109,7 +107,6 @@ class App : Application() {
             }
             if (adInfo != null) {
                 try {
-
                     TraderDoublerSDK.getInstance()?.googleAdvertisingId = adInfo.id
                 } catch (e: ExecutionException) {
                     e.printStackTrace()
@@ -120,6 +117,5 @@ class App : Application() {
         }
     }
 
-}
 
 }
