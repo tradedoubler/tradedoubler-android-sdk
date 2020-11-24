@@ -8,6 +8,7 @@ import com.tradedouble.tradedoublerandroid.utils.Constant.CURR
 import com.tradedouble.tradedoublerandroid.utils.Constant.CURRENCY
 import com.tradedouble.tradedoublerandroid.utils.Constant.ENC
 import com.tradedouble.tradedoublerandroid.utils.Constant.EVENT
+import com.tradedouble.tradedoublerandroid.utils.Constant.EVENT_ID
 import com.tradedouble.tradedoublerandroid.utils.Constant.EXT_ID
 import com.tradedouble.tradedoublerandroid.utils.Constant.EXT_TYP
 import com.tradedouble.tradedoublerandroid.utils.Constant.G
@@ -36,6 +37,21 @@ object HttpRequest {
         return urlBuilder.toString()
     }
 
+
+    fun trackingInstallation(
+        organizationId: String?,
+        appInstallEventId: String,
+        leadNumber: String,
+        tduid: String?,
+        extId: String?): String {
+        val urlBuilder = BASE_URL_SALE.toHttpUrlOrNull()!!.newBuilder()
+        urlBuilder.addQueryParameter(ORGANIZATION_ID, organizationId)
+        urlBuilder.addQueryParameter(EVENT_ID, appInstallEventId)
+        urlBuilder.addQueryParameter(LEAD_NUMBER, leadNumber)
+        urlBuilder.addQueryParameter(TDUID,tduid)
+        urlBuilder.addQueryParameter(EXT_ID, extId)
+        return urlBuilder.toString()
+    }
 
     fun trackingLead(
         organizationId: String?,
