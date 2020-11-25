@@ -9,7 +9,7 @@ import com.android.installreferrer.api.ReferrerDetails
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.tradedouble.tradedoublerandroid.TraderDoublerSDK
+import com.tradedouble.tradedoublerandroid.TraderDoublerSdk
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -32,11 +32,11 @@ class App : Application() {
         super.onCreate()
 
 
-        TraderDoublerSDK.create(this)
+        TraderDoublerSdk.create(this)
 
-        TraderDoublerSDK.getInstance()?.setTduid("4e8241cd1b66e8a8d2a55c666129cccc")
-        TraderDoublerSDK.getInstance()?.organizationId = "945630"
-        TraderDoublerSDK.getInstance()?.userEmail = "magdalena.dziesinska@britenet.com.pl"
+        TraderDoublerSdk.getInstance()?.setTduid("4e8241cd1b66e8a8d2a55c666129cccc")
+        TraderDoublerSdk.getInstance()?.organizationId = "945630"
+        TraderDoublerSdk.getInstance()?.userEmail = "magdalena.dziesinska@britenet.com.pl"
 
 
         getGoogleAdvertisingId()
@@ -83,7 +83,7 @@ class App : Application() {
 
 
 
-        TraderDoublerSDK.getInstance()?.callTrackingLead()
+        TraderDoublerSdk.getInstance()?.callTrackingLead()
     }
 
     private fun getGoogleAdvertisingId() {
@@ -110,7 +110,7 @@ class App : Application() {
             }
             if (adInfo != null) {
                 try {
-                    TraderDoublerSDK.getInstance()?.googleAdvertisingId = adInfo.id
+                    TraderDoublerSdk.getInstance()?.googleAdvertisingId = adInfo.id
                 } catch (e: ExecutionException) {
                     e.printStackTrace()
                 } catch (e: InterruptedException) {

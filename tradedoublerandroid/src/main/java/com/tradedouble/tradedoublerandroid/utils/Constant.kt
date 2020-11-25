@@ -39,4 +39,6 @@ object Constant {
     const val QUANTITY = "q"
     const val UNIT_VALUE = "v"
 
+    const val LENGTH_STRING = 6
+
 }

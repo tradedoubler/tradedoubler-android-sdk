@@ -10,7 +10,7 @@ import com.tradedouble.tradedoublerandroid.network.NetworkConnection
 import com.tradedouble.tradedoublerandroid.network.ResultRequest
 import java.io.IOException
 
-class TraderDoublerSDK private constructor(context: Context?) {
+class TraderDoublerSdk private constructor(context: Context?) {
 
     companion object {
         private var context: Context? = null
@@ -18,24 +18,24 @@ class TraderDoublerSDK private constructor(context: Context?) {
         private var networkConnection: NetworkConnection? = null
 
         @Volatile
-        private var instance: TraderDoublerSDK? = null
+        private var instance: TraderDoublerSdk? = null
 
-        fun getInstance(): TraderDoublerSDK? {
+        fun getInstance(): TraderDoublerSdk? {
             if (instance == null) {
-                synchronized(TraderDoublerSDK::class.java) {
+                synchronized(TraderDoublerSdk::class.java) {
                     if (instance == null) {
-                        return TraderDoublerSDK(context)
+                        return TraderDoublerSdk(context)
                     }
                 }
             }
             return instance
         }
 
-        fun create(context: Context): TraderDoublerSDK? {
+        fun create(context: Context): TraderDoublerSdk? {
             if (instance == null) {
-                synchronized(TraderDoublerSDK::class.java) {
+                synchronized(TraderDoublerSdk::class.java) {
                     if (instance == null) {
-                        instance = TraderDoublerSDK(context)
+                        instance = TraderDoublerSdk(context)
                     }
                 }
             }
@@ -83,7 +83,7 @@ class TraderDoublerSDK private constructor(context: Context?) {
             if (userEmail != null && userEmail.isNotEmpty()) {
                 if (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
                     val generateSHA56HashEmail =
-                        Cryptography.generateSHA56Hash(userEmail)
+                        TraderDoublerSdkUtils.generateSHA56Hash(userEmail)
                     settings.storeUserEmail(generateSHA56HashEmail)
                 }
             }
@@ -92,7 +92,7 @@ class TraderDoublerSDK private constructor(context: Context?) {
     var googleAdvertisingId: String?
         get() = settings.googleAdvertisingId
         set(googleAdvertisingId) {
-            val generateSHA56Hash = Cryptography.generateSHA56Hash(googleAdvertisingId)
+            val generateSHA56Hash = TraderDoublerSdkUtils.generateSHA56Hash(googleAdvertisingId)
             settings.storeGoogleAdvertisingId(generateSHA56Hash)
         }
 

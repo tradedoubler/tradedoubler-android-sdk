@@ -1,12 +1,13 @@
 package com.tradedouble.tradedoublerandroid
 
+import com.tradedouble.tradedoublerandroid.utils.Constant.LENGTH_STRING
 import okhttp3.internal.and
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
-object Cryptography {
+object TraderDoublerSdkUtils {
 
     fun generateSHA56Hash(base: String?): String {
 
@@ -40,6 +41,13 @@ object Cryptography {
         val prefix = "v04"
         val suffix = secretCode + orderNumber + orderValue
         return prefix + generateMD5(suffix)
+    }
+
+    fun getRandomString() : String {
+        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
+        return (1..LENGTH_STRING)
+            .map { allowedChars.random() }
+            .joinToString("")
     }
 
 }

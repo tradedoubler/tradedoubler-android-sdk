@@ -1,6 +1,6 @@
 package com.tradedouble.tradedoublerandroid.network
 
-import com.tradedouble.tradedoublerandroid.Cryptography
+import com.tradedouble.tradedoublerandroid.TraderDoublerSdkUtils
 import com.tradedouble.tradedoublerandroid.utils.Constant.A
 import com.tradedouble.tradedoublerandroid.utils.Constant.BASE_URL_SALE
 import com.tradedouble.tradedoublerandroid.utils.Constant.BASE_URL_TRACKING_OPEN
@@ -25,9 +25,7 @@ import com.tradedouble.tradedoublerandroid.utils.Constant.REPORT_INFO
 import com.tradedouble.tradedoublerandroid.utils.Constant.TDUID
 import com.tradedouble.tradedoublerandroid.utils.Constant.VERIFY
 import com.tradedouble.tradedoublerandroid.utils.Constant.VOUCHER
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
-import java.util.*
 
 object HttpRequest {
 
@@ -85,7 +83,7 @@ object HttpRequest {
         reportInfo: String?
     ): String {
 
-        val checksum  = Cryptography.generateCheckSum(secretCode, orderNumber, orderValue)
+        val checksum  = TraderDoublerSdkUtils.generateCheckSum(secretCode, orderNumber, orderValue)
 
         val urlBuilder = BASE_URL_SALE.toHttpUrlOrNull()!!.newBuilder()
         urlBuilder.addQueryParameter(ORGANIZATION_ID, organizationId)
