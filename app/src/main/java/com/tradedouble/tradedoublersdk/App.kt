@@ -50,7 +50,7 @@ class App : Application() {
                     InstallReferrerClient.InstallReferrerResponse.OK -> {
                         val response: ReferrerDetails = referrerClient.installReferrer
                         val referrerUrl  = response.installReferrer
-
+                        TraderDoublerSdk.getInstance()?.callTrackingInstallation(appDateInstall = "", appInstallEventId = "403761",tduid = referrerUrl)
                     }
 
                     InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {
