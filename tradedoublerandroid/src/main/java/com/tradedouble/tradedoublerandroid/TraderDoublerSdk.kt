@@ -10,7 +10,7 @@ import com.tradedouble.tradedoublerandroid.network.NetworkConnection
 import com.tradedouble.tradedoublerandroid.network.ResultRequest
 import java.io.IOException
 
-class TraderDoublerSdk private constructor(context: Context?) {
+class TraderDoublerSdk constructor(context: Context?) {
 
     companion object {
         private var context: Context? = null
@@ -172,13 +172,15 @@ class TraderDoublerSdk private constructor(context: Context?) {
 
     fun callTrackingInstallation(
         appInstallEventId: String,
-        leadNumber: String,
+        appDateInstall: String,
         tduid: String?
     ) {
         val organizationId = settings.organizationId
         val userEmail = settings.userEmail
         val googleAdvertisingId =
             settings.googleAdvertisingId
+
+        val leadNumber = TraderDoublerSdkUtils.getRandomString() + appDateInstall
 
         if (userEmail != null && userEmail.isNotEmpty()) {
             val url = HttpRequest.trackingInstallation(
