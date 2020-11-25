@@ -163,6 +163,67 @@ class TraderDoublerSDK private constructor(context: Context?) {
             field = orderId
         }
 
+    var appInstallEventId:String ? = null
+        get() = appInstallEventId
+        set(value) {
+            field = appInstallEventId
+        }
+
+
+    fun callTrackingInstallation(
+        appInstallEventId: String,
+        leadNumber: String,
+        tduid: String?
+    ) {
+        val organizationId = settings.organizationId
+        val userEmail = settings.userEmail
+        val googleAdvertisingId =
+            settings.googleAdvertisingId
+
+        if (userEmail != null && userEmail.isNotEmpty()) {
+            val url = HttpRequest.trackingInstallation(
+                organizationId,
+                appInstallEventId = appInstallEventId,
+                leadNumber = leadNumber,
+                tduid = tduid,
+                extId = userEmail
+            )
+                try {
+                    NetClient.netClient
+                        ?.callResponse(url, object : ResultRequest {
+                            override fun onFailure(code: Int) {
+                                Log.e("Response Error", "Problem with reqest$code")
+                            }
+
+                            override fun onResponseSuccess(code: Int, responseBody: String?) {}
+                        })
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+        }
+
+        val url = HttpRequest.trackingInstallation(
+            organizationId,
+            appInstallEventId = appInstallEventId,
+            leadNumber = leadNumber,
+            tduid = tduid,
+            extId = googleAdvertisingId
+        )
+        try {
+            NetClient.netClient
+                ?.callResponse(url, object : ResultRequest {
+                    override fun onFailure(code: Int) {
+                        Log.e("Response Error", "Problem with reqest$code")
+                    }
+
+                    override fun onResponseSuccess(code: Int, responseBody: String?) {}
+                })
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+
     fun callTrackingOpenURl() {
 
         val organizationId = settings.organizationId
@@ -278,7 +339,6 @@ class TraderDoublerSDK private constructor(context: Context?) {
         val userEmail = settings.userEmail
         val googleAdvertisingId =
             settings.googleAdvertisingId
-
 
 
         val url = HttpRequest.trackingSale(
