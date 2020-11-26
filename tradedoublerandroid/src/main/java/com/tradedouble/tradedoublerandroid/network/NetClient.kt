@@ -3,6 +3,7 @@ package com.tradedouble.tradedoublerandroid.network
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
+import java.net.HttpRetryException
 import java.util.concurrent.TimeUnit
 
 class NetClient {
@@ -18,9 +19,10 @@ class NetClient {
     }
 
     @Throws(IOException::class)
-    fun callResponse(url: String?, resultRequest: ResultRequest) {
+    fun callResponse(url: String, resultRequest: ResultRequest) {
+
         val request = Request.Builder()
-            .url(url!!)
+            .url(url)
             .get()
             .build()
         val call =
@@ -28,7 +30,7 @@ class NetClient {
                 ?.initOkHttpClient()?.newCall(request)
         call?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                resultRequest.onFailure(-1)
+                resultRequest.onFailure( call.execute().code, e.message)
             }
 
             @Throws(IOException::class)
@@ -37,11 +39,10 @@ class NetClient {
                 response: Response
             ) {
                 if (response.isSuccessful) {
-                    if (response.code in 200..300) {
-                        resultRequest.onResponseSuccess(response.code, responseBody = response.body.toString())
-                    } else {
-                        resultRequest.onFailure(response.code)
-                    }
+                    resultRequest.onResponseSuccess(
+                        response.code,
+                        responseBody = response.body.toString()
+                    )
                 }
             }
         })

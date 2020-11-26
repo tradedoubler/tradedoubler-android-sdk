@@ -131,13 +131,12 @@ object HttpRequest {
     fun trackingOpen(
         organizationId: String?,
         extId: String?,
-        tduid: String?,
-        exttype: String?
+        tduid: String?
     ): String {
         val urlBuilder = BASE_URL_TRACKING_OPEN.toHttpUrlOrNull()!!.newBuilder()
         urlBuilder.addQueryParameter(ORGANIZATION, organizationId)
         urlBuilder.addQueryParameter(EXT_ID, extId)
-        urlBuilder.addQueryParameter(EXT_TYP, exttype)
+        urlBuilder.addQueryParameter(EXT_TYP, "1")
         urlBuilder.addQueryParameter(TDUID, tduid)
         urlBuilder.addQueryParameter(VERIFY, "true")
         return urlBuilder.toString()

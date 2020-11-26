@@ -10,7 +10,6 @@ import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.tradedouble.tradedoublerandroid.TraderDoublerSdk
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executor
@@ -33,10 +32,9 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
-
         TraderDoublerSdk.create(this)
 
-        TraderDoublerSdk.getInstance()?.setTduid("4e8241cd1b66e8a8d2a55c666129cccc")
+        TraderDoublerSdk.getInstance()?.tudid="4e8241cd1b66e8a8d2a55c666129cccc"
         TraderDoublerSdk.getInstance()?.organizationId = "945630"
         TraderDoublerSdk.getInstance()?.userEmail = "magdalena.dziesinska@britenet.com.pl"
 
@@ -50,7 +48,7 @@ class App : Application() {
                     InstallReferrerClient.InstallReferrerResponse.OK -> {
                         val response: ReferrerDetails = referrerClient.installReferrer
                         val referrerUrl  = response.installReferrer
-                        TraderDoublerSdk.getInstance()?.callTrackingInstallation(appDateInstall = "", appInstallEventId = "403761",tduid = referrerUrl)
+                        TraderDoublerSdk.getInstance()?.callTrackingInstallation(appDateInstall =currentTimeSecsUTC(), appInstallEventId = "403761",tduid = referrerUrl)
                     }
 
                     InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {
@@ -122,5 +120,9 @@ class App : Application() {
         }
     }
 
-
+    fun currentTimeSecsUTC(): String {
+        val currentTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+            .timeInMillis / 1000
+        return currentTime.toString()
+    }
 }

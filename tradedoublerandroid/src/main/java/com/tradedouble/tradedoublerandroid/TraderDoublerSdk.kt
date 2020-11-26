@@ -181,47 +181,79 @@ class TraderDoublerSdk constructor(context: Context?) {
 
         val leadNumber = TraderDoublerSdkUtils.getRandomString() + appDateInstall
 
-        if (userEmail != null && userEmail.isNotEmpty()) {
+
+        val isAllParametersComplete = (!organizationId.isNullOrBlank() && !tudid.isNullOrEmpty() && !userEmail.isNullOrEmpty() && !googleAdvertisingId.isNullOrEmpty() && !leadNumber.isNullOrEmpty() && !appInstallEventId.isNullOrEmpty() && !appDateInstall.isNullOrEmpty() && !tduid.isNullOrEmpty())
+
+        if (isAllParametersComplete ){
+
+            if (userEmail != null && userEmail.isNotEmpty()) {
+                val url = HttpRequest.trackingInstallation(
+                    organizationId,
+                    appInstallEventId = appInstallEventId,
+                    leadNumber = leadNumber,
+                    tduid = tduid,
+                    extId = userEmail
+                )
+                try {
+                    NetClient.netClient
+                        ?.callResponse(url, object : ResultRequest {
+                            override fun onFailure(code: Int, errorMessage: String?) {
+                                Log.e(
+                                    "Response Error",
+                                    "Problem with request url $url  response  code $code and response error message $errorMessage"
+                                )
+                            }
+
+                            override fun onResponseSuccess(code: Int, responseBody: String?) {
+                                Log.e(
+                                    "Response Success",
+                                    "Request is done. Url :$url status code  $code and response body $responseBody"
+                                )
+                            }
+                        })
+                } catch (e: IOException) {
+                    e.printStackTrace()
+
+
+                }
+            }
+
             val url = HttpRequest.trackingInstallation(
                 organizationId,
                 appInstallEventId = appInstallEventId,
                 leadNumber = leadNumber,
                 tduid = tduid,
-                extId = userEmail
+                extId = googleAdvertisingId
             )
+
+
             try {
                 NetClient.netClient
                     ?.callResponse(url, object : ResultRequest {
-                        override fun onFailure(code: Int) {
-                            Log.e("Response Error", "Problem with reqest$code")
+                        override fun onFailure(code: Int, errorMessage: String?) {
+                            Log.e(
+                                "Response Error",
+                                "Problem with request url $url  response  code $code and response error message $errorMessage"
+                            )
                         }
 
-                        override fun onResponseSuccess(code: Int, responseBody: String?) {}
+                        override fun onResponseSuccess(code: Int, responseBody: String?) {
+                            Log.e(
+                                "Response Success",
+                                "Request is done. Url :$url status code  $code and response body $responseBody"
+                            )
+                        }
                     })
             } catch (e: IOException) {
                 e.printStackTrace()
             }
+        } else {
+            Log.e(
+                "Missing Parameters ",
+                " Please complete parameters because problem with call response"
+            )
         }
 
-        val url = HttpRequest.trackingInstallation(
-            organizationId,
-            appInstallEventId = appInstallEventId,
-            leadNumber = leadNumber,
-            tduid = tduid,
-            extId = googleAdvertisingId
-        )
-        try {
-            NetClient.netClient
-                ?.callResponse(url, object : ResultRequest {
-                    override fun onFailure(code: Int) {
-                        Log.e("Response Error", "Problem with reqest$code")
-                    }
-
-                    override fun onResponseSuccess(code: Int, responseBody: String?) {}
-                })
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
     }
 
 
@@ -232,35 +264,77 @@ class TraderDoublerSdk constructor(context: Context?) {
         val userEmail = settings.userEmail
         val googleAdvertisingId =
             settings.googleAdvertisingId
-        if (userEmail != null && userEmail.isNotEmpty()) {
-            val url = HttpRequest.trackingOpen(organizationId, userEmail, tudid, "1")
+
+
+        val isAllParametersComplete =
+            (!organizationId.isNullOrBlank() && !tudid.isNullOrEmpty() && !userEmail.isNullOrEmpty() && !googleAdvertisingId.isNullOrEmpty())
+
+        if (isAllParametersComplete) {
+
+            if (userEmail != null && userEmail.isNotEmpty()) {
+                val url = HttpRequest.trackingOpen(organizationId, userEmail, tudid)
+                try {
+                    NetClient.netClient
+                        ?.callResponse(url, object : ResultRequest {
+                            override fun onFailure(code: Int, errorMessage: String?) {
+                                Log.e(
+                                    "Response Error",
+                                    "Problem with request url $url  response  code $code and response error message $errorMessage"
+                                )
+                            }
+
+                            override fun onResponseSuccess(code: Int, responseBody: String?) {
+                                Log.e(
+                                    "Response Success",
+                                    "Request is done. Url :$url status code  $code and response body $responseBody"
+                                )
+                            }
+                        })
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    Log.e(
+                        "Problem with call url ",
+                        " Problem with call response url $url  error ${e.message}"
+                    )
+                }
+            }
+
+            val url =
+                HttpRequest.trackingOpen(organizationId, googleAdvertisingId, tudid)
+
             try {
                 NetClient.netClient
                     ?.callResponse(url, object : ResultRequest {
-                        override fun onFailure(code: Int) {
-                            Log.e("Response Error", "Problem with reqest$code")
+                        override fun onFailure(code: Int, errorMessage: String?) {
+                            Log.e(
+                                "Response Error",
+                                "Problem with request url $url  response  code $code and response error message $errorMessage"
+                            )
                         }
 
-                        override fun onResponseSuccess(code: Int, responseBody: String?) {}
+                        override fun onResponseSuccess(code: Int, responseBody: String?) {
+                            Log.e(
+                                "Response Success",
+                                "Request is done. Url :$url staus code  $code and response body $responseBody"
+                            )
+                        }
                     })
             } catch (e: IOException) {
                 e.printStackTrace()
-            }
-        }
-        val url =
-            HttpRequest.trackingOpen(organizationId, googleAdvertisingId, tudid, "0")
-        try {
-            NetClient.netClient
-                ?.callResponse(url, object : ResultRequest {
-                    override fun onFailure(code: Int) {
-                        Log.e("Response Error", "Problem with reqest$code")
-                    }
 
-                    override fun onResponseSuccess(code: Int, responseBody: String?) {}
-                })
-        } catch (e: IOException) {
-            e.printStackTrace()
+                Log.e(
+                    "Problem with call url ",
+                    " Problem with call response url $url  error ${e.message}"
+                )
+            }
+        }else {
+            Log.e(
+                "Missing Parameters ",
+                " Please complete parameters because problem with call response"
+            )
         }
+
+
     }
 
     fun generateTUDID() {
@@ -268,19 +342,31 @@ class TraderDoublerSdk constructor(context: Context?) {
         try {
             NetClient.netClient
                 ?.callResponse(url, object : ResultRequest {
-                    override fun onFailure(code: Int) {
-                        Log.e("Response Error", "Problem with reqest$code")
+                    override fun onFailure(code: Int, errorMessage: String?) {
+                        Log.e(
+                            "Response Error",
+                            "Problem with request url $url  response  code $code and response error message $errorMessage"
+                        )
                     }
 
-                    override fun onResponseSuccess(code: Int, responseBody: String?) {}
+                    override fun onResponseSuccess(code: Int, responseBody: String?) {
+                        Log.e(
+                            "Response Success",
+                            "Request is done. Url :$url status code  $code and response body $responseBody"
+                        )
+                    }
                 })
         } catch (e: IOException) {
             e.printStackTrace()
+            Log.e(
+                "Problem with call url ",
+                " Problem with call response url $url  error ${e.message}"
+            )
         }
     }
 
 
-    fun callTrackingLead() {
+    fun callTrackingLead(leadEventId: String, leadId: String) {
 
         val organizationId = settings.organizationId
         val tudid = settings.tduidValue
@@ -288,53 +374,98 @@ class TraderDoublerSdk constructor(context: Context?) {
         val googleAdvertisingId =
             settings.googleAdvertisingId
 
-        val url = HttpRequest.trackingLead(
-            organizationId = organizationId,
-            leadEventId = "403765",
-            leadId = "5",
-            tduid = tudid,
-            extId = googleAdvertisingId
-        )
-        try {
-            NetClient.netClient
-                ?.callResponse(url, object : ResultRequest {
-                    override fun onFailure(code: Int) {
-                        Log.e("Response Error", "Problem with reqest$code")
-                    }
 
-                    override fun onResponseSuccess(code: Int, responseBody: String?) {}
-                })
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+        val isAllParametersComplete =
+            (!organizationId.isNullOrBlank() && !tudid.isNullOrEmpty() && !userEmail.isNullOrEmpty() && !googleAdvertisingId.isNullOrEmpty() && !leadEventId.isNullOrEmpty() && !leadId.isNullOrEmpty())
 
-        if (userEmail != null && userEmail.isNotEmpty()) {
+
+        if (isAllParametersComplete){
             val url = HttpRequest.trackingLead(
                 organizationId = organizationId,
-                leadEventId = "403765",
-                leadId = "5",
+                leadEventId = leadEventId,
+                leadId = leadId,
                 tduid = tudid,
-                extId = userEmail
+                extId = googleAdvertisingId
             )
-
             try {
                 NetClient.netClient
                     ?.callResponse(url, object : ResultRequest {
-                        override fun onFailure(code: Int) {
-                            Log.e("Response Error", "Problem with reqest$code")
+                        override fun onFailure(code: Int, errorMessage: String?) {
+                            Log.e(
+                                "Response Error",
+                                "Problem with request url $url  response  code $code and response error message $errorMessage"
+                            )
                         }
 
-                        override fun onResponseSuccess(code: Int, responseBody: String?) {}
+                        override fun onResponseSuccess(code: Int, responseBody: String?) {
+                            Log.e(
+                                "Response Success",
+                                "Request is done. Url :$url status code  $code and response body $responseBody"
+                            )
+                        }
                     })
             } catch (e: IOException) {
                 e.printStackTrace()
+                Log.e(
+                    "Problem with call url ",
+                    " Problem with call response url $url  error ${e.message}"
+                )
             }
+
+
+            if (userEmail != null && userEmail.isNotEmpty()) {
+                val url = HttpRequest.trackingLead(
+                    organizationId = organizationId,
+                    leadEventId = leadEventId,
+                    leadId = leadId,
+                    tduid = tudid,
+                    extId = userEmail
+                )
+
+                try {
+                    NetClient.netClient
+                        ?.callResponse(url, object : ResultRequest {
+                            override fun onFailure(code: Int, errorMessage: String?) {
+                                Log.e(
+                                    "Response Error",
+                                    "Problem with request url $url  response  code $code and response error message $errorMessage"
+                                )
+                            }
+
+                            override fun onResponseSuccess(code: Int, responseBody: String?) {
+                                Log.e(
+                                    "Response Success",
+                                    "Request is done. Url :$url status code  $code and response body $responseBody"
+                                )
+                            }
+                        })
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    Log.e(
+                        "Problem with call url ",
+                        " Problem with call response url $url  error ${e.message}"
+                    )
+                }
+            }
+        }else {
+            Log.e(
+                "Missing Parameters ",
+                " Please complete parameters because problem with call response"
+            )
         }
 
     }
 
 
-    fun callTrackingSale() {
+    fun callTrackingSale(
+        saleEventId: String,
+        orderNumber: String,
+        orderValue: String,
+        currency: String,
+        voucherCode: String?,
+        reportInfo: String?,
+        secretCode: String
+    ) {
         val organizationId = settings.organizationId
         val tudid = settings.tduidValue
         val userEmail = settings.userEmail
@@ -344,25 +475,35 @@ class TraderDoublerSdk constructor(context: Context?) {
 
         val url = HttpRequest.trackingSale(
             organizationId = organizationId,
-            saleEventId = "403759",
-            orderNumber = "15645654",
-            orderValue = "81830",
-            currency = "EUR",
-            voucherCode = null,
+            saleEventId = saleEventId,
+            orderNumber = orderNumber,
+            orderValue = orderValue,
+            currency = currency,
+            voucherCode = voucherCode,
             tduid = tudid,
             extId = googleAdvertisingId,
-            reportInfo = null,
-            secretCode = "123456789"
+            reportInfo = reportInfo,
+            secretCode = secretCode
         )
+
+        val isAllParametersComplete = (!organizationId.isNullOrBlank() &&)
 
         try {
             NetClient.netClient
                 ?.callResponse(url, object : ResultRequest {
-                    override fun onFailure(code: Int) {
-                        Log.e("Response Error", "Problem with reqest$code")
+                    override fun onFailure(code: Int, errorMessage: String?) {
+                        Log.e(
+                            "Response Error",
+                            "Problem with request url $url  response  code $code and response error message $errorMessage"
+                        )
                     }
 
-                    override fun onResponseSuccess(code: Int, responseBody: String?) {}
+                    override fun onResponseSuccess(code: Int, responseBody: String?) {
+                        Log.e(
+                            "Response Success",
+                            "Request is done. Url :$url status code  $code and response body $responseBody"
+                        )
+                    }
                 })
         } catch (e: IOException) {
             e.printStackTrace()
@@ -386,11 +527,19 @@ class TraderDoublerSdk constructor(context: Context?) {
             try {
                 NetClient.netClient
                     ?.callResponse(url, object : ResultRequest {
-                        override fun onFailure(code: Int) {
-                            Log.e("Response Error", "Problem with reqest$code")
+                        override fun onFailure(code: Int, errorMessage: String?) {
+                            Log.e(
+                                "Response Error",
+                                "Problem with request url $url  response  code $code and response error message $errorMessage"
+                            )
                         }
 
-                        override fun onResponseSuccess(code: Int, responseBody: String?) {}
+                        override fun onResponseSuccess(code: Int, responseBody: String?) {
+                            Log.e(
+                                "Response Success",
+                                "Request is done. Url :$url status code  $code and response body $responseBody"
+                            )
+                        }
                     })
             } catch (e: IOException) {
                 e.printStackTrace()
