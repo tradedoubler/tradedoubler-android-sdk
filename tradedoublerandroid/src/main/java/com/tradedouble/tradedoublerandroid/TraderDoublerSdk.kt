@@ -64,18 +64,17 @@ class TraderDoublerSdk constructor(context: Context?) {
         }
     }
 
-    fun setTduid(tduid: String?) {
-        settings.storeTduid(tduid)
-    }
-
     var organizationId: String?
         get() = settings.organizationId
         set(organizationId) {
             settings.storeOrganizationId(organizationId)
         }
 
-    val tudid: String?
+    var tudid: String?
         get() = settings.tduidValue
+        set(value) {
+            settings.storeTduid(tudid)
+        }
 
     var userEmail: String?
         get() = settings.userEmail
@@ -163,7 +162,7 @@ class TraderDoublerSdk constructor(context: Context?) {
             field = orderId
         }
 
-    var appInstallEventId:String ? = null
+    var appInstallEventId: String? = null
         get() = appInstallEventId
         set(value) {
             field = appInstallEventId
@@ -190,18 +189,18 @@ class TraderDoublerSdk constructor(context: Context?) {
                 tduid = tduid,
                 extId = userEmail
             )
-                try {
-                    NetClient.netClient
-                        ?.callResponse(url, object : ResultRequest {
-                            override fun onFailure(code: Int) {
-                                Log.e("Response Error", "Problem with reqest$code")
-                            }
+            try {
+                NetClient.netClient
+                    ?.callResponse(url, object : ResultRequest {
+                        override fun onFailure(code: Int) {
+                            Log.e("Response Error", "Problem with reqest$code")
+                        }
 
-                            override fun onResponseSuccess(code: Int, responseBody: String?) {}
-                        })
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
+                        override fun onResponseSuccess(code: Int, responseBody: String?) {}
+                    })
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
 
         val url = HttpRequest.trackingInstallation(

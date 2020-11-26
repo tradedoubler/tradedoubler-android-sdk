@@ -12,6 +12,34 @@ import com.tradedouble.tradedoublerandroid.utils.Constant.USER_EMAIL_VALUE
 
 class ApplicationSettings(private val context: Context) {
 
+    val tduidValue: String?
+        get() {
+            val settings =
+                context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE)
+            return settings.getString(TDUIC_VALUE, null)
+        }
+
+    val organizationId: String?
+        get() {
+            val settings =
+                context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE)
+            return settings.getString(ORGANIZATION_ID_VALUE, null)
+        }
+
+    val userEmail: String?
+        get() {
+            val settings =
+                context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE)
+            return settings.getString(USER_EMAIL_VALUE, null)
+        }
+
+    val googleAdvertisingId: String?
+        get() {
+            val settings =
+                context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE)
+            return settings.getString(GAID_VALUE, null)
+        }
+
     fun storeTduid(tduidValue: String?) {
         val settings =
             context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE)
@@ -63,32 +91,14 @@ class ApplicationSettings(private val context: Context) {
         return System.currentTimeMillis() + days * 24 * 60 * 60 * 1000
     }
 
-    val tduidValue: String?
-        get() {
-            val settings =
-                context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE)
-            return settings.getString(TDUIC_VALUE, null)
-        }
 
-    val organizationId: String?
-        get() {
-            val settings =
-                context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE)
-            return settings.getString(ORGANIZATION_ID_VALUE, null)
-        }
-
-    val userEmail: String?
-        get() {
-            val settings =
-                context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE)
-            return settings.getString(USER_EMAIL_VALUE, null)
-        }
-
-    val googleAdvertisingId: String?
-        get() {
-            val settings =
-                context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE)
-            return settings.getString(GAID_VALUE, null)
-        }
+    fun clearParameters(context: Context) {
+        val settings= context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE)
+        val editor = settings.edit()
+        editor.remove(USER_EMAIL_VALUE).apply()
+        editor.remove(TDUIC_VALUE).apply()
+        editor.remove(ORGANIZATION_ID_VALUE).apply()
+        editor.remove(GAID_VALUE).apply()
+    }
 
 }
