@@ -181,10 +181,10 @@ class TraderDoublerSdk constructor(context: Context?) {
 
         val leadNumber = TraderDoublerSdkUtils.getRandomString() + appDateInstall
 
+        val isRequiredParametersComplete =
+            (!organizationId.isNullOrBlank() && !tudid.isNullOrEmpty() && !userEmail.isNullOrEmpty() && !googleAdvertisingId.isNullOrEmpty() && !leadNumber.isNullOrEmpty() && !appInstallEventId.isNullOrEmpty() && !appDateInstall.isNullOrEmpty() && !tduid.isNullOrEmpty())
 
-        val isAllParametersComplete = (!organizationId.isNullOrBlank() && !tudid.isNullOrEmpty() && !userEmail.isNullOrEmpty() && !googleAdvertisingId.isNullOrEmpty() && !leadNumber.isNullOrEmpty() && !appInstallEventId.isNullOrEmpty() && !appDateInstall.isNullOrEmpty() && !tduid.isNullOrEmpty())
-
-        if (isAllParametersComplete ){
+        if (isRequiredParametersComplete) {
 
             if (userEmail != null && userEmail.isNotEmpty()) {
                 val url = HttpRequest.trackingInstallation(
@@ -265,11 +265,9 @@ class TraderDoublerSdk constructor(context: Context?) {
         val googleAdvertisingId =
             settings.googleAdvertisingId
 
+        val isRequiredParametersComplete = (!organizationId.isNullOrBlank() && !tudid.isNullOrEmpty() && !userEmail.isNullOrEmpty() && !googleAdvertisingId.isNullOrEmpty())
 
-        val isAllParametersComplete =
-            (!organizationId.isNullOrBlank() && !tudid.isNullOrEmpty() && !userEmail.isNullOrEmpty() && !googleAdvertisingId.isNullOrEmpty())
-
-        if (isAllParametersComplete) {
+        if (isRequiredParametersComplete) {
 
             if (userEmail != null && userEmail.isNotEmpty()) {
                 val url = HttpRequest.trackingOpen(organizationId, userEmail, tudid)
@@ -327,7 +325,7 @@ class TraderDoublerSdk constructor(context: Context?) {
                     " Problem with call response url $url  error ${e.message}"
                 )
             }
-        }else {
+        } else {
             Log.e(
                 "Missing Parameters ",
                 " Please complete parameters because problem with call response"
@@ -375,11 +373,11 @@ class TraderDoublerSdk constructor(context: Context?) {
             settings.googleAdvertisingId
 
 
-        val isAllParametersComplete =
+        val isRequiredParametersComplete =
             (!organizationId.isNullOrBlank() && !tudid.isNullOrEmpty() && !userEmail.isNullOrEmpty() && !googleAdvertisingId.isNullOrEmpty() && !leadEventId.isNullOrEmpty() && !leadId.isNullOrEmpty())
 
 
-        if (isAllParametersComplete){
+        if (isRequiredParametersComplete) {
             val url = HttpRequest.trackingLead(
                 organizationId = organizationId,
                 leadEventId = leadEventId,
@@ -447,7 +445,7 @@ class TraderDoublerSdk constructor(context: Context?) {
                     )
                 }
             }
-        }else {
+        } else {
             Log.e(
                 "Missing Parameters ",
                 " Please complete parameters because problem with call response"
@@ -472,57 +470,25 @@ class TraderDoublerSdk constructor(context: Context?) {
         val googleAdvertisingId =
             settings.googleAdvertisingId
 
+        val isRequiredParametersComplete =
+            (!organizationId.isNullOrBlank() && !tudid.isNullOrEmpty() && !userEmail.isNullOrEmpty() && !googleAdvertisingId.isNullOrEmpty() && !leadEventId.isNullOrEmpty() && !leadId.isNullOrEmpty() && saleEventId.isNullOrEmpty() && orderNumber.isNullOrEmpty() && !orderValue.isNullOrEmpty() && !currency.isNullOrEmpty() && !voucherCode.isNullOrEmpty() && secretCode.isNullOrEmpty())
 
-        val url = HttpRequest.trackingSale(
-            organizationId = organizationId,
-            saleEventId = saleEventId,
-            orderNumber = orderNumber,
-            orderValue = orderValue,
-            currency = currency,
-            voucherCode = voucherCode,
-            tduid = tudid,
-            extId = googleAdvertisingId,
-            reportInfo = reportInfo,
-            secretCode = secretCode
-        )
+        if (isRequiredParametersComplete){
 
-        val isAllParametersComplete = (!organizationId.isNullOrBlank() &&)
-
-        try {
-            NetClient.netClient
-                ?.callResponse(url, object : ResultRequest {
-                    override fun onFailure(code: Int, errorMessage: String?) {
-                        Log.e(
-                            "Response Error",
-                            "Problem with request url $url  response  code $code and response error message $errorMessage"
-                        )
-                    }
-
-                    override fun onResponseSuccess(code: Int, responseBody: String?) {
-                        Log.e(
-                            "Response Success",
-                            "Request is done. Url :$url status code  $code and response body $responseBody"
-                        )
-                    }
-                })
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-
-        if (userEmail != null && userEmail.isNotEmpty()) {
             val url = HttpRequest.trackingSale(
                 organizationId = organizationId,
-                saleEventId = "",
-                orderNumber = "",
-                orderValue = "",
-                currency = "",
-                voucherCode = "",
+                saleEventId = saleEventId,
+                orderNumber = orderNumber,
+                orderValue = orderValue,
+                currency = currency,
+                voucherCode = voucherCode,
                 tduid = tudid,
-                extId = userEmail,
-                reportInfo = "",
-                secretCode = "123456789"
+                extId = googleAdvertisingId,
+                reportInfo = reportInfo,
+                secretCode = secretCode
             )
+
+
 
             try {
                 NetClient.netClient
@@ -544,8 +510,48 @@ class TraderDoublerSdk constructor(context: Context?) {
             } catch (e: IOException) {
                 e.printStackTrace()
             }
+
+            if (userEmail != null && userEmail.isNotEmpty()) {
+                val url = HttpRequest.trackingSale(
+                    organizationId = organizationId,
+                    saleEventId = "",
+                    orderNumber = "",
+                    orderValue = "",
+                    currency = "",
+                    voucherCode = "",
+                    tduid = tudid,
+                    extId = userEmail,
+                    reportInfo = "",
+                    secretCode = "123456789"
+                )
+
+                try {
+                    NetClient.netClient
+                        ?.callResponse(url, object : ResultRequest {
+                            override fun onFailure(code: Int, errorMessage: String?) {
+                                Log.e(
+                                    "Response Error",
+                                    "Problem with request url $url  response  code $code and response error message $errorMessage"
+                                )
+                            }
+
+                            override fun onResponseSuccess(code: Int, responseBody: String?) {
+                                Log.e(
+                                    "Response Success",
+                                    "Request is done. Url :$url status code  $code and response body $responseBody"
+                                )
+                            }
+                        })
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }else {
+            Log.e(
+                "Missing Parameters ",
+                " Please complete parameters because problem with call response"
+            )
         }
     }
-
 
 }

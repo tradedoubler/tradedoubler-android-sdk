@@ -80,10 +80,6 @@ class App : Application() {
 
         })
 
-
-
-
-        TraderDoublerSdk.getInstance()?.callTrackingLead()
     }
 
     private fun getGoogleAdvertisingId() {
