@@ -2,7 +2,10 @@ package com.tradedouble.tradedoublerandroid.network
 
 import com.tradedouble.tradedoublerandroid.TraderDoublerSdkUtils
 import com.tradedouble.tradedoublerandroid.utils.Constant.A
+import com.tradedouble.tradedoublerandroid.utils.Constant.BASE_CLK_URL
+import com.tradedouble.tradedoublerandroid.utils.Constant.BASE_URL
 import com.tradedouble.tradedoublerandroid.utils.Constant.BASE_URL_SALE
+import com.tradedouble.tradedoublerandroid.utils.Constant.BASE_URL_SALE_PLT
 import com.tradedouble.tradedoublerandroid.utils.Constant.BASE_URL_TRACKING_OPEN
 import com.tradedouble.tradedoublerandroid.utils.Constant.BASKET
 import com.tradedouble.tradedoublerandroid.utils.Constant.CHECK_SUM
@@ -30,7 +33,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 object HttpRequest {
 
     fun clickLinkAffiliate(): String {
-        val urlBuilder = BASE_URL_SALE.toHttpUrlOrNull()!!.newBuilder()
+        val urlBuilder = BASE_CLK_URL.toHttpUrlOrNull()!!.newBuilder()
         urlBuilder.addQueryParameter(P, "310409")
         urlBuilder.addQueryParameter(A, "982247")
         urlBuilder.addQueryParameter(G, "0")
@@ -44,7 +47,7 @@ object HttpRequest {
         leadNumber: String,
         tduid: String?,
         extId: String?): String {
-        val urlBuilder = BASE_URL_SALE.toHttpUrlOrNull()!!.newBuilder()
+        val urlBuilder = BASE_URL.toHttpUrlOrNull()!!.newBuilder()
         urlBuilder.addQueryParameter(ORGANIZATION_ID, organizationId)
         urlBuilder.addQueryParameter(EVENT_ID, appInstallEventId)
         urlBuilder.addQueryParameter(LEAD_NUMBER, leadNumber)
@@ -114,7 +117,7 @@ object HttpRequest {
         voucherCode: String?,
         basket: String?
     ): String {
-        val urlBuilder = BASE_URL_SALE.toHttpUrlOrNull()!!.newBuilder()
+        val urlBuilder = BASE_URL_SALE_PLT.toHttpUrlOrNull()!!.newBuilder()
         urlBuilder.addQueryParameter(ORGANIZATION_ID, organizationId)
         urlBuilder.addQueryParameter(EVENT, pltEventId)
         urlBuilder.addQueryParameter(ORDNUM, orderId)

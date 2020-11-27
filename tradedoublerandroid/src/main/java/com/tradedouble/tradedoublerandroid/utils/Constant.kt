@@ -6,6 +6,7 @@ object Constant {
     const val BASE_URL = "https://tbl.tradedoubler.com/report"
     const val BASE_URL_SALE = "https://tbs.tradedoubler.com/report"
     const val BASE_URL_TRACKING_OPEN = "https://tbs.tradedoubler.com/user"
+    const val BASE_URL_SALE_PLT = "https://tbs.tradedoubler.com/report"
     const val ORGANIZATION_ID = "organization"
     const val EVENT_ID = "event"
     const val LEAD_NUMBER = "leadNumber"
