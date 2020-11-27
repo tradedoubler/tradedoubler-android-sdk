@@ -37,8 +37,6 @@ class App : Application() {
         TraderDoublerSdk.getInstance()?.tudid="4e8241cd1b66e8a8d2a55c666129cccc"
         TraderDoublerSdk.getInstance()?.organizationId = "945630"
         TraderDoublerSdk.getInstance()?.userEmail = "magdalena.dziesinska@britenet.com.pl"
-
-
         getGoogleAdvertisingId()
 
         referrerClient = InstallReferrerClient.newBuilder(this).build()
