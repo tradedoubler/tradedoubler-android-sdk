@@ -59,11 +59,11 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             }
         }
 
-    var googleAdvertisingId: String?
-        get() = settings.googleAdvertisingId
+    var deviceIdentifier: String?
+        get() = settings.deviceIdentifier
         set(googleAdvertisingId) {
             val generateSHA56Hash = TradeDoublerSdkUtils.generateSHA56Hash(googleAdvertisingId)
-            settings.storeGoogleAdvertisingId(generateSHA56Hash)
+            settings.storeDeviceIdentifier(generateSHA56Hash)
         }
 
     var secretCode: String?
@@ -77,11 +77,12 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         set(value) {
             logger.isLoggingEnabled = value
         }
+
     fun trackOpenApp() {
         val organizationId = settings.organizationId
         val tduid = settings.tduid
         val userEmail = settings.userEmail
-        val googleAdvertisingId = settings.googleAdvertisingId
+        val googleAdvertisingId = settings.deviceIdentifier
 
         if(validateOrganizationId(organizationId)){
             return
@@ -108,7 +109,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val organizationId = settings.organizationId
         val tduid = settings.tduid
         val userEmail = settings.userEmail
-        val googleAdvertisingId = settings.googleAdvertisingId
+        val googleAdvertisingId = settings.deviceIdentifier
 
         if(!validateOrganizationId(organizationId)){
             return
@@ -144,7 +145,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
 
         val tduid = settings.tduid
         val userEmail = settings.userEmail
-        val googleAdvertisingId = settings.googleAdvertisingId
+        val googleAdvertisingId = settings.deviceIdentifier
 
         if (tduid.isNullOrBlank()) {
             return
@@ -177,7 +178,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val organizationId = settings.organizationId
         val tduid = settings.tduid
         val userEmail = settings.userEmail
-        val googleAdvertisingId = settings.googleAdvertisingId
+        val googleAdvertisingId = settings.deviceIdentifier
 
         if(!validateOrganizationId(organizationId)){
             return
@@ -211,7 +212,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val tduid = settings.tduid
         val organizationId = settings.organizationId
         val userEmail = settings.userEmail
-        val googleAdvertisingId = settings.googleAdvertisingId
+        val googleAdvertisingId = settings.deviceIdentifier
         val leadNumber = TradeDoublerSdkUtils.getRandomString() + TradeDoublerSdkUtils.getInstallDate(context)
 
         if(!validateOrganizationId(organizationId)){
@@ -234,6 +235,24 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             appendRequest(buildInstallUrl(googleAdvertisingId))
         }
     }
+
+    var automaticDeviceIdentifierRetrieval: Boolean = false
+        set(value){
+            field = value
+            if(automaticDeviceIdentifierRetrieval){
+                AdvertisingIdHelper.retrieveAdvertisingId(context,
+                    { aaId ->
+                        logger.logEvent("Android advertising id retrieved")
+                        deviceIdentifier = aaId
+                    },
+                    { errorMessage ->
+                        logger.logEvent("Android advertising not retrieved, performing fallback to android id")
+                        logger.logError(errorMessage)
+                        deviceIdentifier = TradeDoublerSdkUtils.getAndroidId(context)
+                    })
+            }
+        }
+
 
     private fun validateSecretCode(secretCode: String?) = validateAndPrintError(secretCode, "secretCode")
 
@@ -272,6 +291,5 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
                 }
             }
         })
-
     }
 }

@@ -1,7 +1,9 @@
 package com.tradedouble.tradedoublerandroid
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.provider.Settings
 import com.tradedouble.tradedoublerandroid.utils.Constant.LENGTH_STRING
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
@@ -53,6 +55,15 @@ internal object TradeDoublerSdkUtils {
                 .getPackageInfo(context.packageName, 0).firstInstallTime}"
         } catch (e: PackageManager.NameNotFoundException) {
             "${Calendar.getInstance().timeInMillis}"
+        }
+    }
+
+    @SuppressLint("HardwareIds")
+    fun getAndroidId(context: Context): String{
+        return try {
+            Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+        } catch (e: SecurityException){
+            getInstallDate(context)
         }
     }
 

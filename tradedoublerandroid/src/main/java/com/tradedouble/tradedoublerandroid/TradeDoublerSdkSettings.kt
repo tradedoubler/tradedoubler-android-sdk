@@ -35,7 +35,7 @@ internal class TradeDoublerSdkSettings(private val context: Context) {
             return settings.getString(SECRET_CODE_VALUE, null)
         }
 
-    val googleAdvertisingId: String?
+    val deviceIdentifier: String?
         get() {
             return settings.getString(GAID_VALUE, null)
         }
@@ -46,7 +46,7 @@ internal class TradeDoublerSdkSettings(private val context: Context) {
         editor.commit()
     }
 
-    fun storeGoogleAdvertisingId(googleAdvertisingId: String?) {
+    fun storeDeviceIdentifier(googleAdvertisingId: String?) {
         val editor = settings.edit()
         if (googleAdvertisingId != null) editor.putString(GAID_VALUE, googleAdvertisingId)
         editor.commit()

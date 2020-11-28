@@ -1,11 +1,17 @@
 package com.tradedouble.tradedoublerandroid
 
+import android.view.View
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.jakewharton.espresso.OkHttp3IdlingResource
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.hamcrest.Matcher
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.*
@@ -20,10 +26,10 @@ class TradeDoublerSdkTest {
     private val leadEventId = "403765"
     private val basketSale = "51"
 
-    private val orgId = "YOUR_VALUE"
-    private val tdUid = "YOUR_VALUE"
-    private val email = "YOUR_VALUE"
-    private val advertisingId = "YOUR_VALUE"
+    private val orgId = "945630"
+    private val tdUid = "3e28242cd1c67ca5d9b19d2395e52941"
+    private val email = "test24588444@tradedoubler.com"
+    private val advertisingId = "xsdedrf"
 
     @Test
     fun trackAppOpen() {
@@ -32,7 +38,7 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
-        tradeDoublerSdk.googleAdvertisingId = advertisingId
+        tradeDoublerSdk.deviceIdentifier = advertisingId
 
         tradeDoublerSdk.trackOpenApp()
     }
@@ -44,7 +50,7 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
-        tradeDoublerSdk.googleAdvertisingId = advertisingId
+        tradeDoublerSdk.deviceIdentifier = advertisingId
 
         tradeDoublerSdk.trackInstall(installEventId)
 
@@ -58,7 +64,7 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
-        tradeDoublerSdk.googleAdvertisingId = advertisingId
+        tradeDoublerSdk.deviceIdentifier = advertisingId
 
         tradeDoublerSdk.trackLead(leadEventId,"734")
 
@@ -73,7 +79,7 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
-        tradeDoublerSdk.googleAdvertisingId = advertisingId
+        tradeDoublerSdk.deviceIdentifier = advertisingId
         tradeDoublerSdk.secretCode = "12345678"
 
         val reportInfo = ReportInfo(
@@ -90,13 +96,12 @@ class TradeDoublerSdkTest {
 
     @Test
     fun trackSalePlt() {
-        val tradeDoublerSdk =
-            createSkdClient()
+        val tradeDoublerSdk = createSkdClient()
 
         tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
-        tradeDoublerSdk.googleAdvertisingId = advertisingId
+        tradeDoublerSdk.deviceIdentifier = advertisingId
         tradeDoublerSdk.secretCode = "12345678"
 
         val reportInfo = BasketInfo(
@@ -111,6 +116,32 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.trackSalePlt(sale2EventId,"141121", Currency.getInstance("EUR"),null, reportInfo)
 
         Thread.sleep(3000)
+    }
+
+    @Test
+    fun enableAutomaticDeviceIdRetrieval() {
+        val tradeDoublerSdk = createSkdClient()
+
+        tradeDoublerSdk.tduid = tdUid
+        tradeDoublerSdk.organizationId = orgId
+        tradeDoublerSdk.userEmail = email
+        //tradeDoublerSdk.deviceIdentifier = advertisingId
+        tradeDoublerSdk.secretCode = "12345678"
+        tradeDoublerSdk.isLoggingEnabled = true
+        tradeDoublerSdk.automaticDeviceIdentifierRetrieval = true
+
+//        val reportInfo = BasketInfo(
+//            listOf(
+//                BasketEntry("3408","1243","plt_cookie", 23.0,5),
+//                BasketEntry("3168","3221","plt_milk", 3.0,25)
+//            )
+//        )
+
+        //1411
+        //tradeDoublerSdk.trackSalePlt(basketSale,"141121", Currency.getInstance("EUR"),null, reportInfo)
+        //tradeDoublerSdk.trackSalePlt(sale2EventId,"141121", Currency.getInstance("EUR"),null, reportInfo)
+
+        Thread.sleep(6000)
     }
 
     private fun createSkdClient(): TradeDoublerSdk {
@@ -135,5 +166,25 @@ class TradeDoublerSdkTest {
             .connectTimeout(10000, TimeUnit.MILLISECONDS)
             .addInterceptor(loggingInterceptor)
             .build()
+    }
+}
+
+fun waitOnUiThread(millis: Long = 3000L){
+    Espresso.onView(ViewMatchers.isRoot()).perform(waitFor(millis))
+}
+
+fun waitFor(millis: Long): ViewAction {
+    return object : ViewAction {
+        override fun getConstraints(): Matcher<View> {
+            return ViewMatchers.isRoot()
+        }
+
+        override fun getDescription(): String {
+            return "Wait for $millis milliseconds."
+        }
+
+        override fun perform(uiController: UiController, view: View) {
+            uiController.loopMainThreadForAtLeast(millis)
+        }
     }
 }
