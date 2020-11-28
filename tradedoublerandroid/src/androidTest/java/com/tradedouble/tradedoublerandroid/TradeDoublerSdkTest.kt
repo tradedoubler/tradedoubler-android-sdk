@@ -29,7 +29,7 @@ class TradeDoublerSdkTest {
     fun trackAppOpen() {
         val tradeDoublerSdk = createSkdClient()
 
-        tradeDoublerSdk.tudid = tdUid
+        tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
         tradeDoublerSdk.googleAdvertisingId = advertisingId
@@ -41,7 +41,7 @@ class TradeDoublerSdkTest {
     fun trackAppInstall() {
         val tradeDoublerSdk = createSkdClient()
 
-        tradeDoublerSdk.tudid = tdUid
+        tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
         tradeDoublerSdk.googleAdvertisingId = advertisingId
@@ -55,7 +55,7 @@ class TradeDoublerSdkTest {
     fun trackLead() {
         val tradeDoublerSdk = createSkdClient()
 
-        tradeDoublerSdk.tudid = tdUid
+        tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
         tradeDoublerSdk.googleAdvertisingId = advertisingId
@@ -70,7 +70,7 @@ class TradeDoublerSdkTest {
     fun trackSale() {
         val tradeDoublerSdk = createSkdClient()
 
-        tradeDoublerSdk.tudid = tdUid
+        tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
         tradeDoublerSdk.googleAdvertisingId = advertisingId
@@ -93,7 +93,7 @@ class TradeDoublerSdkTest {
         val tradeDoublerSdk =
             createSkdClient()
 
-        tradeDoublerSdk.tudid = tdUid
+        tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
         tradeDoublerSdk.googleAdvertisingId = advertisingId

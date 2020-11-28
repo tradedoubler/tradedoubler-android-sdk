@@ -1,9 +1,11 @@
 package com.tradedouble.tradedoublerandroid
 
 import android.content.Context
+import android.util.Log
 import android.util.Patterns
 import com.tradedouble.tradedoublerandroid.network.HttpRequest
 import com.tradedouble.tradedoublerandroid.network.NetworkConnection
+import com.tradedouble.tradedoublerandroid.utils.TradeDoublerLogger
 import okhttp3.*
 import java.io.IOException
 import java.util.*
@@ -11,7 +13,8 @@ import java.util.*
 
 class TradeDoublerSdk constructor(private val context: Context, private val client: OkHttpClient) {
 
-    private var settings: TradeDoublerSdkSettings = TradeDoublerSdkSettings(context)
+    private val settings: TradeDoublerSdkSettings = TradeDoublerSdkSettings(context)
+    private val logger: TradeDoublerLogger = TradeDoublerLogger(false)
     private var networkConnection: NetworkConnection = NetworkConnection(context)
 
     companion object {
@@ -39,7 +42,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             settings.storeOrganizationId(organizationId)
         }
 
-    var tudid: String?
+    var tduid: String?
         get() = settings.tduid
         set(value) {
             settings.storeTduid(value)
@@ -50,8 +53,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         set(userEmail) {
             if (userEmail != null && userEmail.isNotEmpty()) {
                 if (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
-                    val generateSHA56HashEmail =
-                        TradeDoublerSdkUtils.generateSHA56Hash(userEmail)
+                    val generateSHA56HashEmail = TradeDoublerSdkUtils.generateSHA56Hash(userEmail)
                     settings.storeUserEmail(generateSHA56HashEmail)
                 }
             }
@@ -70,18 +72,27 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             settings.setSecretCode(secretCode)
         }
 
+    var isLoggingEnabled: Boolean
+        get() = logger.isLoggingEnabled
+        set(value) {
+            logger.isLoggingEnabled = value
+        }
     fun trackOpenApp() {
         val organizationId = settings.organizationId
         val tduid = settings.tduid
         val userEmail = settings.userEmail
         val googleAdvertisingId = settings.googleAdvertisingId
 
+        if(validateOrganizationId(organizationId)){
+            return
+        }
+
         if (tduid.isNullOrBlank()) {
             return
         }
 
         fun buildTrackOpenUrl(extId: String): String {
-            return HttpRequest.trackingOpen(organizationId, extId, tudid, "1")
+            return HttpRequest.trackingOpen(organizationId, extId, tduid, "1")
         }
 
         if (!userEmail.isNullOrEmpty()) {
@@ -99,12 +110,16 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val userEmail = settings.userEmail
         val googleAdvertisingId = settings.googleAdvertisingId
 
+        if(!validateOrganizationId(organizationId)){
+            return
+        }
+
         if (tduid.isNullOrBlank()) {
             return
         }
 
         fun buildTrackLead(extId: String): String {
-            return HttpRequest.trackingLead(organizationId, leadEventId, leadId, tudid, extId)
+            return HttpRequest.trackingLead(organizationId, leadEventId, leadId, tduid, extId)
         }
 
         if (!userEmail.isNullOrEmpty()) {
@@ -118,10 +133,18 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
 
     fun trackSale(saleEventId: String, orderNumber: String, orderValue: String, currency: Currency, voucherCode: String?, reportInfo: ReportInfo?) {
         val organizationId = settings.organizationId
+        val secretCode = settings.secretCode
+
+        if(!validateOrganizationId(organizationId)){
+            return
+        }
+        if(!validateSecretCode(secretCode)){
+            return
+        }
+
         val tduid = settings.tduid
         val userEmail = settings.userEmail
         val googleAdvertisingId = settings.googleAdvertisingId
-        val secretCode = settings.secretCode
 
         if (tduid.isNullOrBlank()) {
             return
@@ -135,11 +158,11 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
                 orderValue,
                 currency.currencyCode,
                 voucherCode,
-                tudid,
+                tduid,
                 extId,
                 reportInfo,
                 secretCode!!
-            ) //TODO kkalisz validate secret code
+            )
         }
 
         if (!userEmail.isNullOrEmpty()) {
@@ -156,6 +179,9 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val userEmail = settings.userEmail
         val googleAdvertisingId = settings.googleAdvertisingId
 
+        if(!validateOrganizationId(organizationId)){
+            return
+        }
         if (tduid.isNullOrBlank()) {
             return
         }
@@ -166,7 +192,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
                 saleEventId,
                 orderNumber,
                 currency.currencyCode,
-                tudid,
+                tduid,
                 extId,
                 voucherCode,
                 reportInfo
@@ -188,6 +214,10 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val googleAdvertisingId = settings.googleAdvertisingId
         val leadNumber = TradeDoublerSdkUtils.getRandomString() + TradeDoublerSdkUtils.getInstallDate(context)
 
+        if(!validateOrganizationId(organizationId)){
+            return
+        }
+
         if (tduid.isNullOrBlank()) {
             return
         }
@@ -205,17 +235,27 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         }
     }
 
-    private fun appendRequest(requestUrl: String) {
+    private fun validateSecretCode(secretCode: String?) = validateAndPrintError(secretCode, "secretCode")
 
-        val request = Request.Builder()
-            .url(requestUrl)
-            .get()
-            .build()
+    private fun validateOrganizationId(organizationId: String?) = validateAndPrintError(organizationId, "organizationId")
+
+    private fun validateAndPrintError(value: String?, fieldName: String): Boolean {
+        return if( value.isNullOrBlank() ){
+            logger.logError("Property $fieldName must be set and not be empty")
+            false
+        }else{
+            true
+        }
+    }
+
+    private fun appendRequest(requestUrl: String) {
+        val request = Request.Builder().url(requestUrl).get().build()
         val call = client.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-                //resultRequest.onFailure(-1)
+                if(logger.isLoggingEnabled) {
+                    logger.logEvent(Log.getStackTraceString(e))
+                }
             }
 
             @Throws(IOException::class)
@@ -225,9 +265,9 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             ) {
                 if (response.isSuccessful) {
                     if (response.code in 200..300) {
-                        //resultRequest.onResponseSuccess(response.code, responseBody = response.body.toString())
+
                     } else {
-                        //resultRequest.onFailure(response.code)
+                        logger.logEvent("Request failed with code: ${response.code}")
                     }
                 }
             }

@@ -32,7 +32,7 @@ class App : Application() {
 
         TradeDoublerSdk.create(this)
 
-        TradeDoublerSdk.getInstance()?.tudid = "4e8241cd1b66e8a8d2a55c666129cccc"
+        TradeDoublerSdk.getInstance()?.tduid = "4e8241cd1b66e8a8d2a55c666129cccc"
         TradeDoublerSdk.getInstance()?.organizationId = "945630"
         TradeDoublerSdk.getInstance()?.userEmail = "magdalena.dziesinska@britenet.com.pl"
 
