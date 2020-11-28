@@ -51,7 +51,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             if (userEmail != null && userEmail.isNotEmpty()) {
                 if (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
                     val generateSHA56HashEmail =
-                        TraderDoublerSdkUtils.generateSHA56Hash(userEmail)
+                        TradeDoublerSdkUtils.generateSHA56Hash(userEmail)
                     settings.storeUserEmail(generateSHA56HashEmail)
                 }
             }
@@ -60,7 +60,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
     var googleAdvertisingId: String?
         get() = settings.googleAdvertisingId
         set(googleAdvertisingId) {
-            val generateSHA56Hash = TraderDoublerSdkUtils.generateSHA56Hash(googleAdvertisingId)
+            val generateSHA56Hash = TradeDoublerSdkUtils.generateSHA56Hash(googleAdvertisingId)
             settings.storeGoogleAdvertisingId(generateSHA56Hash)
         }
 
@@ -186,7 +186,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val organizationId = settings.organizationId
         val userEmail = settings.userEmail
         val googleAdvertisingId = settings.googleAdvertisingId
-        val leadNumber = TraderDoublerSdkUtils.getRandomString() + TraderDoublerSdkUtils.getInstallDate(context)
+        val leadNumber = TradeDoublerSdkUtils.getRandomString() + TradeDoublerSdkUtils.getInstallDate(context)
 
         if (tduid.isNullOrBlank()) {
             return

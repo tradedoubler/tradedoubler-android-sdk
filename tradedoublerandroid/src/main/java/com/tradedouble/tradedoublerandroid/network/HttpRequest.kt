@@ -2,7 +2,7 @@ package com.tradedouble.tradedoublerandroid.network
 
 import com.tradedouble.tradedoublerandroid.BasketInfo
 import com.tradedouble.tradedoublerandroid.ReportInfo
-import com.tradedouble.tradedoublerandroid.TraderDoublerSdkUtils
+import com.tradedouble.tradedoublerandroid.TradeDoublerSdkUtils
 import com.tradedouble.tradedoublerandroid.utils.Constant.BASE_TBL_URL
 import com.tradedouble.tradedoublerandroid.utils.Constant.BASE_URL_SALE
 import com.tradedouble.tradedoublerandroid.utils.Constant.BASE_URL_TRACKING_OPEN
@@ -71,7 +71,7 @@ object HttpRequest {
         secretCode: String
     ): String {
 
-        val checksum = TraderDoublerSdkUtils.generateCheckSum(secretCode, orderNumber, orderValue)
+        val checksum = TradeDoublerSdkUtils.generateCheckSum(secretCode, orderNumber, orderValue)
 
         val urlBuilder = BASE_TBL_URL.toHttpUrlOrNull()!!.newBuilder()
         urlBuilder.addQueryParameter(ORGANIZATION_ID, organizationId)

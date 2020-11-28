@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.*
 
-internal object TraderDoublerSdkUtils {
+internal object TradeDoublerSdkUtils {
 
     fun generateSHA56Hash(base: String?): String {
 
