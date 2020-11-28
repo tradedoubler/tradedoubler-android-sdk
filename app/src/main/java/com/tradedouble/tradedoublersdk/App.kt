@@ -9,9 +9,7 @@ import com.android.installreferrer.api.ReferrerDetails
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.tradedouble.tradedoublerandroid.TraderDoublerSdk
-import java.text.SimpleDateFormat
-import java.util.*
+import com.tradedouble.tradedoublerandroid.TradeDoublerSdk
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -28,17 +26,15 @@ class App : Application() {
 
     private lateinit var referrerClient: InstallReferrerClient
 
-    private var tduidId: String? = ""
-
     override fun onCreate() {
         super.onCreate()
 
 
-        TraderDoublerSdk.create(this)
+        TradeDoublerSdk.create(this)
 
-        TraderDoublerSdk.getInstance()?.setTduid("4e8241cd1b66e8a8d2a55c666129cccc")
-        TraderDoublerSdk.getInstance()?.organizationId = "945630"
-        TraderDoublerSdk.getInstance()?.userEmail = "magdalena.dziesinska@britenet.com.pl"
+        TradeDoublerSdk.getInstance()?.tudid = "4e8241cd1b66e8a8d2a55c666129cccc"
+        TradeDoublerSdk.getInstance()?.organizationId = "945630"
+        TradeDoublerSdk.getInstance()?.userEmail = "magdalena.dziesinska@britenet.com.pl"
 
 
         getGoogleAdvertisingId()
@@ -50,7 +46,7 @@ class App : Application() {
                     InstallReferrerClient.InstallReferrerResponse.OK -> {
                         val response: ReferrerDetails = referrerClient.installReferrer
                         val referrerUrl  = response.installReferrer
-                        TraderDoublerSdk.getInstance()?.callTrackingInstallation(appDateInstall = "", appInstallEventId = "403761",tduid = referrerUrl)
+                        TradeDoublerSdk.getInstance()?.callTrackingInstallation(appDateInstall = "", appInstallEventId = "403761",tduid = referrerUrl)
                     }
 
                     InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {
@@ -85,7 +81,7 @@ class App : Application() {
 
 
 
-        TraderDoublerSdk.getInstance()?.callTrackingLead()
+        TradeDoublerSdk.getInstance()?.callTrackingLead()
     }
 
     private fun getGoogleAdvertisingId() {
@@ -112,7 +108,7 @@ class App : Application() {
             }
             if (adInfo != null) {
                 try {
-                    TraderDoublerSdk.getInstance()?.googleAdvertisingId = adInfo.id
+                    TradeDoublerSdk.getInstance()?.googleAdvertisingId = adInfo.id
                 } catch (e: ExecutionException) {
                     e.printStackTrace()
                 } catch (e: InterruptedException) {

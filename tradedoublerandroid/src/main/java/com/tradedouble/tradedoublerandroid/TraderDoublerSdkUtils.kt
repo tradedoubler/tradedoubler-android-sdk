@@ -1,22 +1,21 @@
 package com.tradedouble.tradedoublerandroid
 
+import android.content.Context
+import android.content.pm.PackageManager
 import com.tradedouble.tradedoublerandroid.utils.Constant.LENGTH_STRING
-import okhttp3.internal.and
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
+import java.util.*
 
-object TraderDoublerSdkUtils {
+internal object TraderDoublerSdkUtils {
 
     fun generateSHA56Hash(base: String?): String {
 
         if (base != null) {
             return try {
-                val digest =
-                    MessageDigest.getInstance("SHA-256")
-                val hash =
-                    digest.digest(base.toByteArray(StandardCharsets.UTF_8))
+                val digest = MessageDigest.getInstance("SHA-256")
+                val hash = digest.digest(base.toByteArray(StandardCharsets.UTF_8))
                 val hexString = StringBuffer()
                 for (i in hash.indices) {
                     val hex = Integer.toHexString(0xff and hash[i].toInt())
@@ -43,11 +42,18 @@ object TraderDoublerSdkUtils {
         return prefix + generateMD5(suffix)
     }
 
-    fun getRandomString() : String {
+    fun getRandomString(): String {
         val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
-        return (1..LENGTH_STRING)
-            .map { allowedChars.random() }
-            .joinToString("")
+        return (1..LENGTH_STRING).map { allowedChars.random() }.joinToString("")
+    }
+
+    fun getInstallDate(context: Context): String {
+        return try {
+            "${context.packageManager
+                .getPackageInfo(context.packageName, 0).firstInstallTime}"
+        } catch (e: PackageManager.NameNotFoundException) {
+            "${Calendar.getInstance().timeInMillis}"
+        }
     }
 
 }
