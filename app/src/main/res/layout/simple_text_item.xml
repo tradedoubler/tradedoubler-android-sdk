@@ -4,6 +4,7 @@
     android:layout_height="wrap_content">
 
     <TextView
+        style="@style/TextAppearance.AppCompat.Large"
         android:id="@+id/text_view"
         android:maxLines="20"
         android:layout_width="match_parent"

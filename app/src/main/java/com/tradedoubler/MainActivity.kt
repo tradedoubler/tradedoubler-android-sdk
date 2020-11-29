@@ -1,20 +1,33 @@
 package com.tradedoubler
 
-
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.vivchar.rendererrecyclerviewadapter.*
-import com.tradedoubler.sdk.TradeDoublerSdk
+import com.tradedoubler.sdk.*
 import com.tradedoubler.tradedoublersdk.R
 import kotlinx.android.synthetic.main.activity_main.*
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import java.util.*
+import java.util.concurrent.TimeUnit
+
 
 class MainActivity : AppCompatActivity() {
 
+    private val charPool : List<Char> = ('a'..'z') + ('A'..'Z') + ('0'..'9')
+
+
     private val adapter = RendererRecyclerViewAdapter()
     private val listItems: MutableList<ViewModel> = mutableListOf()
+
+    private val saleEventId = "403759"
+    private val installEventId = "403761"
+    private val sale2EventId = "403763"
+    private val leadEventId = "403765"
+    private val basketSale = "51"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +43,11 @@ class MainActivity : AppCompatActivity() {
         recycler_view.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recycler_view.adapter = adapter
 
+        TradeDoublerSdk.create(applicationContext,initClient())
+        TradeDoublerSdk.getInstance().isLoggingEnabled = true
+        TradeDoublerSdk.getInstance().organizationId = "945630"
+        TradeDoublerSdk.getInstance().secretCode = "12345678"
+
         info.setOnClickListener {
             addItem("tduid: ${TradeDoublerSdk.getInstance().tduid}", "advertisingId: ${TradeDoublerSdk.getInstance().deviceIdentifier}")
         }
@@ -42,8 +60,55 @@ class MainActivity : AppCompatActivity() {
             TradeDoublerSdk.getInstance().automaticInstallReferrerRetrieval = true
         }
 
+        open.setOnClickListener {
+            TradeDoublerSdk.getInstance().trackOpenApp()
+        }
+
+        install.setOnClickListener {
+            TradeDoublerSdk.getInstance().trackInstall(installEventId)
+        }
+
+        open_app.setOnClickListener {
+            addItem("activity intent: ${intent.data}")
+            val newTduid = TradeDoublerSdk.extractTduidFromIntent(intent)
+            newTduid?.run {
+                TradeDoublerSdk.getInstance().tduid = newTduid
+            }
+            addItem("tduid for open: $newTduid")
+        }
+
+        //
+        // sale lead
+        //
+
+        lead.setOnClickListener {
+            TradeDoublerSdk.getInstance().trackLead(leadEventId,"myLeadId")
+        }
+
+        sale.setOnClickListener {
+            val orderNumber = generateId(10)
+            val reportInfo = ReportInfo(
+                listOf(
+                    ReportEntry("25","car", 23.0,5),
+                    ReportEntry("453","bike", 3.0,25)
+                )
+            )
+            TradeDoublerSdk.getInstance().trackSale(saleEventId,orderNumber,"23.56", Currency.getInstance("PLN"),null, reportInfo)
+        }
+
+        sale_plt.setOnClickListener {
+            val orderNumber = generateId(10)
+            val reportInfo = BasketInfo(
+                listOf(
+                    BasketEntry("3408",generateId(3),"plt_cookie", 23.0,5),
+                    BasketEntry("3168",generateId(3),"plt_milk", 3.0,25)
+                )
+            )
+            TradeDoublerSdk.getInstance().trackSalePlt(basketSale,orderNumber, Currency.getInstance("PLN"),null, reportInfo)
+        }
 
     }
+
 
     private fun addItem(vararg values: String){
         for (item in values) {
@@ -52,8 +117,27 @@ class MainActivity : AppCompatActivity() {
         adapter.setItems(listItems.toMutableList())
     }
 
+    private fun generateId(length: Int): String{
+        return (1..length)
+            .map { i -> kotlin.random.Random.nextInt(0, charPool.size) }
+            .map(charPool::get)
+            .joinToString("")
+    }
+
+    private fun initClient(): OkHttpClient {
+        val loggingInterceptor = Interceptor{
+            addItem(it.request().url.toString())
+            it.proceed(it.request())
+        }
+
+        return OkHttpClient.Builder()
+            .followRedirects(true)
+            .followSslRedirects(true)
+            .readTimeout(10000, TimeUnit.MILLISECONDS)
+            .connectTimeout(10000, TimeUnit.MILLISECONDS)
+            .addInterceptor(loggingInterceptor)
+            .build()
+    }
 }
 
-data class TextModel(val text: String): ViewModel{
-
-}
+data class TextModel(val text: String): ViewModel

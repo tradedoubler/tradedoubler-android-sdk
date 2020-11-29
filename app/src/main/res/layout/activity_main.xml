@@ -11,21 +11,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
+            style="@style/Widget.AppCompat.Button.Small"
             android:layout_margin="4dp"
             android:id="@+id/info"
             android:text="Info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></Button>
         <Button
+            style="@style/Widget.AppCompat.Button.Small"
             android:layout_margin="4dp"
             android:id="@+id/aaid"
             android:text="Aaid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></Button>
         <Button
+            style="@style/Widget.AppCompat.Button.Small"
             android:layout_margin="4dp"
             android:id="@+id/referrer_btn"
             android:text="Referrer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></Button>
+        <Button
+            style="@style/Widget.AppCompat.Button.Small"
+            android:layout_margin="4dp"
+            android:id="@+id/open_app"
+            android:text="open app"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></Button>
     </LinearLayout>
