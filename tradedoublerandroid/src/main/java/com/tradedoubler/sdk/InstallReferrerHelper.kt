@@ -8,7 +8,7 @@ import com.android.installreferrer.api.ReferrerDetails
 
 internal object InstallReferrerHelper {
 
-    fun retrieveReferrer(context: Context, successCallback: (String) -> Unit, errorCallback: (String) -> Unit) {
+    fun retrieveReferrer(context: Context, successCallback: (String?) -> Unit, errorCallback: (String) -> Unit) {
 
         val referrerClient = InstallReferrerClient.newBuilder(context).build()
         referrerClient.startConnection(object : InstallReferrerStateListener {
@@ -16,8 +16,8 @@ internal object InstallReferrerHelper {
                 when (responseCode) {
                     InstallReferrerClient.InstallReferrerResponse.OK -> {
                         val response: ReferrerDetails = referrerClient.installReferrer
-                        val referrerUrl  = response.installReferrer //TODO parsing
-                        successCallback.invoke(referrerUrl)
+                        val referrerUrl  = response.installReferrer
+                        successCallback.invoke(TradeDoublerSdkUtils.extractTduidFromQuery(referrerUrl))
                     }
 
                     InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {

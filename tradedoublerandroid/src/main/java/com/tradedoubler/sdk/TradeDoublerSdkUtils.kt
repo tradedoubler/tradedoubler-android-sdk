@@ -3,9 +3,12 @@ package com.tradedoubler.sdk
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.provider.Settings
 import com.tradedoubler.sdk.utils.Constant.LENGTH_STRING
+import com.tradedoubler.sdk.utils.Constant.TDUID
 import java.math.BigInteger
+import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.util.*
@@ -65,6 +68,39 @@ internal object TradeDoublerSdkUtils {
         } catch (e: SecurityException){
             getInstallDate(context)
         }
+    }
+
+    fun extractTduidFromUri(uri: Uri?): String?{
+        return uri?.let { uriNotNull ->
+            uriNotNull.queryParameterNames.firstOrNull { it.equals(TDUID, true) }?.let { key ->
+                uriNotNull.getQueryParameter(key)
+            }
+        }
+    }
+
+    fun extractTduidFromQuery(query: String?): String?{
+        return query?.let { queryNotNull ->
+            // query can be not related to TDUID
+            if(queryNotNull.contains(TDUID,true)){
+                try{
+                    return getHashMapFromQuery(queryNotNull).filter { it.key.equals(TDUID,true) }.values.firstOrNull()
+                }catch (e: java.lang.Exception){
+                    // add some logs
+                }
+
+            }
+            null
+        }
+    }
+
+    private fun getHashMapFromQuery(query: String): Map<String, String> {
+        val queryValues: MutableMap<String, String> = LinkedHashMap()
+        val pairs = query.split("&").toTypedArray()
+        for (pair in pairs) {
+            val idx = pair.indexOf("=")
+            queryValues[URLDecoder.decode(pair.substring(0, idx), Charsets.UTF_8.name()).toLowerCase()] = URLDecoder.decode(pair.substring(idx + 1), Charsets.UTF_8.name())
+        }
+        return queryValues
     }
 
 }

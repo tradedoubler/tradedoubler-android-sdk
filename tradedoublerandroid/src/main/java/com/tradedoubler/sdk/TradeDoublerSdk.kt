@@ -1,6 +1,8 @@
 package com.tradedoubler.sdk
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.util.Patterns
 import com.tradedoubler.sdk.network.HttpRequest
@@ -33,6 +35,18 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         fun create(context: Context, okHttpClient: OkHttpClient): TradeDoublerSdk {
             instance = TradeDoublerSdk(context, okHttpClient)
             return instance!!
+        }
+
+        fun extractTduidFromIntent(intent: Intent?): String?{
+            return extractTduidFromUri(intent?.data)
+        }
+
+        fun extractTduidFromUri(uri: Uri?): String?{
+            return TradeDoublerSdkUtils.extractTduidFromUri(uri)
+        }
+
+        fun extractTduidFromReferrer(referrer: String?): String?{
+            return TradeDoublerSdkUtils.extractTduidFromQuery(referrer)
         }
     }
 
@@ -259,14 +273,18 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             if(automaticInstallReferrerRetrieval){
                 InstallReferrerHelper.retrieveReferrer(context,
                     { tduid ->
-                        logger.logEvent("Referrer id retrieved")
-                        if(BuildConfig.DEBUG){
-                            logger.logEvent("referrer $tduid")
+                        if(tduid != null){
+                            logger.logEvent("tduid form referrer retrieved")
+                            if(BuildConfig.DEBUG){
+                                logger.logEvent("tduid $tduid")
+                            }
+                            this.tduid = tduid
+                        }else{
+                            logger.logEvent("tduid not present in referrer")
                         }
-                        this.tduid = tduid
                     },
                     { errorMessage ->
-                        logger.logEvent("Referrer not retrieved")
+                        logger.logEvent("error during referrer retrival")
                         logger.logError(errorMessage)
                     })
             }

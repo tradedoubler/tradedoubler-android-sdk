@@ -171,10 +171,6 @@ class TradeDoublerSdkTest {
     }
 }
 
-fun waitOnUiThread(millis: Long = 3000L){
-    Espresso.onView(ViewMatchers.isRoot()).perform(waitFor(millis))
-}
-
 fun waitFor(millis: Long): ViewAction {
     return object : ViewAction {
         override fun getConstraints(): Matcher<View> {
