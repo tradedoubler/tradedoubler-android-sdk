@@ -1,4 +1,4 @@
-package com.tradedouble.tradedoublerandroid
+package com.tradedoubler.sdk
 
 import android.content.Context
 import com.google.android.gms.ads.identifier.AdvertisingIdClient

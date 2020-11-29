@@ -1,11 +1,11 @@
-package com.tradedouble.tradedoublerandroid
+package com.tradedoubler.sdk
 
 import android.content.Context
 import android.util.Log
 import android.util.Patterns
-import com.tradedouble.tradedoublerandroid.network.HttpRequest
-import com.tradedouble.tradedoublerandroid.network.NetworkConnection
-import com.tradedouble.tradedoublerandroid.utils.TradeDoublerLogger
+import com.tradedoubler.sdk.network.HttpRequest
+import com.tradedoubler.sdk.network.NetworkConnection
+import com.tradedoubler.sdk.utils.TradeDoublerLogger
 import okhttp3.*
 import java.io.IOException
 import java.util.*

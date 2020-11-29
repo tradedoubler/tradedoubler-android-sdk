@@ -1,4 +1,4 @@
-package com.tradedouble.tradedoublerandroid
+package com.tradedoubler.sdk
 
 import java.net.URLEncoder
 

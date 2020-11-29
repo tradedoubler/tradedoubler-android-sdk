@@ -1,10 +1,10 @@
-package com.tradedouble.tradedoublerandroid
+package com.tradedoubler.sdk
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.provider.Settings
-import com.tradedouble.tradedoublerandroid.utils.Constant.LENGTH_STRING
+import com.tradedoubler.sdk.utils.Constant.LENGTH_STRING
 import java.math.BigInteger
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest

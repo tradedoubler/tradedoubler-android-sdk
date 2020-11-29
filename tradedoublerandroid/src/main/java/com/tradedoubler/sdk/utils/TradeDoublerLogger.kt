@@ -1,4 +1,4 @@
-package com.tradedouble.tradedoublerandroid.utils
+package com.tradedoubler.sdk.utils
 
 import android.util.Log
 

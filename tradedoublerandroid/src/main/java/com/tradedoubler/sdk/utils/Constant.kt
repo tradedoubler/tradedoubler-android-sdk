@@ -1,4 +1,4 @@
-package com.tradedouble.tradedoublerandroid.utils
+package com.tradedoubler.sdk.utils
 
 object Constant {
     const val BASE_TBL_URL = "https://tbl.tradedoubler.com/report"

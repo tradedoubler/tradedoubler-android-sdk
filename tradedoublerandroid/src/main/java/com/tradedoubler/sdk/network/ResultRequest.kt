@@ -1,4 +1,4 @@
-package com.tradedouble.tradedoublerandroid.network
+package com.tradedoubler.sdk.network
 
 interface ResultRequest {
     fun onFailure(code: Int)

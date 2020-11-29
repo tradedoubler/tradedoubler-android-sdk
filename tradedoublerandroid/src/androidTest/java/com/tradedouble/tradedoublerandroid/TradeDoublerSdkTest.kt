@@ -1,4 +1,4 @@
-package com.tradedouble.tradedoublerandroid
+package com.tradedoubler.sdk
 
 import android.view.View
 import androidx.test.espresso.Espresso
@@ -125,21 +125,23 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
-        //tradeDoublerSdk.deviceIdentifier = advertisingId
         tradeDoublerSdk.secretCode = "12345678"
         tradeDoublerSdk.isLoggingEnabled = true
         tradeDoublerSdk.automaticDeviceIdentifierRetrieval = true
 
-//        val reportInfo = BasketInfo(
-//            listOf(
-//                BasketEntry("3408","1243","plt_cookie", 23.0,5),
-//                BasketEntry("3168","3221","plt_milk", 3.0,25)
-//            )
-//        )
+        Thread.sleep(6000)
+    }
 
-        //1411
-        //tradeDoublerSdk.trackSalePlt(basketSale,"141121", Currency.getInstance("EUR"),null, reportInfo)
-        //tradeDoublerSdk.trackSalePlt(sale2EventId,"141121", Currency.getInstance("EUR"),null, reportInfo)
+    @Test
+    fun enableAutomaticReferrerRetrieval() {
+        val tradeDoublerSdk = createSkdClient()
+
+        tradeDoublerSdk.organizationId = orgId
+        tradeDoublerSdk.userEmail = email
+        tradeDoublerSdk.secretCode = "12345678"
+        tradeDoublerSdk.isLoggingEnabled = true
+        tradeDoublerSdk.automaticDeviceIdentifierRetrieval = true
+        tradeDoublerSdk.automaticInstallReferrerRetrieval = true
 
         Thread.sleep(6000)
     }

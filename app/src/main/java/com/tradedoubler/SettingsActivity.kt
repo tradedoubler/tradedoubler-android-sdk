@@ -1,8 +1,9 @@
-package com.tradedouble.tradedoublersdk
+package com.tradedoubler
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
+import com.tradedoubler.tradedoublersdk.R
 
 class SettingsActivity : AppCompatActivity() {
 

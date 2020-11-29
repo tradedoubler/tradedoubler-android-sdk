@@ -1,4 +1,4 @@
-package com.tradedouble.tradedoublerandroid.network
+package com.tradedoubler.sdk.network
 
 import android.content.Context
 import android.net.ConnectivityManager

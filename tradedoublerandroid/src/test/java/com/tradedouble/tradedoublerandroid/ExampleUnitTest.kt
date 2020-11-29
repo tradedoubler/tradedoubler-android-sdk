@@ -1,4 +1,4 @@
-package com.tradedouble.tradedoublerandroid
+package com.tradedoubler.sdk
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
