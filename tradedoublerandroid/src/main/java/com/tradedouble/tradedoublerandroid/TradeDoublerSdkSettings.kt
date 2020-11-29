@@ -2,16 +2,20 @@ package com.tradedouble.tradedoublerandroid
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.tradedouble.tradedoublerandroid.utils.Constant.DEFAULT_LIFE_TIME_VALUE_DAYS
-import com.tradedouble.tradedoublerandroid.utils.Constant.GAID_VALUE
-import com.tradedouble.tradedoublerandroid.utils.Constant.LTV_EXPIRY
-import com.tradedouble.tradedoublerandroid.utils.Constant.ORGANIZATION_ID_VALUE
-import com.tradedouble.tradedoublerandroid.utils.Constant.SECRET_CODE_VALUE
-import com.tradedouble.tradedoublerandroid.utils.Constant.TDUIC_VALUE
-import com.tradedouble.tradedoublerandroid.utils.Constant.TRACKING_FILE
-import com.tradedouble.tradedoublerandroid.utils.Constant.USER_EMAIL_VALUE
 
 internal class TradeDoublerSdkSettings(private val context: Context) {
+
+    companion object{
+        private const val TDUIC_VALUE = "TDUDID_VLAUE"
+        private const val GAID_VALUE = "GAID_VALUE"
+        private const val WAS_INSTALL_TRACKED = "WAS_INSTALL_TRACKED"
+        private const val USER_EMAIL_VALUE = "USER_EMAIL"
+        private const val SECRET_CODE_VALUE = "SECRET_CODE"
+        private const val ORGANIZATION_ID_VALUE = "ORGANIZATION_ID_VALUE"
+        private const val TRACKING_FILE = "td-app-download-tracking.dat"
+        private const val DEFAULT_LIFE_TIME_VALUE_DAYS = 365L
+        private const val LTV_EXPIRY = "ltvExpiry"
+    }
 
     private val settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE)
 
@@ -38,6 +42,11 @@ internal class TradeDoublerSdkSettings(private val context: Context) {
     val deviceIdentifier: String?
         get() {
             return settings.getString(GAID_VALUE, null)
+        }
+
+    val wasInstallTracked: Boolean?
+        get() {
+            return settings.getBoolean(WAS_INSTALL_TRACKED, false)
         }
 
     fun storeTduid(tduid: String?) {

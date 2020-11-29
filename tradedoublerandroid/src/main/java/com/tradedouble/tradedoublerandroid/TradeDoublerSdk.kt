@@ -253,6 +253,24 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             }
         }
 
+    var automaticInstallReferrerRetrieval: Boolean = false
+        set(value){
+            field = value
+            if(automaticInstallReferrerRetrieval){
+                InstallReferrerHelper.retrieveReferrer(context,
+                    { tduid ->
+                        logger.logEvent("Referrer id retrieved")
+                        if(BuildConfig.DEBUG){
+                            logger.logEvent("referrer $tduid")
+                        }
+                        this.tduid = tduid
+                    },
+                    { errorMessage ->
+                        logger.logEvent("Referrer not retrieved")
+                        logger.logError(errorMessage)
+                    })
+            }
+        }
 
     private fun validateSecretCode(secretCode: String?) = validateAndPrintError(secretCode, "secretCode")
 
