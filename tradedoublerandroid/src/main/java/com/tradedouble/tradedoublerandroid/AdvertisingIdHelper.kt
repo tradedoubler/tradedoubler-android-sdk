@@ -1,27 +1,37 @@
 package com.tradedouble.tradedoublerandroid
 
 import android.content.Context
-import androidx.ads.identifier.AdvertisingIdClient
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
+import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 internal object AdvertisingIdHelper {
 
     fun retrieveAdvertisingId(context: Context, successCallback: (String) -> Unit, errorCallback: (String) -> Unit) {
-        if (AdvertisingIdClient.isAdvertisingIdProviderAvailable(context)) {
-            val executor: Executor = Executors.newSingleThreadExecutor()
-            executor.execute {
-                val advertisingIdInfoListenableFuture = AdvertisingIdClient.getAdvertisingIdInfo(context)
+        val executor: Executor = Executors.newSingleThreadExecutor()
+        executor.execute {
+            var adInfo: AdvertisingIdClient.Info? = null
+            try {
+                adInfo = AdvertisingIdClient.getAdvertisingIdInfo(context)
+            } catch (e: Exception) {
+                errorCallback.invoke("Could not fetch advertising id")
+            } catch (e: GooglePlayServicesNotAvailableException) {
+                errorCallback.invoke("Could not fetch advertising id, Google Play Service not available")
+            } catch (e: GooglePlayServicesRepairableException) {
+                errorCallback.invoke("Could not fetch advertising id, Google Play Service need repairing")
+            }
+            if (adInfo != null) {
                 try {
-                    val info = advertisingIdInfoListenableFuture.get()
-                    successCallback.invoke(info.id)
-                }
-                catch (e: java.lang.Exception){
-                    errorCallback.invoke("Exception during retrieving aaid")
+                    successCallback.invoke(adInfo.id)
+                } catch (e: ExecutionException) {
+                    errorCallback.invoke("Could not fetch advertising id, ExecutionException")
+                } catch (e: InterruptedException) {
+                    errorCallback.invoke("Could not fetch advertising id, InterruptedException")
                 }
             }
-        } else {
-            return errorCallback.invoke("The Advertising ID client library is unavailable. Use a different")
         }
     }
 }
