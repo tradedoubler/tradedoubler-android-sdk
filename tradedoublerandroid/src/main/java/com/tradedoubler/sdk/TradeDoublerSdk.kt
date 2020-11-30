@@ -7,6 +7,7 @@ import android.util.Log
 import android.util.Patterns
 import com.tradedoubler.sdk.network.HttpRequest
 import com.tradedoubler.sdk.network.NetworkConnection
+import com.tradedoubler.sdk.utils.OfflineDatabase
 import com.tradedoubler.sdk.utils.TradeDoublerLogger
 import okhttp3.*
 import java.io.IOException
@@ -17,6 +18,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
 
     private val settings: TradeDoublerSdkSettings = TradeDoublerSdkSettings(context)
     private val logger: TradeDoublerLogger = TradeDoublerLogger(false)
+    private val offlineDatabase = OfflineDatabase(context)
     private var networkConnection: NetworkConnection = NetworkConnection(context)
 
     companion object {
@@ -306,23 +308,38 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
     }
 
     private fun appendRequest(requestUrl: String) {
-        val request = Request.Builder().url(requestUrl).get().build()
+        val request = offlineDatabase.insertUrl(requestUrl)
+        if(networkConnection.isNetworkAvailable()) {
+            offlineDatabase.peekUrlById(request.id)?.also {
+                performRequest(it)
+            }
+        }
+    }
+
+    private fun checkPendingRequests() {
+        offlineDatabase.peekOldestUrl()?.also { offlineUrl ->
+            performRequest(offlineUrl)
+        }
+    }
+
+    private fun performRequest(offlineUrl: OfflineDatabase.OfflineUrl) {
+        val url = offlineUrl.url
+        val request = Request.Builder().url(url).get().build()
         val call = client.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                if(logger.isLoggingEnabled) {
+                if (logger.isLoggingEnabled) {
                     logger.logEvent(Log.getStackTraceString(e))
                 }
+                appendRequest(url)
             }
 
             @Throws(IOException::class)
-            override fun onResponse(
-                call: Call,
-                response: Response
-            ) {
+            override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
                     if (response.code in 200..300) {
-
+                        offlineDatabase.deleteUrl(offlineUrl.id)
+                        checkPendingRequests()
                     } else {
                         logger.logEvent("Request failed with code: ${response.code}")
                     }

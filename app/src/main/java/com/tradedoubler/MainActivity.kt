@@ -166,7 +166,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun initClient(): OkHttpClient {
         val loggingInterceptor = Interceptor{
-            addItem(it.request().url.toString())
+            window?.decorView?.post {
+                addItem(it.request().url.toString())
+            }
             it.proceed(it.request())
         }
 
