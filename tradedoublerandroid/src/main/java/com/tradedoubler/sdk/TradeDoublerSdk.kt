@@ -107,10 +107,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             return
         }
 
-        if (tduid.isNullOrBlank()) {
-            return
-        }
-
         fun buildTrackOpenUrl(extId: String): String {
             return HttpRequest.trackingOpen(organizationId, extId, tduid, "1")
         }
@@ -134,10 +130,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val googleAdvertisingId = settings.deviceIdentifier
 
         if(!validateOrganizationId(organizationId)){
-            return
-        }
-
-        if (tduid.isNullOrBlank()) {
             return
         }
 
@@ -211,9 +203,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         if(!validateOrganizationId(organizationId)){
             return
         }
-        if (tduid.isNullOrBlank()) {
-            return
-        }
 
         fun buildTrackSalPltUrl(extId: String): String {
             return HttpRequest.trackingSalePLT(
@@ -247,10 +236,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val leadNumber = TradeDoublerSdkUtils.getRandomString() + TradeDoublerSdkUtils.getInstallDate(context)
 
         if(!validateOrganizationId(organizationId)){
-            return
-        }
-
-        if (tduid.isNullOrBlank()) {
             return
         }
 
