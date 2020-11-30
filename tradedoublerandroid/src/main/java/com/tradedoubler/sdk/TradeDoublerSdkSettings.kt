@@ -39,7 +39,7 @@ internal class TradeDoublerSdkSettings(private val context: Context) {
             return settings.getString(SECRET_CODE_VALUE, null)
         }
 
-    val deviceIdentifier: String?
+    val advertisingIdentifier: String?
         get() {
             return settings.getString(GAID_VALUE, null)
         }
@@ -49,13 +49,21 @@ internal class TradeDoublerSdkSettings(private val context: Context) {
             return settings.getBoolean(WAS_INSTALL_TRACKED, false)
         }
 
+    private val tduidExpireTime: Long
+        get() {
+            return settings.getLong(LTV_EXPIRY,calculateLtvExpiry())
+        }
+
     fun storeTduid(tduid: String?) {
         val editor = settings.edit()
+        if(this.tduid != tduid){
+            editor.putLong(LTV_EXPIRY,calculateLtvExpiry())
+        }
         editor.putString(TDUIC_VALUE, tduid)
         editor.commit()
     }
 
-    fun storeDeviceIdentifier(googleAdvertisingId: String?) {
+    fun storeAdvertisingIdentifier(googleAdvertisingId: String?) {
         val editor = settings.edit()
         if (googleAdvertisingId != null) editor.putString(GAID_VALUE, googleAdvertisingId)
         editor.commit()

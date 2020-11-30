@@ -74,10 +74,10 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         }
 
     var deviceIdentifier: String?
-        get() = settings.deviceIdentifier
+        get() = settings.advertisingIdentifier
         set(googleAdvertisingId) {
             val generateSHA56Hash = TradeDoublerSdkUtils.generateSHA56Hash(googleAdvertisingId)
-            settings.storeDeviceIdentifier(generateSHA56Hash)
+            settings.storeAdvertisingIdentifier(generateSHA56Hash)
         }
 
     var secretCode: String?
@@ -101,7 +101,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val organizationId = settings.organizationId
         val tduid = settings.tduid
         val userEmail = settings.userEmail
-        val googleAdvertisingId = settings.deviceIdentifier
+        val googleAdvertisingId = settings.advertisingIdentifier
 
         if(!validateOrganizationId(organizationId)){
             return
@@ -127,7 +127,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val organizationId = settings.organizationId
         val tduid = settings.tduid
         val userEmail = settings.userEmail
-        val googleAdvertisingId = settings.deviceIdentifier
+        val googleAdvertisingId = settings.advertisingIdentifier
 
         if(!validateOrganizationId(organizationId)){
             return
@@ -162,7 +162,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
 
         val tduid = settings.tduid
         val userEmail = settings.userEmail
-        val googleAdvertisingId = settings.deviceIdentifier
+        val googleAdvertisingId = settings.advertisingIdentifier
 
         if (tduid.isNullOrBlank()) {
             return
@@ -198,7 +198,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val organizationId = settings.organizationId
         val tduid = settings.tduid
         val userEmail = settings.userEmail
-        val googleAdvertisingId = settings.deviceIdentifier
+        val googleAdvertisingId = settings.advertisingIdentifier
 
         if(!validateOrganizationId(organizationId)){
             return
@@ -232,7 +232,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val tduid = settings.tduid
         val organizationId = settings.organizationId
         val userEmail = settings.userEmail
-        val googleAdvertisingId = settings.deviceIdentifier
+        val googleAdvertisingId = settings.advertisingIdentifier
         val leadNumber = TradeDoublerSdkUtils.getRandomString() + TradeDoublerSdkUtils.getInstallDate(context)
 
         if(!validateOrganizationId(organizationId)){
