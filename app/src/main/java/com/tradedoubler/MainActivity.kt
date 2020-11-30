@@ -5,6 +5,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.installreferrer.api.InstallReferrerClient
+import com.android.installreferrer.api.InstallReferrerStateListener
+import com.android.installreferrer.api.ReferrerDetails
 import com.github.vivchar.rendererrecyclerviewadapter.*
 import com.tradedoubler.sdk.*
 import com.tradedoubler.tradedoublersdk.R
@@ -58,6 +61,8 @@ class MainActivity : AppCompatActivity() {
 
         referrer_btn.setOnClickListener {
             TradeDoublerSdk.getInstance().automaticInstallReferrerRetrieval = true
+
+            retrieveReferrer()
         }
 
         open.setOnClickListener {
@@ -107,6 +112,41 @@ class MainActivity : AppCompatActivity() {
             TradeDoublerSdk.getInstance().trackSalePlt(basketSale,orderNumber, Currency.getInstance("PLN"),null, reportInfo)
         }
 
+    }
+
+    private fun retrieveReferrer(){
+        val referrerClient = InstallReferrerClient.newBuilder(this).build()
+        referrerClient.startConnection(object : InstallReferrerStateListener {
+            override fun onInstallReferrerSetupFinished(responseCode: Int) {
+                when (responseCode) {
+                    InstallReferrerClient.InstallReferrerResponse.OK -> {
+                        val response: ReferrerDetails = referrerClient.installReferrer
+                        val referrerUrl  = response.installReferrer
+                        addItem("full referrer $referrerUrl")
+                    }
+
+                    InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {
+                        addItem("Install referrer, feature not supported")
+                    }
+
+                    InstallReferrerClient.InstallReferrerResponse.SERVICE_UNAVAILABLE -> {
+                        addItem("Install referrer, service unavailable")
+                    }
+
+                    InstallReferrerClient.InstallReferrerResponse.SERVICE_DISCONNECTED -> {
+                        addItem("Install referrer, service disconnected")
+                    }
+
+                    InstallReferrerClient.InstallReferrerResponse.DEVELOPER_ERROR -> {
+                        addItem("Install referrer, developer error")
+                    }
+                }
+            }
+
+            override fun onInstallReferrerServiceDisconnected() {
+                addItem("Install referrer, developer error")
+            }
+        })
     }
 
 
