@@ -12,6 +12,7 @@ import com.jakewharton.espresso.OkHttp3IdlingResource
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.hamcrest.Matcher
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.*
@@ -144,6 +145,38 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.automaticInstallReferrerRetrieval = true
 
         Thread.sleep(6000)
+    }
+
+    @Test
+    fun retrieveTduidFromReferrer(){
+        Assert.assertEquals("123123",TradeDoublerSdkUtils.extractTduidFromQuery("tduid=123123"))
+        Assert.assertEquals("123123",TradeDoublerSdkUtils.extractTduidFromQuery("TduId=723654"))
+        Assert.assertNull(TradeDoublerSdkUtils.extractTduidFromQuery("TduuId=723654"))
+    }
+
+    @Test
+    fun whenTduidExpireTimeNotPassedTduidIsValid(){
+        //given
+        val settings = TradeDoublerSdkSettings(InstrumentationRegistry.getInstrumentation().targetContext)
+
+        //when
+        settings.storeTduid("213123")
+
+        //then
+        Assert.assertEquals("213213", settings.tduid)
+    }
+
+    @Test
+    fun whenTduidExpireTimeNotPassedTduidIsNotValid(){
+        //given
+        val settings = TradeDoublerSdkSettings(InstrumentationRegistry.getInstrumentation().targetContext)
+        settings.storeTduid("213123")
+
+        //when
+        settings.settings.edit().putLong(TradeDoublerSdkSettings.LTV_EXPIRY,System.currentTimeMillis() - 6 * 1000).commit()
+
+        //then
+        Assert.assertNull( settings.tduid)
     }
 
     private fun createSkdClient(): TradeDoublerSdk {

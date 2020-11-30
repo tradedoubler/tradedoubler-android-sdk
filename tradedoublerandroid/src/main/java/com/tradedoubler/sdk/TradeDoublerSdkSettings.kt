@@ -14,13 +14,20 @@ internal class TradeDoublerSdkSettings(private val context: Context) {
         private const val ORGANIZATION_ID_VALUE = "ORGANIZATION_ID_VALUE"
         private const val TRACKING_FILE = "td-app-download-tracking.dat"
         private const val DEFAULT_LIFE_TIME_VALUE_DAYS = 365L
-        private const val LTV_EXPIRY = "ltvExpiry"
+        internal const val LTV_EXPIRY = "ltvExpiry"
     }
 
-    private val settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE)
+    internal val settings = context.getSharedPreferences(TRACKING_FILE, Context.MODE_PRIVATE)
 
     val tduid: String?
+        @SuppressLint("ApplySharedPref")
         get() {
+            if(tduidExpireTime < System.currentTimeMillis()){
+                settings.edit().apply {
+                    remove(TDUIC_VALUE)
+                    remove(LTV_EXPIRY)
+                }.commit()
+            }
             return settings.getString(TDUIC_VALUE, null)
         }
 
@@ -81,17 +88,8 @@ internal class TradeDoublerSdkSettings(private val context: Context) {
         editor.commit()
     }
 
-    val ltvExpiry: String?
-        get() {
-            return settings.getString(LTV_EXPIRY, "")
-        }
-
-    fun calculateLtvExpiry(ltvDays: Long): Long {
-        var days = ltvDays
-        if (days <= 0) {
-            days = DEFAULT_LIFE_TIME_VALUE_DAYS
-        }
-        return System.currentTimeMillis() + days * 24 * 60 * 60 * 1000
+    private fun calculateLtvExpiry(): Long {
+        return System.currentTimeMillis() + DEFAULT_LIFE_TIME_VALUE_DAYS * 24 * 60 * 60 * 1000
     }
 
     @SuppressLint("ApplySharedPref")
