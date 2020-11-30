@@ -92,7 +92,12 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             logger.isLoggingEnabled = value
         }
 
+    var isTrackingEnabled: Boolean = true
+
     fun trackOpenApp() {
+        if(!isTrackingEnabled){
+            return
+        }
         val organizationId = settings.organizationId
         val tduid = settings.tduid
         val userEmail = settings.userEmail
@@ -120,6 +125,9 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
     }
 
     fun trackLead(leadEventId: String, leadId: String) {
+        if(!isTrackingEnabled){
+            return
+        }
         val organizationId = settings.organizationId
         val tduid = settings.tduid
         val userEmail = settings.userEmail
@@ -147,6 +155,9 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
     }
 
     fun trackSale(saleEventId: String, orderNumber: String, orderValue: String, currency: Currency, voucherCode: String?, reportInfo: ReportInfo?) {
+        if(!isTrackingEnabled){
+            return
+        }
         val organizationId = settings.organizationId
         val secretCode = settings.secretCode
 
@@ -189,6 +200,9 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
     }
 
     fun trackSalePlt(saleEventId: String, orderNumber: String, currency: Currency, voucherCode: String?, reportInfo: BasketInfo) {
+        if(!isTrackingEnabled){
+            return
+        }
         val organizationId = settings.organizationId
         val tduid = settings.tduid
         val userEmail = settings.userEmail
@@ -223,6 +237,9 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
     }
 
     fun trackInstall(appInstallEventId: String) {
+        if(!isTrackingEnabled){
+            return
+        }
         val tduid = settings.tduid
         val organizationId = settings.organizationId
         val userEmail = settings.userEmail
