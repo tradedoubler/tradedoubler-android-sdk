@@ -98,7 +98,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val userEmail = settings.userEmail
         val googleAdvertisingId = settings.deviceIdentifier
 
-        if(validateOrganizationId(organizationId)){
+        if(!validateOrganizationId(organizationId)){
             return
         }
 
