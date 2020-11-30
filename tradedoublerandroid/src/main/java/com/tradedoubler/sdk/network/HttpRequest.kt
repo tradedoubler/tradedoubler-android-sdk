@@ -37,6 +37,7 @@ object HttpRequest {
         urlBuilder.addQueryParameter(EVENT_ID, appInstallEventId)
         urlBuilder.addQueryParameter(LEAD_NUMBER, leadNumber)
         urlBuilder.addQueryParameter(TDUID, tduid)
+        urlBuilder.addQueryParameter(EXT_TYP, "1")
         urlBuilder.addQueryParameter(EXT_ID, extId)
         return urlBuilder.toString()
     }
