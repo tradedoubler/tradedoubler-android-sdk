@@ -30,6 +30,18 @@
                 <data android:scheme="https" android:host="www.tradedoubler.com" android:pathPattern=".*"/>
             </intent-filter>
         </activity>
+
+
+        <activity android:name="com.tradedoubler.SettingsActivity">
+
+        </activity>
+
+        <activity android:name="com.tradedoubler.TrackingLeadActivity">
+
+        </activity>
+
+
+
     </application>
 
 </manifest>
