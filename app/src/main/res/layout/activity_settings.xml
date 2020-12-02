@@ -35,6 +35,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
@@ -43,6 +44,7 @@
             android:id="@+id/organizationIdInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="number"
             android:hint="Organization Id" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -54,12 +56,14 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
+        app:errorEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/organizationIdInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/userEmailInput"
+            android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="User Email" />
@@ -72,16 +76,18 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
+        app:errorEnabled="true"
         android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/organizationIdInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/userEmailInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/userEmailInput"
+            android:id="@+id/secretCodeInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="User Email" />
+            android:hint="Secret Code"
+            android:inputType="number" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
@@ -89,12 +95,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:text="Call tracking open"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userEmailInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/secertCodeInputLayout" />
 
     <Button
         android:id="@+id/tracking_lead_button"

@@ -9,5 +9,7 @@ class TrackingLeadActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tracking_lead)
+
+        val eventId = eventIdEditText
     }
 }
