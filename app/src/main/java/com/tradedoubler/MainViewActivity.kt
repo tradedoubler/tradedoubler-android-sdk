@@ -21,6 +21,17 @@ class MainViewActivity: AppCompatActivity() {
         advertising_text.text = TradeDoublerSdk.getInstance().deviceIdentifier
         tduid_text.text = TradeDoublerSdk.getInstance().tduid
 
+        isLoggingCheckBox.isChecked = TradeDoublerSdk.getInstance().isLoggingEnabled
+        isLoggingCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            TradeDoublerSdk.getInstance().isLoggingEnabled = isChecked
+        }
+
+        isTrackingCheckBox.isChecked = TradeDoublerSdk.getInstance().isTrackingEnabled
+        isTrackingCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            TradeDoublerSdk.getInstance().isTrackingEnabled = isChecked
+        }
+
+
         setting_view.setOnClickListener {
             val intent = Intent(this , SettingsActivity::class.java)
             startActivity(intent)

@@ -13,14 +13,15 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val organizationId = organizationIdInput.value
-        val userEmail = userEmailInput.value
-        var secretCode = secretCodeInput.value
+
 
         tracking_open_button.setOnClickListener {
 
-            var hasError = false
+            val organizationId = organizationIdInput.value
+            val userEmail = userEmailInput.value
+            val secretCode = secretCodeInput.value
 
+            var hasError = false
 
             if (organizationId.isEmpty()) {
                 hasError = true
@@ -46,6 +47,10 @@ class SettingsActivity : AppCompatActivity() {
 
         tracking_lead_button.setOnClickListener {
 
+            val organizationId = organizationIdInput.value
+            val userEmail = userEmailInput.value
+            val secretCode = secretCodeInput.value
+
             var hasError = false
 
             if (organizationId.isEmpty()) {
@@ -64,13 +69,16 @@ class SettingsActivity : AppCompatActivity() {
             }
 
             if (!hasError){
-
-                val intent = Intent(this , SettingsActivity::class.java)
+                val intent = Intent(this , TrackingLeadActivity::class.java)
                 startActivity(intent)
             }
         }
 
         tracking_sale_button.setOnClickListener {
+
+            val organizationId = organizationIdInput.value
+            val userEmail = userEmailInput.value
+            val secretCode = secretCodeInput.value
 
             var hasError = false
 
@@ -87,6 +95,18 @@ class SettingsActivity : AppCompatActivity() {
 
             if (userEmail.isValidEmail() && userEmail.isNotEmpty()) {
                 TradeDoublerSdk.getInstance().userEmail = userEmail
+            }
+
+            if (secretCode.isEmpty()){
+                hasError = true
+                secertCodeInputLayout.error = "Provide the paramter secret Code"
+            }else {
+                TradeDoublerSdk.getInstance().secretCode = secretCode
+            }
+
+            if (!hasError){
+                val intent = Intent(this , TrackingSaleActivity::class.java)
+                startActivity(intent)
             }
         }
     }

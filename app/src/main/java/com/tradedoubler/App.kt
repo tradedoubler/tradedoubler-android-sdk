@@ -10,7 +10,5 @@ class App : Application() {
 
         TradeDoublerSdk.create(this)
         TradeDoublerSdk.getInstance().isLoggingEnabled = true
-        TradeDoublerSdk.getInstance().organizationId = "945630"
-        //TradeDoublerSdk.getInstance().userEmail = "magdalena.dziesinska@britenet.com.pl"
     }
 }

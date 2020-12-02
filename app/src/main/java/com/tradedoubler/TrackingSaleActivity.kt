@@ -10,11 +10,6 @@ class TrackingSaleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tracking_sale)
 
-        val extras = intent.extras
-        if (extras != null) {
-            val locationId = extras.getString(SECRET_CODE)
-
-        }
 
     }
 }
