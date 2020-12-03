@@ -128,8 +128,7 @@ object HttpRequest {
                 "tduid(${tduid ?: ""})" +
                 "extid($extId)" +
                 "exttype(1)" +
-                // "type(iframe)" +
-                //"voucher(${voucherCode ?: ""})" + TODO VOUCHER
+                 if(voucherCode != null) "voucher(${voucherCode ?: ""})" else "" +
                 "enc(3)" +
                 basket.toEncodedString()
         return BASE_URL_SALE + queryParam
