@@ -13,7 +13,9 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-
+        organizationIdInput.value = TradeDoublerSdk.getInstance().organizationId ?: ""
+        userEmailInput.value = TradeDoublerSdk.getInstance().userEmail ?: ""
+        secretCodeInput.value = TradeDoublerSdk.getInstance().secretCode ?: ""
 
         tracking_open_button.setOnClickListener {
 
