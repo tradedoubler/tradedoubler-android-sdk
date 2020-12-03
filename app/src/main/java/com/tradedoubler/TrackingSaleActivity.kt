@@ -81,6 +81,20 @@ class TrackingSaleActivity : AppCompatActivity() {
                     Toast.makeText(this, "Please add anything Reports", Toast.LENGTH_LONG).show()
                 }
 
+            if (eventId.isEmpty()){
+                hasError = true
+                saleEventIdInputLayout.error = "Provide the paramter event Id."
+            }
+
+            if (orderValue.isEmpty()) {
+                hasError = true
+                orderValueInputLayout.error = "Provide the paramter order value."
+            }
+
+            if (orderValue.isNotEmpty() && orderValue.toDouble() <=0.00){
+                orderValueInputLayout.error = "Paramter orderValue cannot be negative."
+            }
+
             if (!hasError) {
 
                 TradeDoublerSdk.getInstance()
@@ -89,7 +103,7 @@ class TrackingSaleActivity : AppCompatActivity() {
                         orderNumber = generateId(5),
                         orderValue = orderValue,
                         voucherCode = voucherCode,
-                        currency = Currency.getInstance("PLN"),
+                        currency = Currency.getInstance(currency),
                         reportInfo = ReportInfo(reportEntries = reportInfoAdapter.data.toList())
                     )
             }
