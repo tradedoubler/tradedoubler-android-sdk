@@ -40,6 +40,8 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
 
     companion object {
 
+        const val DEFAULT_SALE_EVENT = "51"
+
         @Volatile
         private var instance: TradeDoublerSdk? = null
 
@@ -208,6 +210,10 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         if (!googleAdvertisingId.isNullOrEmpty()) {
             appendRequest(buildTrackSaleUrl(googleAdvertisingId))
         }
+    }
+
+    fun trackSalePlt(orderNumber: String, currency: Currency, voucherCode: String?, reportInfo: BasketInfo){
+        trackSalePlt(DEFAULT_SALE_EVENT,orderNumber,currency,voucherCode,reportInfo)
     }
 
     fun trackSalePlt(saleEventId: String, orderNumber: String, currency: Currency, voucherCode: String?, reportInfo: BasketInfo) {
