@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         aaid.setOnClickListener {
-            TradeDoublerSdk.getInstance().automaticDeviceIdentifierRetrieval = true
+            TradeDoublerSdk.getInstance().automaticAdvertisingIdRetrieval = true
         }
 
         referrer_btn.setOnClickListener {

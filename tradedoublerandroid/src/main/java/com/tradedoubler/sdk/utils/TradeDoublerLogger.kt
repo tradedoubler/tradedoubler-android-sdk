@@ -10,7 +10,7 @@ class TradeDoublerLogger(var isLoggingEnabled: Boolean){
 
     fun logEvent(event: String){
         if(isLoggingEnabled){
-            Log.d(logTag,event)
+            Log.d(logTag, event)
         }
     }
 

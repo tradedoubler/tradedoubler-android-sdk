@@ -1,7 +1,6 @@
 package com.tradedoubler.sdk
 
 import android.view.View
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -128,7 +127,7 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.userEmail = email
         tradeDoublerSdk.secretCode = "12345678"
         tradeDoublerSdk.isLoggingEnabled = true
-        tradeDoublerSdk.automaticDeviceIdentifierRetrieval = true
+        tradeDoublerSdk.automaticAdvertisingIdRetrieval = true
 
         Thread.sleep(6000)
     }
@@ -141,7 +140,7 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.userEmail = email
         tradeDoublerSdk.secretCode = "12345678"
         tradeDoublerSdk.isLoggingEnabled = true
-        tradeDoublerSdk.automaticDeviceIdentifierRetrieval = true
+        tradeDoublerSdk.automaticAdvertisingIdRetrieval = true
         tradeDoublerSdk.automaticInstallReferrerRetrieval = true
 
         Thread.sleep(6000)

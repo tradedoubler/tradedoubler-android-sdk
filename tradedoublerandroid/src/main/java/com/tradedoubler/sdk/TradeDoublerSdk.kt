@@ -254,10 +254,10 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         }
     }
 
-    var automaticDeviceIdentifierRetrieval: Boolean = false
+    var automaticAdvertisingIdRetrieval: Boolean = false
         set(value){
             field = value
-            if(automaticDeviceIdentifierRetrieval){
+            if(automaticAdvertisingIdRetrieval){
                 AdvertisingIdHelper.retrieveAdvertisingId(context,
                     { aaId ->
                         logger.logEvent("Android advertising id retrieved")
