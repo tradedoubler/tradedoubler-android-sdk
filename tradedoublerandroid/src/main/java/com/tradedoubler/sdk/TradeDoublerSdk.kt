@@ -94,7 +94,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             }
         }
 
-    var deviceIdentifier: String?
+    var advertisingId: String?
         get() = settings.advertisingIdentifier
         set(googleAdvertisingId) {
             val generateSHA56Hash = TradeDoublerSdkUtils.generateSHA56Hash(googleAdvertisingId)
@@ -184,10 +184,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val tduid = settings.tduid
         val userEmail = settings.userEmail
         val googleAdvertisingId = settings.advertisingIdentifier
-
-        if (tduid.isNullOrBlank()) {
-            return
-        }
 
         fun buildTrackSaleUrl(extId: String): String {
             return HttpRequest.trackingSale(
@@ -284,12 +280,12 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
                 AdvertisingIdHelper.retrieveAdvertisingId(context,
                     { aaId ->
                         logger.logEvent("Android advertising id retrieved")
-                        deviceIdentifier = aaId
+                        advertisingId = aaId
                     },
                     { errorMessage ->
                         logger.logEvent("Android advertising not retrieved, performing fallback to android id")
                         logger.logError(errorMessage)
-                        deviceIdentifier = TradeDoublerSdkUtils.getAndroidId(context)
+                        advertisingId = TradeDoublerSdkUtils.getAndroidId(context)
                     })
             }
         }

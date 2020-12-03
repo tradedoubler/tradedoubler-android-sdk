@@ -55,7 +55,7 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
-        tradeDoublerSdk.deviceIdentifier = advertisingId
+        tradeDoublerSdk.advertisingId = advertisingId
 
         tradeDoublerSdk.trackOpenApp()
     }
@@ -67,7 +67,7 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
-        tradeDoublerSdk.deviceIdentifier = advertisingId
+        tradeDoublerSdk.advertisingId = advertisingId
 
         tradeDoublerSdk.trackInstall(installEventId)
 
@@ -81,7 +81,7 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
-        tradeDoublerSdk.deviceIdentifier = advertisingId
+        tradeDoublerSdk.advertisingId = advertisingId
 
         tradeDoublerSdk.trackLead(leadEventId,"734")
 
@@ -96,13 +96,13 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
-        tradeDoublerSdk.deviceIdentifier = advertisingId
+        tradeDoublerSdk.advertisingId = advertisingId
         tradeDoublerSdk.secretCode = "12345678"
 
         val reportInfo = ReportInfo(
             listOf(
-                ReportEntry("25","car", 23.0,5),
-                ReportEntry("453","bike", 3.0,25)
+                ReportEntry("25","carółść", 23.0,5),
+                ReportEntry("453","bikeółść", 3.0,25)
             )
         )
 
@@ -118,13 +118,13 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
-        tradeDoublerSdk.deviceIdentifier = advertisingId
+        tradeDoublerSdk.advertisingId = advertisingId
         tradeDoublerSdk.secretCode = "12345678"
 
         val reportInfo = BasketInfo(
             listOf(
-                BasketEntry("3408","1243","plt_cookie", 23.0,5),
-                BasketEntry("3168","3221","plt_milk", 3.0,25)
+                BasketEntry("3408","1243","plt_cookieółść", 23.0,5),
+                BasketEntry("3168","3221","plt_milkółść", 3.0,25)
             )
         )
 
@@ -179,7 +179,7 @@ class TradeDoublerSdkTest {
         settings.storeTduid("213123")
 
         //then
-        Assert.assertEquals("213213", settings.tduid)
+        Assert.assertEquals("213123", settings.tduid)
     }
 
     @Test
