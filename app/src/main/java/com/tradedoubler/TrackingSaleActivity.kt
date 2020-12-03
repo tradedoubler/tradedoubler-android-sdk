@@ -1,6 +1,9 @@
 package com.tradedoubler
 
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,6 +12,12 @@ import com.tradedoubler.sdk.ReportInfo
 import com.tradedoubler.sdk.TradeDoublerSdk
 import com.tradedoubler.tradedoublersdk.R
 import kotlinx.android.synthetic.main.activity_tracking_sale.*
+import kotlinx.android.synthetic.main.activity_tracking_sale.priceEditText
+import kotlinx.android.synthetic.main.activity_tracking_sale.priceInputLayout
+import kotlinx.android.synthetic.main.activity_tracking_sale.productNameInputLayout
+import kotlinx.android.synthetic.main.activity_tracking_sale.quantityEditText
+import kotlinx.android.synthetic.main.activity_tracking_sale.quantityInputLayout
+import kotlinx.android.synthetic.main.activity_tracking_sale_plt.*
 import java.util.*
 
 class TrackingSaleActivity : AppCompatActivity() {
@@ -19,6 +28,7 @@ class TrackingSaleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tracking_sale)
         setRecycleView()
+        setSpinnerCurrency()
 
         add_report_info.setOnClickListener {
 
@@ -59,27 +69,23 @@ class TrackingSaleActivity : AppCompatActivity() {
             }
         }
 
-
         call_tracking_sale_button.setOnClickListener {
             var hasError = false
-
-            val saleEventId = saveEventIdEditText.value
+            val eventId = saleEventIdEditText.value
             val orderValue = orderValueEditText.value
             val voucherCode = voucherCodeEditText.value
-
+            val currency = currencySpinner.selectedItem.toString()
 
                 if (reportInfoAdapter.data.size == 0) {
                     hasError = true
                     Toast.makeText(this, "Please add anything Reports", Toast.LENGTH_LONG).show()
                 }
 
-
-
             if (!hasError) {
 
                 TradeDoublerSdk.getInstance()
                     .trackSale(
-                        saleEventId = saleEventId,
+                        saleEventId = eventId,
                         orderNumber = generateId(5),
                         orderValue = orderValue,
                         voucherCode = voucherCode,
@@ -98,5 +104,15 @@ class TrackingSaleActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context)
             adapter = reportInfoAdapter
         }
+    }
+
+    private fun setSpinnerCurrency() {
+        val currency = resources.getStringArray(R.array.currency)
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item, currency
+        )
+        currencySpinner.adapter = adapter
+
     }
 }

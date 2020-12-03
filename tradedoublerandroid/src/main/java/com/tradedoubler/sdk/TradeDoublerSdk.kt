@@ -193,7 +193,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         }
     }
 
-    fun trackSalePlt(saleEventId: String, orderNumber: String, currency: Currency, voucherCode: String?, reportInfo: BasketInfo) {
+    fun trackSalePlt(saleEventId: String, orderNumber: String, currency: Currency, voucherCode: String?, basketInfo: BasketInfo) {
         if(!isTrackingEnabled){
             return
         }
@@ -215,7 +215,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
                 tduid,
                 extId,
                 voucherCode,
-                reportInfo
+                basketInfo
             )
         }
 

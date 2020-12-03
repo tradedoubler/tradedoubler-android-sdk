@@ -111,5 +111,41 @@ class SettingsActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+
+        tracking_sale_plt_button.setOnClickListener {
+            val organizationId = organizationIdInput.value
+            val userEmail = userEmailInput.value
+            val secretCode = secretCodeInput.value
+
+            var hasError = false
+
+            if (organizationId.isEmpty()) {
+                hasError = true
+                organizationIdInputLayout.error = "Provide the paramter organization Id"
+            } else {
+                TradeDoublerSdk.getInstance().organizationId = organizationId
+            }
+
+            if (!userEmail.isValidEmail() && userEmail.isNotEmpty()) {
+                userEmailInputLayout.error = "Incorrect email"
+            }
+
+            if (userEmail.isValidEmail() && userEmail.isNotEmpty()) {
+                TradeDoublerSdk.getInstance().userEmail = userEmail
+            }
+
+            if (secretCode.isEmpty()){
+                hasError = true
+                secertCodeInputLayout.error = "Provide the paramter secret Code"
+            }else {
+                TradeDoublerSdk.getInstance().secretCode = secretCode
+            }
+
+            if (!hasError){
+                val intent = Intent(this , TrackingSalePltActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
     }
 }
