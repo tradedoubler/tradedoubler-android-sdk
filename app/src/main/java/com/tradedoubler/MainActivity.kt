@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         TradeDoublerSdk.getInstance().secretCode = "12345678"
 
         info.setOnClickListener {
-            addItem("tduid: ${TradeDoublerSdk.getInstance().tduid}", "advertisingId: ${TradeDoublerSdk.getInstance().deviceIdentifier}")
+            addItem("tduid: ${TradeDoublerSdk.getInstance().tduid}", "advertisingId: ${TradeDoublerSdk.getInstance().advertisingId}")
         }
 
         aaid.setOnClickListener {
@@ -92,10 +92,7 @@ class MainActivity : AppCompatActivity() {
 
         open_app.setOnClickListener {
             addItem("activity intent: ${intent.data}")
-            val newTduid = TradeDoublerSdk.extractTduidFromIntent(intent)
-            newTduid?.run {
-                TradeDoublerSdk.getInstance().tduid = newTduid
-            }
+            val newTduid = TradeDoublerSdk.getInstance().retrieveAndSetTduidFromIntent(intent)
             addItem("tduid for open: $newTduid")
         }
 
@@ -111,8 +108,8 @@ class MainActivity : AppCompatActivity() {
             val orderNumber = generateId(10)
             val reportInfo = ReportInfo(
                 listOf(
-                    ReportEntry("25","car", 23.0,5),
-                    ReportEntry("453","bike", 3.0,25)
+                    ReportEntry("25","caróśćżćł", 23.0,5),
+                    ReportEntry("453","bikeóśćżćł", 3.0,25)
                 )
             )
             TradeDoublerSdk.getInstance().trackSale(saleEventId,orderNumber,"23.56", Currency.getInstance("PLN"),null, reportInfo)
@@ -122,8 +119,8 @@ class MainActivity : AppCompatActivity() {
             val orderNumber = generateId(10)
             val reportInfo = BasketInfo(
                 listOf(
-                    BasketEntry("3408",generateId(3),"plt_cookie", 23.0,5),
-                    BasketEntry("3168",generateId(3),"plt_milk", 3.0,25)
+                    BasketEntry("3408",generateId(3),"plt_cookieóśćżćł", 23.0,5),
+                    BasketEntry("3168",generateId(3),"plt_milkóśćżćł", 3.0,25)
                 )
             )
             TradeDoublerSdk.getInstance().trackSalePlt(basketSale,orderNumber, Currency.getInstance("PLN"),null, reportInfo)

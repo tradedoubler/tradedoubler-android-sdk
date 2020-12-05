@@ -115,6 +115,46 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
 
     var isTrackingEnabled: Boolean = true
 
+    var automaticAdvertisingIdRetrieval: Boolean = false
+        set(value){
+            field = value
+            if(automaticAdvertisingIdRetrieval){
+                AdvertisingIdHelper.retrieveAdvertisingId(context,
+                    { aaId ->
+                        logger.logEvent("Android advertising id retrieved")
+                        advertisingId = aaId
+                    },
+                    { errorMessage ->
+                        logger.logEvent("Android advertising not retrieved, performing fallback to android id")
+                        logger.logError(errorMessage)
+                        advertisingId = TradeDoublerSdkUtils.getAndroidId(context)
+                    })
+            }
+        }
+
+    var automaticInstallReferrerRetrieval: Boolean = false
+        set(value){
+            field = value
+            if(automaticInstallReferrerRetrieval){
+                InstallReferrerHelper.retrieveReferrer(context,
+                    { tduid ->
+                        if(tduid != null){
+                            logger.logEvent("tduid form referrer retrieved")
+                            if(BuildConfig.DEBUG){
+                                logger.logEvent("tduid $tduid")
+                            }
+                            this.tduid = tduid
+                        }else{
+                            logger.logEvent("tduid not present in referrer")
+                        }
+                    },
+                    { errorMessage ->
+                        logger.logEvent("error during referrer retrival")
+                        logger.logError(errorMessage)
+                    })
+            }
+        }
+
     fun trackOpenApp() {
         if(!isTrackingEnabled){
             return
@@ -272,46 +312,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             appendRequest(buildInstallUrl(googleAdvertisingId))
         }
     }
-
-    var automaticAdvertisingIdRetrieval: Boolean = false
-        set(value){
-            field = value
-            if(automaticAdvertisingIdRetrieval){
-                AdvertisingIdHelper.retrieveAdvertisingId(context,
-                    { aaId ->
-                        logger.logEvent("Android advertising id retrieved")
-                        advertisingId = aaId
-                    },
-                    { errorMessage ->
-                        logger.logEvent("Android advertising not retrieved, performing fallback to android id")
-                        logger.logError(errorMessage)
-                        advertisingId = TradeDoublerSdkUtils.getAndroidId(context)
-                    })
-            }
-        }
-
-    var automaticInstallReferrerRetrieval: Boolean = false
-        set(value){
-            field = value
-            if(automaticInstallReferrerRetrieval){
-                InstallReferrerHelper.retrieveReferrer(context,
-                    { tduid ->
-                        if(tduid != null){
-                            logger.logEvent("tduid form referrer retrieved")
-                            if(BuildConfig.DEBUG){
-                                logger.logEvent("tduid $tduid")
-                            }
-                            this.tduid = tduid
-                        }else{
-                            logger.logEvent("tduid not present in referrer")
-                        }
-                    },
-                    { errorMessage ->
-                        logger.logEvent("error during referrer retrival")
-                        logger.logError(errorMessage)
-                    })
-            }
-        }
 
     private fun validateSecretCode(secretCode: String?) = validateAndPrintError(secretCode, "secretCode")
 
