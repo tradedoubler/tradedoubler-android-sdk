@@ -57,18 +57,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             instance = TradeDoublerSdk(context, okHttpClient)
             return instance!!
         }
-
-        fun extractTduidFromIntent(intent: Intent?): String?{
-            return extractTduidFromUri(intent?.data)
-        }
-
-        fun extractTduidFromUri(uri: Uri?): String?{
-            return TradeDoublerSdkUtils.extractTduidFromUri(uri)
-        }
-
-        fun extractTduidFromReferrer(referrer: String?): String?{
-            return TradeDoublerSdkUtils.extractTduidFromQuery(referrer)
-        }
     }
 
     var organizationId: String?
@@ -204,6 +192,22 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
 
         if (!googleAdvertisingId.isNullOrEmpty()) {
             appendRequest(buildTrackLead(googleAdvertisingId))
+        }
+    }
+
+    fun retrieveAndSetTduidFromIntent(intent: Intent?): String?{
+        return retrieveAndSetTduidFromUri(intent?.data)
+    }
+
+    fun retrieveAndSetTduidFromUri(uri: Uri?): String?{
+        return TradeDoublerSdkUtils.extractTduidFromUri(uri)?.also { newTdUid ->
+            tduid = newTdUid
+        }
+    }
+
+    fun retrieveAndSetTduidFromReferrer(referrer: String?): String?{
+        return TradeDoublerSdkUtils.extractTduidFromQuery(referrer)?.also { newTdUid ->
+            tduid = newTdUid
         }
     }
 
