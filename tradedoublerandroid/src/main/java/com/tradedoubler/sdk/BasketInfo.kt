@@ -17,15 +17,45 @@
 
 package com.tradedoubler.sdk
 
+import android.os.Parcel
+import android.os.Parcelable
 import java.net.URLEncoder
 
-data class BasketInfo(val reportEntries: List<BasketEntry>) {
+data class BasketInfo(val reportEntries: List<BasketEntry>): Parcelable {
+    constructor(parcel: Parcel) : this(parcel.createTypedArrayList(BasketEntry)!!)
+
     fun toEncodedString(): String {
         return "basket(${reportEntries.joinToString("") { it.toEncodedString() }})"
     }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeTypedList(reportEntries)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<BasketInfo> {
+        override fun createFromParcel(parcel: Parcel): BasketInfo {
+            return BasketInfo(parcel)
+        }
+
+        override fun newArray(size: Int): Array<BasketInfo?> {
+            return arrayOfNulls(size)
+        }
+    }
 }
 
-data class BasketEntry(val group: String, val id: String, val productName: String, val price: Double, val quantity: Int) {
+data class BasketEntry(val group: String, val id: String, val productName: String, val price: Double, val quantity: Int): Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readString()!!,
+        parcel.readString()!!,
+        parcel.readString()!!,
+        parcel.readDouble(),
+        parcel.readInt()
+    )
+
     fun toEncodedString(): String {
         return "pr(" +
                 "gr(${URLEncoder.encode(group, Charsets.UTF_8.name())})" +
@@ -33,5 +63,27 @@ data class BasketEntry(val group: String, val id: String, val productName: Strin
                 "n(${URLEncoder.encode(productName, Charsets.UTF_8.name())})" +
                 "v(${price})q(${quantity})" +
                 ")"
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(group)
+        parcel.writeString(id)
+        parcel.writeString(productName)
+        parcel.writeDouble(price)
+        parcel.writeInt(quantity)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<BasketEntry> {
+        override fun createFromParcel(parcel: Parcel): BasketEntry {
+            return BasketEntry(parcel)
+        }
+
+        override fun newArray(size: Int): Array<BasketEntry?> {
+            return arrayOfNulls(size)
+        }
     }
 }
