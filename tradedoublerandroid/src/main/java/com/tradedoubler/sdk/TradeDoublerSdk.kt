@@ -77,7 +77,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             if (userEmail != null && userEmail.isNotEmpty()) {
                 val generateSHA56HashEmail = TradeDoublerSdkUtils.generateSHA56Hash(userEmail)
                 settings.storeUserEmail(generateSHA56HashEmail)
-            }else{
+            } else {
                 settings.storeUserEmail(null)
             }
         }
@@ -104,9 +104,9 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
     var isTrackingEnabled: Boolean = true
 
     var automaticAdvertisingIdRetrieval: Boolean = false
-        set(value){
+        set(value) {
             field = value
-            if(automaticAdvertisingIdRetrieval){
+            if (automaticAdvertisingIdRetrieval) {
                 AdvertisingIdHelper.retrieveAdvertisingId(context,
                     { aaId ->
                         logger.logEvent("Android advertising id retrieved")
@@ -121,18 +121,18 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         }
 
     var automaticInstallReferrerRetrieval: Boolean = false
-        set(value){
+        set(value) {
             field = value
-            if(automaticInstallReferrerRetrieval){
+            if (automaticInstallReferrerRetrieval) {
                 InstallReferrerHelper.retrieveReferrer(context,
                     { tduid ->
-                        if(tduid != null){
+                        if (tduid != null) {
                             logger.logEvent("tduid form referrer retrieved")
-                            if(BuildConfig.DEBUG){
+                            if (BuildConfig.DEBUG) {
                                 logger.logEvent("tduid $tduid")
                             }
                             this.tduid = tduid
-                        }else{
+                        } else {
                             logger.logEvent("tduid not present in referrer")
                         }
                     },
@@ -144,7 +144,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         }
 
     fun trackOpenApp() {
-        if(!isTrackingEnabled){
+        if (!isTrackingEnabled) {
             return
         }
         val organizationId = settings.organizationId
@@ -152,7 +152,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val userEmail = settings.userEmail
         val googleAdvertisingId = settings.advertisingIdentifier
 
-        if(!validateOrganizationId(organizationId)){
+        if (!validateOrganizationId(organizationId)) {
             return
         }
 
@@ -170,7 +170,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
     }
 
     fun trackLead(leadEventId: String, leadId: String) {
-        if(!isTrackingEnabled){
+        if (!isTrackingEnabled) {
             return
         }
         val organizationId = settings.organizationId
@@ -178,7 +178,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val userEmail = settings.userEmail
         val googleAdvertisingId = settings.advertisingIdentifier
 
-        if(!validateOrganizationId(organizationId)){
+        if (!validateOrganizationId(organizationId)) {
             return
         }
 
@@ -195,23 +195,26 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         }
     }
 
-    fun retrieveAndSetTduidFromIntent(intent: Intent?): String?{
+    fun retrieveAndSetTduidFromIntent(intent: Intent?): String? {
         return retrieveAndSetTduidFromUri(intent?.data)
     }
 
-    fun retrieveAndSetTduidFromUri(uri: Uri?): String?{
+    fun retrieveAndSetTduidFromUri(uri: Uri?): String? {
         return TradeDoublerSdkUtils.extractTduidFromUri(uri)?.also { newTdUid ->
             tduid = newTdUid
         }
     }
 
-    fun retrieveAndSetTduidFromReferrer(referrer: String?): String?{
+    fun retrieveAndSetTduidFromReferrer(referrer: String?): String? {
         return TradeDoublerSdkUtils.extractTduidFromQuery(referrer)?.also { newTdUid ->
             tduid = newTdUid
         }
     }
+    fun trackSale(saleEventId: String, orderNumber: String, orderValue: Double, currency: Currency?, voucherCode: String?, reportInfo: ReportInfo?) {
+        trackSale(saleEventId,orderNumber,orderValue,currency,voucherCode,reportInfo)
+    }
 
-    fun trackSale(saleEventId: String, orderNumber: String, orderValue: String, currency: Currency, voucherCode: String?, reportInfo: ReportInfo?) {
+    fun trackSale(saleEventId: String, orderNumber: String, orderValue: Double, currency: String?, voucherCode: String?, reportInfo: ReportInfo?) {
         if(!isTrackingEnabled){
             return
         }
@@ -234,8 +237,8 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
                 organizationId,
                 saleEventId,
                 orderNumber,
-                orderValue,
-                currency.currencyCode,
+                orderValue.format(2),
+                currency,
                 voucherCode,
                 tduid,
                 extId,
@@ -370,4 +373,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             }
         })
     }
+
+    private fun Double.format(digits: Int) = "%.${digits}f".format(this)
+
 }

@@ -81,7 +81,7 @@ object HttpRequest {
         saleEventId: String,
         orderNumber: String,
         orderValue: String,
-        currency: String,
+        currency: String?,
         voucherCode: String?,
         tduid: String?,
         extId: String?,
@@ -96,16 +96,18 @@ object HttpRequest {
         urlBuilder.addQueryParameter(EVENT, saleEventId)
         urlBuilder.addQueryParameter(ORDER_NUMBER, orderNumber)
         urlBuilder.addQueryParameter(ORDER_VALUE, orderValue)
-        urlBuilder.addQueryParameter(CURRENCY, currency)
+        currency?.let {
+            urlBuilder.addQueryParameter(CURRENCY, it)
+        }
         urlBuilder.addQueryParameter(CHECK_SUM, checksum)
-        if (voucherCode != null) {
-            urlBuilder.addQueryParameter(VOUCHER, voucherCode)
+        voucherCode?.let {
+            urlBuilder.addQueryParameter(VOUCHER, it)
         }
         urlBuilder.addQueryParameter(TDUID, tduid)
         urlBuilder.addQueryParameter(EXT_TYP, "1")
         urlBuilder.addQueryParameter(EXT_ID, extId)
-        if (reportInfo != null) {
-            urlBuilder.addQueryParameter(REPORT_INFO, reportInfo.toEncodedString())
+        reportInfo?.let {
+            urlBuilder.addQueryParameter(REPORT_INFO, it.toEncodedString())
         }
         return urlBuilder.toString()
     }
