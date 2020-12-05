@@ -89,19 +89,19 @@ internal class TradeDoublerSdkSettings(private val context: Context) {
 
     fun storeAdvertisingIdentifier(googleAdvertisingId: String?) {
         val editor = settings.edit()
-        if (googleAdvertisingId != null) editor.putString(GAID_VALUE, googleAdvertisingId)
+        editor.putString(GAID_VALUE, googleAdvertisingId)
         editor.commit()
     }
 
     fun storeOrganizationId(organizationId: String?) {
         val editor = settings.edit()
-        if (organizationId != null) editor.putString(ORGANIZATION_ID_VALUE, organizationId)
+        editor.putString(ORGANIZATION_ID_VALUE, organizationId)
         editor.commit()
     }
 
     fun storeUserEmail(userEmail: String?) {
         val editor = settings.edit()
-        if (userEmail != null) editor.putString(USER_EMAIL_VALUE, userEmail)
+        editor.putString(USER_EMAIL_VALUE, userEmail)
         editor.commit()
     }
 

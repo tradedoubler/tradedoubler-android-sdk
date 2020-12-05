@@ -75,10 +75,10 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         get() = settings.userEmail
         set(userEmail) {
             if (userEmail != null && userEmail.isNotEmpty()) {
-                if (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
-                    val generateSHA56HashEmail = TradeDoublerSdkUtils.generateSHA56Hash(userEmail)
-                    settings.storeUserEmail(generateSHA56HashEmail)
-                }
+                val generateSHA56HashEmail = TradeDoublerSdkUtils.generateSHA56Hash(userEmail)
+                settings.storeUserEmail(generateSHA56HashEmail)
+            }else{
+                settings.storeUserEmail(null)
             }
         }
 
