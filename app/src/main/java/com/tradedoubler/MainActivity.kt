@@ -108,22 +108,22 @@ class MainActivity : AppCompatActivity() {
             val orderNumber = generateId(10)
             val reportInfo = ReportInfo(
                 listOf(
-                    ReportEntry("25","caróśćżćł", 23.0,5),
-                    ReportEntry("453","bikeóśćżćł", 3.0,25)
+                    ReportEntry("25","carrrxdxdóśćżćł", 21.0,3),
+                    ReportEntry("453","bikeeexdóśćżćł", 3.5,12)
                 )
             )
-            TradeDoublerSdk.getInstance().trackSale(saleEventId,orderNumber,23.56, Currency.getInstance("PLN"),null, reportInfo)
+            TradeDoublerSdk.getInstance().trackSale(saleEventId,orderNumber,23.56, Currency.getInstance("PLN"),"13131313", reportInfo)
         }
 
         sale_plt.setOnClickListener {
             val orderNumber = generateId(10)
             val reportInfo = BasketInfo(
                 listOf(
-                    BasketEntry("3408",generateId(3),"plt_cookieóśćżćł", 23.0,5),
-                    BasketEntry("3168",generateId(3),"plt_milkóśćżćł", 3.0,25)
+                    BasketEntry("3408",generateId(3),"plt_cookieóśćżćł_chksm", 23.0,5),
+                    BasketEntry("3168",generateId(3),"plt_milkóśćżćł_chksm", 3.0,25)
                 )
             )
-            TradeDoublerSdk.getInstance().trackSalePlt(basketSale,orderNumber, Currency.getInstance("PLN"),null, reportInfo)
+            TradeDoublerSdk.getInstance().trackSalePlt(basketSale,orderNumber, Currency.getInstance("PLN"),"13131313", reportInfo)
         }
 
     }
