@@ -21,7 +21,6 @@ class SettingsActivity : AppCompatActivity() {
 
             val organizationId = organizationIdInput.value
             val userEmail = userEmailInput.value
-            val secretCode = secretCodeInput.value
 
             var hasError = false
 
@@ -36,8 +35,12 @@ class SettingsActivity : AppCompatActivity() {
                 userEmailInputLayout.error = "Incorrect email"
             }
 
-            if (userEmail.isValidEmail() && userEmail.isNotEmpty()) {
-                TradeDoublerSdk.getInstance().userEmail = userEmail
+            if (userEmail.isValidEmail()) {
+                if(TradeDoublerSdk.getInstance().userEmail != userEmail) {
+                    TradeDoublerSdk.getInstance().userEmail = userEmail
+                }
+            }else{
+                TradeDoublerSdk.getInstance().userEmail = null
             }
 
             if (!hasError){
@@ -66,8 +69,12 @@ class SettingsActivity : AppCompatActivity() {
                 userEmailInputLayout.error = "Incorrect email"
             }
 
-            if (userEmail.isValidEmail() && userEmail.isNotEmpty()) {
-                TradeDoublerSdk.getInstance().userEmail = userEmail
+            if (userEmail.isValidEmail()) {
+                if(TradeDoublerSdk.getInstance().userEmail != userEmail) {
+                    TradeDoublerSdk.getInstance().userEmail = userEmail
+                }
+            }else{
+                TradeDoublerSdk.getInstance().userEmail = null
             }
 
             if (!hasError){
@@ -134,8 +141,12 @@ class SettingsActivity : AppCompatActivity() {
                 userEmailInputLayout.error = "Incorrect email"
             }
 
-            if (userEmail.isValidEmail() && userEmail.isNotEmpty()) {
-                TradeDoublerSdk.getInstance().userEmail = userEmail
+            if (userEmail.isValidEmail()) {
+                if(TradeDoublerSdk.getInstance().userEmail != userEmail) {
+                    TradeDoublerSdk.getInstance().userEmail = userEmail
+                }
+            }else{
+                TradeDoublerSdk.getInstance().userEmail = null
             }
 
             if (secretCode.isEmpty()){

@@ -17,8 +17,6 @@ class MainViewActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main)
 
-        TradeDoublerSdk.create(applicationContext,initClient())
-
         advertising_text.text = TradeDoublerSdk.getInstance().advertisingId
         tduid_text.text = TradeDoublerSdk.getInstance().tduid
 
@@ -41,24 +39,9 @@ class MainViewActivity: AppCompatActivity() {
         clear_view.setOnClickListener {
 
         }
-    }
 
-    private fun initClient(): OkHttpClient {
-        val appContext = applicationContext
-        val loggingInterceptor = Interceptor{
-            window?.decorView?.post {
-                Toast.makeText(appContext,it.request().url.toString(),Toast.LENGTH_LONG).show()
-            }
-            it.proceed(it.request())
+        TradeDoublerSdk.getInstance().retrieveAndSetTduidFromIntent(intent)?.also {
+            Toast.makeText(this@MainViewActivity, "new tduid $it",Toast.LENGTH_LONG).show()
         }
-
-        return OkHttpClient.Builder()
-            .followRedirects(true)
-            .followSslRedirects(true)
-            .readTimeout(10000, TimeUnit.MILLISECONDS)
-            .connectTimeout(10000, TimeUnit.MILLISECONDS)
-            .addInterceptor(loggingInterceptor)
-            .build()
     }
-
 }
