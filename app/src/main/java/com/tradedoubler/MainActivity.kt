@@ -1,3 +1,20 @@
+/*
+ * Copyright 2020 Tradedoubler
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.tradedoubler
 
 import android.os.Bundle
@@ -52,15 +69,11 @@ class MainActivity : AppCompatActivity() {
         TradeDoublerSdk.getInstance().secretCode = "12345678"
 
         info.setOnClickListener {
-            addItem("tduid: ${TradeDoublerSdk.getInstance().tduid}", "advertisingId: ${TradeDoublerSdk.getInstance().deviceIdentifier}")
-        }
-
-        aaid.setOnClickListener {
-            TradeDoublerSdk.getInstance().automaticDeviceIdentifierRetrieval = true
+            addItem("tduid: ${TradeDoublerSdk.getInstance().tduid}", "advertisingId: ${TradeDoublerSdk.getInstance().advertisingId}")
         }
 
         referrer_btn.setOnClickListener {
-            TradeDoublerSdk.getInstance().automaticInstallReferrerRetrieval = true
+            TradeDoublerSdk.getInstance().useInstallReferrer = true
 
             retrieveReferrer()
         }
@@ -75,10 +88,7 @@ class MainActivity : AppCompatActivity() {
 
         open_app.setOnClickListener {
             addItem("activity intent: ${intent.data}")
-            val newTduid = TradeDoublerSdk.extractTduidFromIntent(intent)
-            newTduid?.run {
-                TradeDoublerSdk.getInstance().tduid = newTduid
-            }
+            val newTduid = TradeDoublerSdk.getInstance().retrieveAndSetTduidFromIntent(intent)
             addItem("tduid for open: $newTduid")
         }
 
@@ -94,22 +104,22 @@ class MainActivity : AppCompatActivity() {
             val orderNumber = generateId(10)
             val reportInfo = ReportInfo(
                 listOf(
-                    ReportEntry("25","car", 23.0,5),
-                    ReportEntry("453","bike", 3.0,25)
+                    ReportEntry("25","carrrxdxdóśćżćł", 21.0,3),
+                    ReportEntry("453","bikeeexdóśćżćł", 3.5,12)
                 )
             )
-            TradeDoublerSdk.getInstance().trackSale(saleEventId,orderNumber,"23.56", Currency.getInstance("PLN"),null, reportInfo)
+            TradeDoublerSdk.getInstance().trackSale(saleEventId,orderNumber,23.56, Currency.getInstance("PLN"),"13131313", reportInfo)
         }
 
         sale_plt.setOnClickListener {
             val orderNumber = generateId(10)
             val reportInfo = BasketInfo(
                 listOf(
-                    BasketEntry("3408",generateId(3),"plt_cookie", 23.0,5),
-                    BasketEntry("3168",generateId(3),"plt_milk", 3.0,25)
+                    BasketEntry("3408",generateId(3),"plt_cookieóśćżćł_chksm", 23.0,5),
+                    BasketEntry("3168",generateId(3),"plt_milkóśćżćł_chksm", 3.0,25)
                 )
             )
-            TradeDoublerSdk.getInstance().trackSalePlt(basketSale,orderNumber, Currency.getInstance("PLN"),null, reportInfo)
+            TradeDoublerSdk.getInstance().trackSalePlt(basketSale,orderNumber, Currency.getInstance("PLN"),"13131313", reportInfo)
         }
 
     }

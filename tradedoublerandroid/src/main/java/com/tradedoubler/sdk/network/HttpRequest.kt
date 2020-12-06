@@ -1,8 +1,26 @@
+/*
+ * Copyright 2020 Tradedoubler
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.tradedoubler.sdk.network
 
 import com.tradedoubler.sdk.BasketInfo
 import com.tradedoubler.sdk.ReportInfo
 import com.tradedoubler.sdk.TradeDoublerSdkUtils
+import com.tradedoubler.sdk.TradeDoublerSdkUtils.format
 import com.tradedoubler.sdk.utils.Constant.BASE_TBL_URL
 import com.tradedoubler.sdk.utils.Constant.BASE_URL_SALE
 import com.tradedoubler.sdk.utils.Constant.BASE_URL_TRACKING_OPEN
@@ -64,7 +82,7 @@ object HttpRequest {
         saleEventId: String,
         orderNumber: String,
         orderValue: String,
-        currency: String,
+        currency: String?,
         voucherCode: String?,
         tduid: String?,
         extId: String?,
@@ -79,16 +97,18 @@ object HttpRequest {
         urlBuilder.addQueryParameter(EVENT, saleEventId)
         urlBuilder.addQueryParameter(ORDER_NUMBER, orderNumber)
         urlBuilder.addQueryParameter(ORDER_VALUE, orderValue)
-        urlBuilder.addQueryParameter(CURRENCY, currency)
+        currency?.let {
+            urlBuilder.addQueryParameter(CURRENCY, it)
+        }
         urlBuilder.addQueryParameter(CHECK_SUM, checksum)
-        if (voucherCode != null) {
-            urlBuilder.addQueryParameter(VOUCHER, voucherCode)
+        voucherCode?.let {
+            urlBuilder.addQueryParameter(VOUCHER, it)
         }
         urlBuilder.addQueryParameter(TDUID, tduid)
         urlBuilder.addQueryParameter(EXT_TYP, "1")
         urlBuilder.addQueryParameter(EXT_ID, extId)
-        if (reportInfo != null) {
-            urlBuilder.addQueryParameter(REPORT_INFO, reportInfo.toEncodedString())
+        reportInfo?.let {
+            urlBuilder.addQueryParameter(REPORT_INFO, it.toEncodedString())
         }
         return urlBuilder.toString()
     }
@@ -101,18 +121,19 @@ object HttpRequest {
         tduid: String?,
         extId: String?,
         voucherCode: String?,
-        basket: BasketInfo
+        basket: BasketInfo,
+        secretCode: String
     ): String {
+        val checksum = TradeDoublerSdkUtils.generateCheckSum(secretCode, orderId, basket.getOverallPrice().format(2))
         val queryParam = "?o($organizationId)" +
                 "event(${saleEventId})" +
                 "ordnum($orderId)" +
                 "curr($currency)" +
-                //"chksum(v0477007e101263751dba5148752ac9eb9d)" + TODO checksum
+                (if(checksum != null) "chksum(${checksum ?: ""})" else "" ) +
                 "tduid(${tduid ?: ""})" +
                 "extid($extId)" +
                 "exttype(1)" +
-                // "type(iframe)" +
-                //"voucher(${voucherCode ?: ""})" + TODO VOUCHER
+                (if(voucherCode != null) "voucher(${voucherCode ?: ""})" else "" ) +
                 "enc(3)" +
                 basket.toEncodedString()
         return BASE_URL_SALE + queryParam

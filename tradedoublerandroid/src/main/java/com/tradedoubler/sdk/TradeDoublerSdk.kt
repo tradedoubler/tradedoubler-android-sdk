@@ -1,10 +1,27 @@
+/*
+ * Copyright 2020 Tradedoubler
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package com.tradedoubler.sdk
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import android.util.Patterns
+import com.tradedoubler.sdk.TradeDoublerSdkUtils.format
 import com.tradedoubler.sdk.network.HttpRequest
 import com.tradedoubler.sdk.network.NetworkConnection
 import com.tradedoubler.sdk.utils.OfflineDatabase
@@ -20,84 +37,131 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
     private val logger: TradeDoublerLogger = TradeDoublerLogger(false)
     private val offlineDatabase = OfflineDatabase(context)
     private var networkConnection: NetworkConnection = NetworkConnection(context)
+    private val queuedItems: MutableList<()->Unit> = mutableListOf<()->Unit>()
+    private var isReferrerInProgress: Boolean = false
 
     companion object {
+
+        const val DEFAULT_SALE_EVENT = "51"
 
         @Volatile
         private var instance: TradeDoublerSdk? = null
 
+        /**
+         * Return sdk instance.
+         */
         fun getInstance(): TradeDoublerSdk {
             return instance!!
         }
 
+        /**
+         *  Create sdk instance with default okhhtp client.
+         */
         fun create(context: Context): TradeDoublerSdk {
             return create(context, OkHttpClient())
         }
 
+        /**
+         *  Create sdk instance with custom okhhtp client.
+         */
         fun create(context: Context, okHttpClient: OkHttpClient): TradeDoublerSdk {
             instance = TradeDoublerSdk(context, okHttpClient)
             return instance!!
         }
 
-        fun extractTduidFromIntent(intent: Intent?): String?{
-            return extractTduidFromUri(intent?.data)
-        }
-
-        fun extractTduidFromUri(uri: Uri?): String?{
-            return TradeDoublerSdkUtils.extractTduidFromUri(uri)
-        }
-
-        fun extractTduidFromReferrer(referrer: String?): String?{
-            return TradeDoublerSdkUtils.extractTduidFromQuery(referrer)
+        /**
+         * Checks that sdk was initialized.
+         */
+        fun wasInitialized(): Boolean{
+            return instance != null
         }
     }
 
+    /**
+     *  Id of your organization, should be provided by Tradedoubler.
+     */
     var organizationId: String?
         get() = settings.organizationId
         set(organizationId) {
             settings.storeOrganizationId(organizationId)
         }
 
+    /**
+     *  TDUID, unique tracking identifier, would be provided in installation url on in open app url.
+     *  TDUID is valid for 365 days.
+     */
     var tduid: String?
         get() = settings.tduid
         set(value) {
             settings.storeTduid(value)
         }
 
+    /**
+     * The user's email address. This value is hashed (sha256) before usage.
+     */
     var userEmail: String?
         get() = settings.userEmail
         set(userEmail) {
             if (userEmail != null && userEmail.isNotEmpty()) {
-                if (Patterns.EMAIL_ADDRESS.matcher(userEmail).matches()) {
-                    val generateSHA56HashEmail = TradeDoublerSdkUtils.generateSHA56Hash(userEmail)
-                    settings.storeUserEmail(generateSHA56HashEmail)
-                }
+                val generateSHA56HashEmail = TradeDoublerSdkUtils.generateSHA56Hash(userEmail)
+                settings.storeUserEmail(generateSHA56HashEmail)
+            } else {
+                settings.storeUserEmail(null)
             }
         }
 
-    var deviceIdentifier: String?
+    /**
+     * Advertising identifier of user, default implementations use Google Advertising Id.
+     */
+    var advertisingId: String?
         get() = settings.advertisingIdentifier
         set(googleAdvertisingId) {
             val generateSHA56Hash = TradeDoublerSdkUtils.generateSHA56Hash(googleAdvertisingId)
             settings.storeAdvertisingIdentifier(generateSHA56Hash)
         }
 
+    /**
+     *  Secret code, should be provided by Tradedoubler.
+     */
     var secretCode: String?
         get() = settings.secretCode
         set(secretCode) {
             settings.setSecretCode(secretCode)
         }
-
+    /**
+     *  Flag to enable extended logs in logcat, very useful during development and diagnosing problems.
+     */
     var isLoggingEnabled: Boolean
         get() = logger.isLoggingEnabled
         set(value) {
             logger.isLoggingEnabled = value
         }
 
+    /**
+     *  Flag to enable tracking, very useful during development. If set to false none of tracking events will be sent to Tradedoubler server.
+     */
     var isTrackingEnabled: Boolean = true
 
+    /**
+     *  Flag to enable automatic tduid retrieval from installation url,
+     */
+    var useInstallReferrer: Boolean = true
+        set(value) {
+            field = value
+            if (useInstallReferrer) {
+                retrieveInstallTduid()
+            }
+        }
+
+    init {
+        retrieveGoogleAdvertisingId()
+    }
+
+    /**
+     * track opening app event
+     */
     fun trackOpenApp() {
-        if(!isTrackingEnabled){
+        if (!isTrackingEnabled) {
             return
         }
         val organizationId = settings.organizationId
@@ -105,7 +169,18 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val userEmail = settings.userEmail
         val googleAdvertisingId = settings.advertisingIdentifier
 
-        if(!validateOrganizationId(organizationId)){
+        if (!validateOrganizationId(organizationId)) {
+            return
+        }
+
+        if(tduid.isNullOrEmpty() && !settings.wasInstallTduidInvoked && useInstallReferrer){
+            retrieveInstallTduid()
+            queuedItems.add{ trackOpenApp() }
+            return
+        }
+
+        if(googleAdvertisingId.isNullOrEmpty()){
+            queuedItems.add{ trackOpenApp() }
             return
         }
 
@@ -122,8 +197,11 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         }
     }
 
+    /**
+     *  Track lead for given lead event.
+     */
     fun trackLead(leadEventId: String, leadId: String) {
-        if(!isTrackingEnabled){
+        if (!isTrackingEnabled) {
             return
         }
         val organizationId = settings.organizationId
@@ -131,7 +209,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val userEmail = settings.userEmail
         val googleAdvertisingId = settings.advertisingIdentifier
 
-        if(!validateOrganizationId(organizationId)){
+        if (!validateOrganizationId(organizationId)) {
             return
         }
 
@@ -148,7 +226,42 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         }
     }
 
-    fun trackSale(saleEventId: String, orderNumber: String, orderValue: String, currency: Currency, voucherCode: String?, reportInfo: ReportInfo?) {
+    /**
+     * Retrieves tduid value from given intent, if tduid is present inside intent its values is also stored in SDK settings for further usage.
+     */
+    fun retrieveAndSetTduidFromIntent(intent: Intent?): String? {
+        return retrieveAndSetTduidFromUri(intent?.data)
+    }
+
+    /**
+     * Retrieves tduid value from given uri, if tduid is present inside intent its values is also stored in SDK settings for further usage.
+     */
+    fun retrieveAndSetTduidFromUri(uri: Uri?): String? {
+        return TradeDoublerSdkUtils.extractTduidFromUri(uri)?.also { newTdUid ->
+            tduid = newTdUid
+        }
+    }
+
+    /**
+     * Retrieves tduid value from given referrer string, if tduid is present inside intent its values is also stored in SDK settings for further usage.
+     */
+    fun retrieveAndSetTduidFromReferrer(referrer: String?): String? {
+        return TradeDoublerSdkUtils.extractTduidFromQuery(referrer)?.also { newTdUid ->
+            tduid = newTdUid
+        }
+    }
+
+    /**
+     * track sale for given parameters.
+     */
+    fun trackSale(saleEventId: String, orderNumber: String, orderValue: Double, currency: Currency?, voucherCode: String?, reportInfo: ReportInfo?) {
+        trackSale(saleEventId,orderNumber,orderValue,currency?.currencyCode,voucherCode,reportInfo)
+    }
+
+    /**
+     * track sale for given parameters.
+     */
+    fun trackSale(saleEventId: String, orderNumber: String, orderValue: Double, currency: String?, voucherCode: String?, reportInfo: ReportInfo?) {
         if(!isTrackingEnabled){
             return
         }
@@ -166,17 +279,13 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val userEmail = settings.userEmail
         val googleAdvertisingId = settings.advertisingIdentifier
 
-        if (tduid.isNullOrBlank()) {
-            return
-        }
-
         fun buildTrackSaleUrl(extId: String): String {
             return HttpRequest.trackingSale(
                 organizationId,
                 saleEventId,
                 orderNumber,
-                orderValue,
-                currency.currencyCode,
+                orderValue.format(2),
+                currency,
                 voucherCode,
                 tduid,
                 extId,
@@ -193,7 +302,17 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         }
     }
 
-    fun trackSalePlt(saleEventId: String, orderNumber: String, currency: Currency, voucherCode: String?, basketInfo: BasketInfo) {
+    /**
+     * track sale PLT for given parameters.
+     */
+    fun trackSalePlt(orderNumber: String, currency: Currency, voucherCode: String?, reportInfo: BasketInfo){
+        trackSalePlt(DEFAULT_SALE_EVENT,orderNumber,currency,voucherCode,reportInfo)
+    }
+
+    /**
+     * track sale PLT for given parameters.
+     */
+    fun trackSalePlt(saleEventId: String, orderNumber: String, currency: Currency, voucherCode: String?, reportInfo: BasketInfo) {
         if(!isTrackingEnabled){
             return
         }
@@ -201,8 +320,13 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val tduid = settings.tduid
         val userEmail = settings.userEmail
         val googleAdvertisingId = settings.advertisingIdentifier
+        val secretCode = settings.secretCode
 
         if(!validateOrganizationId(organizationId)){
+            return
+        }
+
+        if(!validateSecretCode(secretCode)){
             return
         }
 
@@ -215,7 +339,8 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
                 tduid,
                 extId,
                 voucherCode,
-                basketInfo
+                reportInfo,
+                secretCode!!
             )
         }
 
@@ -227,10 +352,17 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         }
     }
 
+    /**
+     * Track application install. SDK takes care about sending this request only once, so no additional checks are needed.
+     */
     fun trackInstall(appInstallEventId: String) {
         if(!isTrackingEnabled){
             return
         }
+        if (settings.wasInstallTracked){
+            return
+        }
+
         val tduid = settings.tduid
         val organizationId = settings.organizationId
         val userEmail = settings.userEmail
@@ -241,58 +373,81 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             return
         }
 
+        if(tduid.isNullOrEmpty() && !settings.wasInstallTduidInvoked && useInstallReferrer){
+            retrieveInstallTduid()
+            queuedItems.add{ trackInstall( appInstallEventId) }
+            return
+        }
+
+        if(googleAdvertisingId.isNullOrEmpty()){
+            queuedItems.add{ trackInstall( appInstallEventId) }
+            return
+        }
+
         fun buildInstallUrl(extId: String): String {
             return HttpRequest.trackingInstallation(organizationId, appInstallEventId, leadNumber, tduid, extId)
         }
 
         if (!userEmail.isNullOrEmpty()) {
             appendRequest(buildInstallUrl(userEmail))
+            settings.wasInstallTracked
         }
 
         if (!googleAdvertisingId.isNullOrEmpty()) {
             appendRequest(buildInstallUrl(googleAdvertisingId))
+            settings.wasInstallTracked
         }
     }
-
-    var automaticDeviceIdentifierRetrieval: Boolean = false
-        set(value){
-            field = value
-            if(automaticDeviceIdentifierRetrieval){
-                AdvertisingIdHelper.retrieveAdvertisingId(context,
-                    { aaId ->
-                        logger.logEvent("Android advertising id retrieved")
-                        deviceIdentifier = aaId
-                    },
-                    { errorMessage ->
-                        logger.logEvent("Android advertising not retrieved, performing fallback to android id")
-                        logger.logError(errorMessage)
-                        deviceIdentifier = TradeDoublerSdkUtils.getAndroidId(context)
-                    })
-            }
+    private fun retrieveInstallTduid() {
+        if(!networkConnection.isNetworkAvailable()){
+            return
         }
-
-    var automaticInstallReferrerRetrieval: Boolean = false
-        set(value){
-            field = value
-            if(automaticInstallReferrerRetrieval){
-                InstallReferrerHelper.retrieveReferrer(context,
-                    { tduid ->
-                        if(tduid != null){
-                            logger.logEvent("tduid form referrer retrieved")
-                            if(BuildConfig.DEBUG){
-                                logger.logEvent("tduid $tduid")
-                            }
-                            this.tduid = tduid
-                        }else{
-                            logger.logEvent("tduid not present in referrer")
-                        }
-                    },
-                    { errorMessage ->
-                        logger.logEvent("error during referrer retrival")
-                        logger.logError(errorMessage)
-                    })
-            }
+        if(settings.wasInstallTduidInvoked){
+            return
         }
+        if(isReferrerInProgress){
+            return
+        }
+        isReferrerInProgress = true
+        InstallReferrerHelper.retrieveReferrer(context,
+            { tduid ->
+                if (tduid != null) {
+                    logger.logEvent("tduid form referrer retrieved")
+                    if (BuildConfig.DEBUG) {
+                        logger.logEvent("tduid $tduid")
+                    }
+                    this.tduid = tduid
+                } else {
+                    logger.logEvent("tduid not present in referrer")
+                }
+                settings.setInstallReferrerChecked(true)
+                isReferrerInProgress = false
+                invokeQueuedItems()
+
+            },
+            { errorMessage ->
+                logger.logEvent("error during referrer retrieval")
+                logger.logError(errorMessage)
+                settings.setInstallReferrerChecked(true)
+                isReferrerInProgress = false
+                invokeQueuedItems()
+            })
+    }
+
+    private fun retrieveGoogleAdvertisingId() {
+        AdvertisingIdHelper.retrieveAdvertisingId(context,
+            { aaId ->
+                logger.logEvent("Android advertising id retrieved")
+                advertisingId = aaId
+                invokeQueuedItems()
+            },
+            { errorMessage ->
+                logger.logEvent("Android advertising not retrieved, performing fallback to android id")
+                logger.logError(errorMessage)
+                advertisingId = TradeDoublerSdkUtils.getAndroidId(context)
+                invokeQueuedItems()
+            })
+    }
 
     private fun validateSecretCode(secretCode: String?) = validateAndPrintError(secretCode, "secretCode")
 
@@ -324,6 +479,9 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
 
     private fun performRequest(offlineUrl: OfflineDatabase.OfflineUrl) {
         val url = offlineUrl.url
+        if(isLoggingEnabled){
+            logger.logEvent("track URL: $url")
+        }
         val request = Request.Builder().url(url).get().build()
         val call = client.newCall(request)
         call.enqueue(object : Callback {
@@ -346,5 +504,22 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
                 }
             }
         })
+    }
+
+    internal fun onInternetConnected(){
+        if(!settings.wasInstallTduidInvoked && useInstallReferrer){
+            retrieveInstallTduid()
+        } else{
+            invokeQueuedItems()
+            checkPendingRequests()
+        }
+    }
+
+    private fun invokeQueuedItems() {
+        val copy = queuedItems.toList()
+        queuedItems.clear()
+        copy.forEach {
+            it.invoke()
+        }
     }
 }
