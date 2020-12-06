@@ -60,7 +60,7 @@ data class ReportEntry(val id: String, val productName: String, val price: Doubl
     )
 
     fun toEncodedString(): String {
-        return "f1=${URLEncoder.encode(id, Charsets.UTF_8.name())}&f2=${URLEncoder.encode(productName, Charsets.UTF_8.name())}&f3=${price}&f4=${quantity}"
+        return "f1=${URLEncoder.encode(id, Charsets.UTF_8.name())}&f2=${productName}&f3=${price}&f4=${quantity}"
     }
 
     fun getOverallPrice(): Double{

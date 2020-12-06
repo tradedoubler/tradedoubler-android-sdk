@@ -19,17 +19,22 @@ package com.tradedoubler.sdk
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.tradedoubler.sdk.TradeDoublerSdkUtils.format
 import java.net.URLEncoder
 
-data class BasketInfo(val reportEntries: List<BasketEntry>): Parcelable {
+data class BasketInfo(val basketEntries: List<BasketEntry>): Parcelable {
     constructor(parcel: Parcel) : this(parcel.createTypedArrayList(BasketEntry)!!)
 
     fun toEncodedString(): String {
-        return "basket(${reportEntries.joinToString("") { it.toEncodedString() }})"
+        return "basket(${basketEntries.joinToString("") { it.toEncodedString() }})"
+    }
+
+    fun getOverallPrice(): Double{
+        return basketEntries.sumByDouble { it.getOverallPrice() }
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeTypedList(reportEntries)
+        parcel.writeTypedList(basketEntries)
     }
 
     override fun describeContents(): Int {
@@ -61,7 +66,7 @@ data class BasketEntry(val group: String, val id: String, val productName: Strin
                 "gr(${URLEncoder.encode(group, Charsets.UTF_8.name())})" +
                 "i(${URLEncoder.encode(id, Charsets.UTF_8.name())})" +
                 "n(${URLEncoder.encode(productName, Charsets.UTF_8.name())})" +
-                "v(${price})q(${quantity})" +
+                "v(${price.format(2)})q(${quantity})" +
                 ")"
     }
 
@@ -71,6 +76,10 @@ data class BasketEntry(val group: String, val id: String, val productName: Strin
         parcel.writeString(productName)
         parcel.writeDouble(price)
         parcel.writeInt(quantity)
+    }
+
+    fun getOverallPrice(): Double{
+        return price * quantity
     }
 
     override fun describeContents(): Int {

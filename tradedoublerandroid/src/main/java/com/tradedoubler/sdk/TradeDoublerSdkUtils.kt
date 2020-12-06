@@ -120,5 +120,7 @@ internal object TradeDoublerSdkUtils {
         return queryValues
     }
 
+    internal fun Double.format(digits: Int) = "%.${digits}f".format(this)
+
 }
 
