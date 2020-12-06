@@ -407,6 +407,9 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
 
     private fun performRequest(offlineUrl: OfflineDatabase.OfflineUrl) {
         val url = offlineUrl.url
+        if(isLoggingEnabled){
+            logger.logEvent("track URL: $url")
+        }
         val request = Request.Builder().url(url).get().build()
         val call = client.newCall(request)
         call.enqueue(object : Callback {
