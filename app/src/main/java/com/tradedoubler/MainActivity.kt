@@ -72,12 +72,12 @@ class MainActivity : AppCompatActivity() {
             addItem("tduid: ${TradeDoublerSdk.getInstance().tduid}", "advertisingId: ${TradeDoublerSdk.getInstance().advertisingId}")
         }
 
-        aaid.setOnClickListener {
-            TradeDoublerSdk.getInstance().automaticAdvertisingIdRetrieval = true
-        }
+//        aaid.setOnClickListener {
+//            TradeDoublerSdk.getInstance().useAdvertisingId = true
+//        }
 
         referrer_btn.setOnClickListener {
-            TradeDoublerSdk.getInstance().automaticInstallReferrerRetrieval = true
+            TradeDoublerSdk.getInstance().useInstallReferrer = true
 
             retrieveReferrer()
         }
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                     ReportEntry("453","bikeóśćżćł", 3.0,25)
                 )
             )
-            TradeDoublerSdk.getInstance().trackSale(saleEventId,orderNumber,"23.56", Currency.getInstance("PLN"),null, reportInfo)
+            TradeDoublerSdk.getInstance().trackSale(saleEventId,orderNumber,23.56, Currency.getInstance("PLN"),null, reportInfo)
         }
 
         sale_plt.setOnClickListener {

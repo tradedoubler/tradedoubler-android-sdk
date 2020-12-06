@@ -26,6 +26,8 @@ internal class TradeDoublerSdkSettings(private val context: Context) {
         private const val TDUIC_VALUE = "TDUDID_VLAUE"
         private const val GAID_VALUE = "GAID_VALUE"
         private const val WAS_INSTALL_TRACKED = "WAS_INSTALL_TRACKED"
+        private const val WAS_INSTALL_TDUID_RETRIEVED = "WAS_INSTALL_TDUID_RETRIEVED"
+        private const val WAS_ADVERTISING_ID_RETRIEVED = "WAS_ADVERTISING_ID_RETRIEVED"
         private const val USER_EMAIL_VALUE = "USER_EMAIL"
         private const val SECRET_CODE_VALUE = "SECRET_CODE"
         private const val ORGANIZATION_ID_VALUE = "ORGANIZATION_ID_VALUE"
@@ -68,10 +70,21 @@ internal class TradeDoublerSdkSettings(private val context: Context) {
             return settings.getString(GAID_VALUE, null)
         }
 
-    val wasInstallTracked: Boolean?
+    val wasInstallTracked: Boolean
         get() {
             return settings.getBoolean(WAS_INSTALL_TRACKED, false)
         }
+
+    val wasInstallTduidInvoked: Boolean
+        get() {
+            return settings.getBoolean(WAS_INSTALL_TDUID_RETRIEVED, false)
+        }
+
+    val wasAndroidIdRetrieved: Boolean
+        get() {
+            return settings.getBoolean(WAS_ADVERTISING_ID_RETRIEVED, false)
+        }
+
 
     private val tduidExpireTime: Long
         get() {
@@ -102,6 +115,18 @@ internal class TradeDoublerSdkSettings(private val context: Context) {
     fun storeUserEmail(userEmail: String?) {
         val editor = settings.edit()
         editor.putString(USER_EMAIL_VALUE, userEmail)
+        editor.commit()
+    }
+
+    fun setInstallTracked(wasInstallTracked: Boolean) {
+        val editor = settings.edit()
+        editor.putBoolean(WAS_INSTALL_TRACKED, wasInstallTracked)
+        editor.commit()
+    }
+
+    fun setInstallReferrerChecked(wasInstallReferrerChecked: Boolean) {
+        val editor = settings.edit()
+        editor.putBoolean(WAS_INSTALL_TDUID_RETRIEVED, wasInstallReferrerChecked)
         editor.commit()
     }
 

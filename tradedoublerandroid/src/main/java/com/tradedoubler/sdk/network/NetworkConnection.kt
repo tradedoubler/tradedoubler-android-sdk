@@ -19,10 +19,38 @@ package com.tradedoubler.sdk.network
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.ConnectivityManager.NetworkCallback
+import android.net.Network
 import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Build
+import com.tradedoubler.sdk.TradeDoublerSdk
+
 
 class NetworkConnection(private val context: Context) {
+
+    private var networkCallback: NetworkCallback = object : NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            if(TradeDoublerSdk.wasInitialized()){
+                TradeDoublerSdk.getInstance().onInternetConnected()
+            }
+        }
+
+        override fun onLost(network: Network) {
+            // do nothing
+        }
+    }
+
+    init {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            connectivityManager.registerDefaultNetworkCallback(networkCallback)
+        } else {
+            val request = NetworkRequest.Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET).build()
+            connectivityManager.registerNetworkCallback(request, networkCallback)
+        }
+    }
 
     fun isNetworkAvailable(): Boolean {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -42,4 +70,5 @@ class NetworkConnection(private val context: Context) {
             return connectivityManager.activeNetworkInfo?.isConnected ?: false
         }
     }
+
 }

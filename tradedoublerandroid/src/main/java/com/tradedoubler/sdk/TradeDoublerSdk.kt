@@ -21,7 +21,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import android.util.Patterns
 import com.tradedoubler.sdk.network.HttpRequest
 import com.tradedoubler.sdk.network.NetworkConnection
 import com.tradedoubler.sdk.utils.OfflineDatabase
@@ -37,6 +36,8 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
     private val logger: TradeDoublerLogger = TradeDoublerLogger(false)
     private val offlineDatabase = OfflineDatabase(context)
     private var networkConnection: NetworkConnection = NetworkConnection(context)
+    private val queuedItems: MutableList<()->Unit> = mutableListOf<()->Unit>()
+    private var isReferrerInProgress: Boolean = false
 
     companion object {
 
@@ -56,6 +57,10 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         fun create(context: Context, okHttpClient: OkHttpClient): TradeDoublerSdk {
             instance = TradeDoublerSdk(context, okHttpClient)
             return instance!!
+        }
+
+        fun wasInitialized(): Boolean{
+            return instance != null
         }
     }
 
@@ -103,45 +108,69 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
 
     var isTrackingEnabled: Boolean = true
 
-    var automaticAdvertisingIdRetrieval: Boolean = false
+    private fun retrieveGoogleAdvertisingId() {
+        AdvertisingIdHelper.retrieveAdvertisingId(context,
+            { aaId ->
+                logger.logEvent("Android advertising id retrieved")
+                advertisingId = aaId
+                invokeQueuedItems()
+            },
+            { errorMessage ->
+                logger.logEvent("Android advertising not retrieved, performing fallback to android id")
+                logger.logError(errorMessage)
+                advertisingId = TradeDoublerSdkUtils.getAndroidId(context)
+                invokeQueuedItems()
+            })
+    }
+
+    var useInstallReferrer: Boolean = true
         set(value) {
             field = value
-            if (automaticAdvertisingIdRetrieval) {
-                AdvertisingIdHelper.retrieveAdvertisingId(context,
-                    { aaId ->
-                        logger.logEvent("Android advertising id retrieved")
-                        advertisingId = aaId
-                    },
-                    { errorMessage ->
-                        logger.logEvent("Android advertising not retrieved, performing fallback to android id")
-                        logger.logError(errorMessage)
-                        advertisingId = TradeDoublerSdkUtils.getAndroidId(context)
-                    })
+            if (useInstallReferrer) {
+                retrieveInstallTduid()
             }
         }
 
-    var automaticInstallReferrerRetrieval: Boolean = false
-        set(value) {
-            field = value
-            if (automaticInstallReferrerRetrieval) {
-                InstallReferrerHelper.retrieveReferrer(context,
-                    { tduid ->
-                        if (tduid != null) {
-                            logger.logEvent("tduid form referrer retrieved")
-                            if (BuildConfig.DEBUG) {
-                                logger.logEvent("tduid $tduid")
-                            }
-                            this.tduid = tduid
-                        } else {
-                            logger.logEvent("tduid not present in referrer")
-                        }
-                    },
-                    { errorMessage ->
-                        logger.logEvent("error during referrer retrival")
-                        logger.logError(errorMessage)
-                    })
-            }
+
+    init {
+        retrieveGoogleAdvertisingId()
+    }
+
+    private fun retrieveInstallTduid() {
+        if(!networkConnection.isNetworkAvailable()){
+            return
         }
+        if(settings.wasInstallTduidInvoked){
+            return
+        }
+        if(isReferrerInProgress){
+            return
+        }
+        isReferrerInProgress = true
+        InstallReferrerHelper.retrieveReferrer(context,
+            { tduid ->
+                if (tduid != null) {
+                    logger.logEvent("tduid form referrer retrieved")
+                    if (BuildConfig.DEBUG) {
+                        logger.logEvent("tduid $tduid")
+                    }
+                    this.tduid = tduid
+                } else {
+                    logger.logEvent("tduid not present in referrer")
+                }
+                settings.setInstallReferrerChecked(true)
+                isReferrerInProgress = false
+                invokeQueuedItems()
+
+            },
+            { errorMessage ->
+                logger.logEvent("error during referrer retrieval")
+                logger.logError(errorMessage)
+                settings.setInstallReferrerChecked(true)
+                isReferrerInProgress = false
+                invokeQueuedItems()
+            })
+    }
 
     fun trackOpenApp() {
         if (!isTrackingEnabled) {
@@ -153,6 +182,17 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val googleAdvertisingId = settings.advertisingIdentifier
 
         if (!validateOrganizationId(organizationId)) {
+            return
+        }
+
+        if(tduid.isNullOrEmpty() && !settings.wasInstallTduidInvoked && useInstallReferrer){
+            retrieveInstallTduid()
+            queuedItems.add{ trackOpenApp() }
+            return
+        }
+
+        if(googleAdvertisingId.isNullOrEmpty()){
+            queuedItems.add{ trackOpenApp() }
             return
         }
 
@@ -211,7 +251,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         }
     }
     fun trackSale(saleEventId: String, orderNumber: String, orderValue: Double, currency: Currency?, voucherCode: String?, reportInfo: ReportInfo?) {
-        trackSale(saleEventId,orderNumber,orderValue,currency,voucherCode,reportInfo)
+        trackSale(saleEventId,orderNumber,orderValue,currency?.currencyCode,voucherCode,reportInfo)
     }
 
     fun trackSale(saleEventId: String, orderNumber: String, orderValue: Double, currency: String?, voucherCode: String?, reportInfo: ReportInfo?) {
@@ -297,6 +337,10 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         if(!isTrackingEnabled){
             return
         }
+        if (settings.wasInstallTracked){
+            return
+        }
+
         val tduid = settings.tduid
         val organizationId = settings.organizationId
         val userEmail = settings.userEmail
@@ -307,16 +351,29 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             return
         }
 
+        if(tduid.isNullOrEmpty() && !settings.wasInstallTduidInvoked && useInstallReferrer){
+            retrieveInstallTduid()
+            queuedItems.add{ trackInstall( appInstallEventId) }
+            return
+        }
+
+        if(googleAdvertisingId.isNullOrEmpty()){
+            queuedItems.add{ trackInstall( appInstallEventId) }
+            return
+        }
+
         fun buildInstallUrl(extId: String): String {
             return HttpRequest.trackingInstallation(organizationId, appInstallEventId, leadNumber, tduid, extId)
         }
 
         if (!userEmail.isNullOrEmpty()) {
             appendRequest(buildInstallUrl(userEmail))
+            settings.wasInstallTracked
         }
 
         if (!googleAdvertisingId.isNullOrEmpty()) {
             appendRequest(buildInstallUrl(googleAdvertisingId))
+            settings.wasInstallTracked
         }
     }
 
@@ -374,6 +431,22 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         })
     }
 
-    private fun Double.format(digits: Int) = "%.${digits}f".format(this)
+    internal fun onInternetConnected(){
+        if(!settings.wasInstallTduidInvoked && useInstallReferrer){
+            retrieveInstallTduid()
+        } else{
+            invokeQueuedItems()
+            checkPendingRequests()
+        }
+    }
 
+    private fun invokeQueuedItems() {
+        val copy = queuedItems.toList()
+        queuedItems.clear()
+        copy.forEach {
+            it.invoke()
+        }
+    }
+
+    private fun Double.format(digits: Int) = "%.${digits}f".format(this)
 }

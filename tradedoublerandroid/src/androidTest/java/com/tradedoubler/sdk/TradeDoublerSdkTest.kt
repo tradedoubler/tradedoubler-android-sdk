@@ -144,7 +144,7 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.userEmail = email
         tradeDoublerSdk.secretCode = "12345678"
         tradeDoublerSdk.isLoggingEnabled = true
-        tradeDoublerSdk.automaticAdvertisingIdRetrieval = true
+        tradeDoublerSdk.useAdvertisingId = true
 
         Thread.sleep(6000)
     }
@@ -157,8 +157,8 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.userEmail = email
         tradeDoublerSdk.secretCode = "12345678"
         tradeDoublerSdk.isLoggingEnabled = true
-        tradeDoublerSdk.automaticAdvertisingIdRetrieval = true
-        tradeDoublerSdk.automaticInstallReferrerRetrieval = true
+        tradeDoublerSdk.useAdvertisingId = true
+        tradeDoublerSdk.useInstallReferrer = true
 
         Thread.sleep(6000)
     }
