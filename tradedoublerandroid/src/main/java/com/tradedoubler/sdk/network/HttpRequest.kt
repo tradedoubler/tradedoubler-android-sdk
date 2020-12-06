@@ -20,6 +20,7 @@ package com.tradedoubler.sdk.network
 import com.tradedoubler.sdk.BasketInfo
 import com.tradedoubler.sdk.ReportInfo
 import com.tradedoubler.sdk.TradeDoublerSdkUtils
+import com.tradedoubler.sdk.TradeDoublerSdkUtils.format
 import com.tradedoubler.sdk.utils.Constant.BASE_TBL_URL
 import com.tradedoubler.sdk.utils.Constant.BASE_URL_SALE
 import com.tradedoubler.sdk.utils.Constant.BASE_URL_TRACKING_OPEN
@@ -120,17 +121,19 @@ object HttpRequest {
         tduid: String?,
         extId: String?,
         voucherCode: String?,
-        basket: BasketInfo
+        basket: BasketInfo,
+        secretCode: String
     ): String {
+        val checksum = TradeDoublerSdkUtils.generateCheckSum(secretCode, orderId, basket.getOverallPrice().format(2))
         val queryParam = "?o($organizationId)" +
                 "event(${saleEventId})" +
                 "ordnum($orderId)" +
                 "curr($currency)" +
-                //"chksum(v0477007e101263751dba5148752ac9eb9d)" + TODO checksum
+                (if(checksum != null) "chksum(${checksum ?: ""})" else "" ) +
                 "tduid(${tduid ?: ""})" +
                 "extid($extId)" +
                 "exttype(1)" +
-                 if(voucherCode != null) "voucher(${voucherCode ?: ""})" else "" +
+                (if(voucherCode != null) "voucher(${voucherCode ?: ""})" else "" ) +
                 "enc(3)" +
                 basket.toEncodedString()
         return BASE_URL_SALE + queryParam

@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import com.tradedoubler.sdk.TradeDoublerSdkUtils.format
 import com.tradedoubler.sdk.network.HttpRequest
 import com.tradedoubler.sdk.network.NetworkConnection
 import com.tradedoubler.sdk.utils.OfflineDatabase
@@ -319,8 +320,13 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val tduid = settings.tduid
         val userEmail = settings.userEmail
         val googleAdvertisingId = settings.advertisingIdentifier
+        val secretCode = settings.secretCode
 
         if(!validateOrganizationId(organizationId)){
+            return
+        }
+
+        if(!validateSecretCode(secretCode)){
             return
         }
 
@@ -333,7 +339,8 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
                 tduid,
                 extId,
                 voucherCode,
-                reportInfo
+                reportInfo,
+                secretCode!!
             )
         }
 
@@ -515,6 +522,4 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             it.invoke()
         }
     }
-
-    private fun Double.format(digits: Int) = "%.${digits}f".format(this)
 }
