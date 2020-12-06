@@ -30,6 +30,9 @@ class TrackingSalePltActivity : AppCompatActivity() {
         setContentView(R.layout.activity_tracking_sale_plt)
         setRecycleView()
         setSpinnerCurrency()
+
+        eventIdEditText.setText("51")
+
         add_basket_info.setOnClickListener {
             val productName = productNameBasketEditText.value
             val price = priceEditText.value
@@ -39,27 +42,27 @@ class TrackingSalePltActivity : AppCompatActivity() {
 
             if (productName.isEmpty()) {
                 hasError = true
-                productNameInputLayout.error = "Provide the paramter product name."
+                productNameInputLayout.error = "Provide the parameter product name."
             }
 
             if (price.isEmpty()) {
                 hasError = true
-                priceInputLayout.error = "Provide the paramter price."
+                priceInputLayout.error = "Provide the parameter price."
             }
 
             if (price.isNotEmpty() && price.toDouble() <= 0.00) {
                 hasError = true
-                priceInputLayout.error = "Paramter price cannot be negative."
+                priceInputLayout.error = "parameter price cannot be negative."
             }
 
             if (quantity.isEmpty()) {
                 hasError = true
-                quantityInputLayout.error = "Provide the paramter quantity."
+                quantityInputLayout.error = "Provide the parameter quantity."
             }
 
             if (quantity.isNotEmpty() && quantity.toInt() <= 0) {
                 hasError = true
-                quantityInputLayout.error = "Paramter price cannot be negative."
+                quantityInputLayout.error = "parameter price cannot be negative."
             }
 
             if (!hasError) {
@@ -72,7 +75,6 @@ class TrackingSalePltActivity : AppCompatActivity() {
         call_tracking_sale_plt_button.setOnClickListener {
             var hasError = false
             val eventId = eventIdEditText.value
-            val orderValue = orderValueBasketEditText.value
             val voucherCode = voucherCodeSaleEditText.value
             val currency = currencyPltSpinner.selectedItem.toString()
 
@@ -84,21 +86,15 @@ class TrackingSalePltActivity : AppCompatActivity() {
 
             if (eventId.isEmpty()) {
                 hasError = true
-                eventIdInputLayout.error = "Provide the paramter event Id."
+                eventIdInputLayout.error = "Provide the parameter event Id."
             }
-
-            if (orderValue.isEmpty()) {
-                hasError = true
-                orderValueSaleInputLayout.error = "Provide the paramter order value."
-            }
-
 
             if (!hasError) {
                 TradeDoublerSdk.getInstance()
                     .trackSalePlt(
                         saleEventId = eventId,
                         orderNumber = generateId(5),
-                        currency = Currency.getInstance(currency),
+                        currency = Currency.getInstance(currency)!!,
                         voucherCode = voucherCode,
                         basketInfo = BasketInfo(basketInfoAdapter.data.toList())
                     )
@@ -123,8 +119,6 @@ class TrackingSalePltActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_item, currency
         )
         currencyPltSpinner.adapter = adapter
-
-
     }
 
 }

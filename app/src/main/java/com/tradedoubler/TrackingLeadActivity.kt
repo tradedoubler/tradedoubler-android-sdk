@@ -12,21 +12,23 @@ class TrackingLeadActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tracking_lead)
 
-        val eventId = eventIdEditText.value
-        val leadId = leadIdEditText.value
+        eventIdEditText.setText("51")
 
         call_tracking_lead_button.setOnClickListener {
+
+            val eventId = eventIdEditText.value
+            val leadId = leadIdEditText.value
 
             var hasError = false
 
             if (eventId.isEmpty()){
                 hasError = true
-                eventIdInputLayout.error  = "Provide the paramter event Id"
+                eventIdInputLayout.error  = "Provide the parameter event Id"
             }
 
             if (leadId.isEmpty()){
                 hasError = true
-                leadIdInputLayout.error = "Provide the paramter lead Id"
+                leadIdInputLayout.error = "Provide the parameter lead Id"
             }
 
             if (!hasError){

@@ -2,6 +2,7 @@ package com.tradedoubler
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.tradedoubler.sdk.TradeDoublerSdk
 import com.tradedoubler.tradedoublersdk.R
@@ -18,7 +19,7 @@ class MainViewActivity: AppCompatActivity() {
 
         TradeDoublerSdk.create(applicationContext,initClient())
 
-        advertising_text.text = TradeDoublerSdk.getInstance().deviceIdentifier
+        advertising_text.text = TradeDoublerSdk.getInstance().advertisingId
         tduid_text.text = TradeDoublerSdk.getInstance().tduid
 
         isLoggingCheckBox.isChecked = TradeDoublerSdk.getInstance().isLoggingEnabled
@@ -42,11 +43,11 @@ class MainViewActivity: AppCompatActivity() {
         }
     }
 
-
     private fun initClient(): OkHttpClient {
+        val appContext = applicationContext
         val loggingInterceptor = Interceptor{
             window?.decorView?.post {
-              //  addItem(it.request().url.toString())
+                Toast.makeText(appContext,it.request().url.toString(),Toast.LENGTH_LONG).show()
             }
             it.proceed(it.request())
         }

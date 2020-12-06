@@ -12,12 +12,9 @@ import com.tradedoubler.sdk.ReportInfo
 import com.tradedoubler.sdk.TradeDoublerSdk
 import com.tradedoubler.tradedoublersdk.R
 import kotlinx.android.synthetic.main.activity_tracking_sale.*
-import kotlinx.android.synthetic.main.activity_tracking_sale.priceEditText
-import kotlinx.android.synthetic.main.activity_tracking_sale.priceInputLayout
 import kotlinx.android.synthetic.main.activity_tracking_sale.productNameInputLayout
 import kotlinx.android.synthetic.main.activity_tracking_sale.quantityEditText
 import kotlinx.android.synthetic.main.activity_tracking_sale.quantityInputLayout
-import kotlinx.android.synthetic.main.activity_tracking_sale_plt.*
 import java.util.*
 
 class TrackingSaleActivity : AppCompatActivity() {
@@ -30,6 +27,8 @@ class TrackingSaleActivity : AppCompatActivity() {
         setRecycleView()
         setSpinnerCurrency()
 
+        saleEventIdEditText.setText("403759")
+
         add_report_info.setOnClickListener {
 
             val productName = productNameEditText.value
@@ -40,27 +39,27 @@ class TrackingSaleActivity : AppCompatActivity() {
 
             if (productName.isEmpty()) {
                 hasError = true
-                productNameInputLayout.error = "Provide the paramter product name."
+                productNameInputLayout.error = "Provide the parameter product name."
             }
 
             if (price.isEmpty()) {
                 hasError = true
-                priceInputLayout.error = "Provide the paramter price."
+                priceInputLayout.error = "Provide the parameter price."
             }
 
             if (price.isNotEmpty() && price.toDouble() <= 0.00) {
                 hasError = true
-                priceInputLayout.error = "Paramter price cannot be negative."
+                priceInputLayout.error = "Parameter price cannot be negative."
             }
 
             if (quantity.isEmpty()) {
                 hasError = true
-                quantityInputLayout.error = "Provide the paramter quantity."
+                quantityInputLayout.error = "Provide the parameter quantity."
             }
 
             if (quantity.isNotEmpty() && quantity.toInt() <= 0) {
                 hasError = true
-                quantityInputLayout.error = "Paramter price cannot be negative."
+                quantityInputLayout.error = "Parameter price cannot be negative."
             }
 
             if (!hasError) {
@@ -72,7 +71,6 @@ class TrackingSaleActivity : AppCompatActivity() {
         call_tracking_sale_button.setOnClickListener {
             var hasError = false
             val eventId = saleEventIdEditText.value
-            val orderValue = orderValueEditText.value
             val voucherCode = voucherCodeEditText.value
             val currency = currencySpinner.selectedItem.toString()
 
@@ -83,31 +81,23 @@ class TrackingSaleActivity : AppCompatActivity() {
 
             if (eventId.isEmpty()){
                 hasError = true
-                saleEventIdInputLayout.error = "Provide the paramter event Id."
-            }
-
-            if (orderValue.isEmpty()) {
-                hasError = true
-                orderValueInputLayout.error = "Provide the paramter order value."
-            }
-
-            if (orderValue.isNotEmpty() && orderValue.toDouble() <=0.00){
-                orderValueInputLayout.error = "Paramter orderValue cannot be negative."
+                saleEventIdInputLayout.error = "Provide the parameter event Id."
             }
 
             if (!hasError) {
+
+                val reportInfo = ReportInfo(reportEntries = reportInfoAdapter.data.toList())
 
                 TradeDoublerSdk.getInstance()
                     .trackSale(
                         saleEventId = eventId,
                         orderNumber = generateId(5),
-                        orderValue = orderValue,
+                        orderValue = reportInfo.getOverallPrice(),
                         voucherCode = voucherCode,
                         currency = Currency.getInstance(currency),
-                        reportInfo = ReportInfo(reportEntries = reportInfoAdapter.data.toList())
+                        reportInfo = reportInfo
                     )
             }
-
         }
     }
 

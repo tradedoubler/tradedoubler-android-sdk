@@ -27,7 +27,7 @@ class SettingsActivity : AppCompatActivity() {
 
             if (organizationId.isEmpty()) {
                 hasError = true
-                organizationIdInputLayout.error = "Provide the paramter organization Id"
+                organizationIdInputLayout.error = "Provide the parameter organization Id"
             } else {
                 TradeDoublerSdk.getInstance().organizationId = organizationId
             }
@@ -57,7 +57,7 @@ class SettingsActivity : AppCompatActivity() {
 
             if (organizationId.isEmpty()) {
                 hasError = true
-                organizationIdInputLayout.error = "Provide the paramter organization Id"
+                organizationIdInputLayout.error = "Provide the parameter organization Id"
             } else {
                 TradeDoublerSdk.getInstance().organizationId = organizationId
             }
@@ -86,7 +86,7 @@ class SettingsActivity : AppCompatActivity() {
 
             if (organizationId.isEmpty()) {
                 hasError = true
-                organizationIdInputLayout.error = "Provide the paramter organization Id"
+                organizationIdInputLayout.error = "Provide the parameter organization Id"
             } else {
                 TradeDoublerSdk.getInstance().organizationId = organizationId
             }
@@ -95,13 +95,17 @@ class SettingsActivity : AppCompatActivity() {
                 userEmailInputLayout.error = "Incorrect email"
             }
 
-            if (userEmail.isValidEmail() && userEmail.isNotEmpty()) {
-                TradeDoublerSdk.getInstance().userEmail = userEmail
+            if (userEmail.isValidEmail()) {
+                if(TradeDoublerSdk.getInstance().userEmail != userEmail) {
+                    TradeDoublerSdk.getInstance().userEmail = userEmail
+                }
+            }else{
+                TradeDoublerSdk.getInstance().userEmail = null
             }
 
             if (secretCode.isEmpty()){
                 hasError = true
-                secertCodeInputLayout.error = "Provide the paramter secret Code"
+                secertCodeInputLayout.error = "Provide the parameter secret Code"
             }else {
                 TradeDoublerSdk.getInstance().secretCode = secretCode
             }
@@ -121,7 +125,7 @@ class SettingsActivity : AppCompatActivity() {
 
             if (organizationId.isEmpty()) {
                 hasError = true
-                organizationIdInputLayout.error = "Provide the paramter organization Id"
+                organizationIdInputLayout.error = "Provide the parameter organization Id"
             } else {
                 TradeDoublerSdk.getInstance().organizationId = organizationId
             }
@@ -136,7 +140,7 @@ class SettingsActivity : AppCompatActivity() {
 
             if (secretCode.isEmpty()){
                 hasError = true
-                secertCodeInputLayout.error = "Provide the paramter secret Code"
+                secertCodeInputLayout.error = "Provide the parameter secret Code"
             }else {
                 TradeDoublerSdk.getInstance().secretCode = secretCode
             }

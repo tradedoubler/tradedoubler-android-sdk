@@ -55,26 +55,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/orderValueSaleInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/eventIdInputLayout">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/orderValueBasketEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Order Value"
-                android:text="0.0"
-                android:inputType="numberDecimal" />
-        </com.google.android.material.textfield.TextInputLayout>
-
         <Spinner
             android:id="@+id/currencyPltSpinner"
             android:layout_width="match_parent"
@@ -85,7 +65,7 @@
             android:entries="@array/currency"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/orderValueSaleInputLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/eventIdInputLayout" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/voucherCodeSaleInputLayout"
