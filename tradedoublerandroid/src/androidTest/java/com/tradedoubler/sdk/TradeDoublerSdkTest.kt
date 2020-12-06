@@ -106,7 +106,7 @@ class TradeDoublerSdkTest {
             )
         )
 
-        tradeDoublerSdk.trackSale(saleEventId,"12553","231", Currency.getInstance("EUR"),null, reportInfo)
+        tradeDoublerSdk.trackSale(saleEventId,"12553",reportInfo.getOverallPrice(), Currency.getInstance("EUR"),null, reportInfo)
 
         Thread.sleep(3000)
     }
@@ -144,7 +144,6 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.userEmail = email
         tradeDoublerSdk.secretCode = "12345678"
         tradeDoublerSdk.isLoggingEnabled = true
-        tradeDoublerSdk.useAdvertisingId = true
 
         Thread.sleep(6000)
     }
@@ -157,7 +156,6 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.userEmail = email
         tradeDoublerSdk.secretCode = "12345678"
         tradeDoublerSdk.isLoggingEnabled = true
-        tradeDoublerSdk.useAdvertisingId = true
         tradeDoublerSdk.useInstallReferrer = true
 
         Thread.sleep(6000)

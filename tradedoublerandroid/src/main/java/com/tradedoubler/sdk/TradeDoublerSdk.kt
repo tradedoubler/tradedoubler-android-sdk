@@ -305,14 +305,14 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
     /**
      * track sale PLT for given parameters.
      */
-    fun trackSalePlt(orderNumber: String, currency: Currency, voucherCode: String?, basketInfo: BasketInfo){
+    fun trackSalePlt(orderNumber: String, currency: Currency?, voucherCode: String?, basketInfo: BasketInfo){
         trackSalePlt(DEFAULT_SALE_EVENT,orderNumber,currency,voucherCode,basketInfo)
     }
 
     /**
      * track sale PLT for given parameters.
      */
-    fun trackSalePlt(saleEventId: String, orderNumber: String, currency: Currency, voucherCode: String?, basketInfo: BasketInfo) {
+    fun trackSalePlt(saleEventId: String, orderNumber: String, currency: Currency?, voucherCode: String?, basketInfo: BasketInfo) {
         if(!isTrackingEnabled){
             return
         }
@@ -335,7 +335,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
                 organizationId,
                 saleEventId,
                 orderNumber,
-                currency.currencyCode,
+                currency?.currencyCode,
                 tduid,
                 extId,
                 voucherCode,

@@ -117,7 +117,7 @@ object HttpRequest {
         organizationId: String?,
         saleEventId: String,
         orderId: String,
-        currency: String,
+        currency: String?,
         tduid: String?,
         extId: String?,
         voucherCode: String?,
@@ -128,7 +128,7 @@ object HttpRequest {
         val queryParam = "?o($organizationId)" +
                 "event(${saleEventId})" +
                 "ordnum($orderId)" +
-                "curr($currency)" +
+                (if(currency != null) "curr(${currency ?: ""})" else "" ) +
                 (if(checksum != null) "chksum(${checksum ?: ""})" else "" ) +
                 "tduid(${tduid ?: ""})" +
                 "extid($extId)" +
