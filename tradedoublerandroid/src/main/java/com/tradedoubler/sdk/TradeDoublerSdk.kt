@@ -507,7 +507,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
     }
 
     internal fun onInternetConnected(){
-        if(!settings.wasInstallTduidInvoked && useInstallReferrer){
+        if(!settings.wasInstallTduidInvoked && useInstallReferrer && tduid.isNullOrEmpty()){
             retrieveInstallTduid()
         } else{
             invokeQueuedItems()
