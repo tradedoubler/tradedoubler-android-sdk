@@ -1,8 +1,6 @@
 package com.tradedoubler
 
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -88,11 +86,10 @@ class TrackingSaleActivity : AppCompatActivity() {
 
                 val reportInfo = ReportInfo(reportEntries = reportInfoAdapter.data.toList())
 
-                TradeDoublerSdk.getInstance()
-                    .trackSale(
+                TradeDoublerSdk.getInstance().trackSale(
                         saleEventId = eventId,
                         orderNumber = generateId(5),
-                        orderValue = reportInfo.getOverallPrice(),
+                        orderValue = reportInfo.getOrderValue(),
                         voucherCode = voucherCode,
                         currency = Currency.getInstance(currency),
                         reportInfo = reportInfo

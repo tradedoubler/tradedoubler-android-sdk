@@ -124,7 +124,7 @@ object HttpRequest {
         basket: BasketInfo,
         secretCode: String
     ): String {
-        val checksum = TradeDoublerSdkUtils.generateCheckSum(secretCode, orderId, basket.getOverallPrice().format(2))
+        val checksum = TradeDoublerSdkUtils.generateCheckSum(secretCode, orderId, basket.getOrderValue().format(2))
         val queryParam = "?o($organizationId)" +
                 "event(${saleEventId})" +
                 "ordnum($orderId)" +

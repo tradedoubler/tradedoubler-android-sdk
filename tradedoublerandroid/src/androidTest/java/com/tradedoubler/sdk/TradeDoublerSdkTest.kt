@@ -106,7 +106,7 @@ class TradeDoublerSdkTest {
             )
         )
 
-        tradeDoublerSdk.trackSale(saleEventId,"12553",reportInfo.getOverallPrice(), Currency.getInstance("EUR"),null, reportInfo)
+        tradeDoublerSdk.trackSale(saleEventId,"12553",reportInfo.getOrderValue(), Currency.getInstance("EUR"),null, reportInfo)
 
         Thread.sleep(3000)
     }

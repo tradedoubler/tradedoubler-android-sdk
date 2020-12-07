@@ -29,7 +29,7 @@ data class BasketInfo(val basketEntries: List<BasketEntry>): Parcelable {
         return "basket(${basketEntries.joinToString("") { it.toEncodedString() }})"
     }
 
-    fun getOverallPrice(): Double{
+    fun getOrderValue(): Double{
         return basketEntries.sumByDouble { it.getOverallPrice() }
     }
 
