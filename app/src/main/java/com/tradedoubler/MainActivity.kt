@@ -121,7 +121,6 @@ class MainActivity : AppCompatActivity() {
             )
             TradeDoublerSdk.getInstance().trackSalePlt(basketSale,orderNumber, Currency.getInstance("PLN"),"13131313", reportInfo)
         }
-
     }
 
     private fun retrieveReferrer(){

@@ -21,6 +21,7 @@ import android.app.Application
 import android.os.Handler
 import android.util.Log
 import android.widget.Toast
+import androidx.core.os.trace
 import com.tradedoubler.sdk.TradeDoublerSdk
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -32,6 +33,11 @@ class App : Application() {
         super.onCreate()
 
         TradeDoublerSdk.create(applicationContext,initClient())
+        TradeDoublerSdk.getInstance().organizationId = "945630"
+        TradeDoublerSdk.getInstance().secretCode = "12345678"
+
+        TradeDoublerSdk.getInstance().trackInstall("403761")
+        TradeDoublerSdk.getInstance().trackOpenApp()
     }
 
     private fun initClient(): OkHttpClient {

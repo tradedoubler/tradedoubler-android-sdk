@@ -30,6 +30,7 @@ class TrackingSalePltActivity : AppCompatActivity() {
         setContentView(R.layout.activity_tracking_sale_plt)
         setRecycleView()
         setSpinnerCurrency()
+        setSpinnerGroup()
 
         eventIdEditText.setText("51")
 
@@ -65,9 +66,11 @@ class TrackingSalePltActivity : AppCompatActivity() {
                 quantityInputLayout.error = "parameter price cannot be negative."
             }
 
+            val group = groupPltSpinner.selectedItem.toString()
+
             if (!hasError) {
                 val basketEntry =
-                    BasketEntry(group = generateId(4), id = randomInt(), productName = productName, price = price.toDouble(), quantity = quantity.toInt())
+                    BasketEntry(group = group, id = randomInt(), productName = productName, price = price.toDouble(), quantity = quantity.toInt())
                 basketInfoAdapter.addBasketEntry(basketEntry)
             }
         }
@@ -119,6 +122,18 @@ class TrackingSalePltActivity : AppCompatActivity() {
             android.R.layout.simple_spinner_item, currency
         )
         currencyPltSpinner.adapter = adapter
+    }
+
+    private fun setSpinnerGroup() {
+        val groups = mutableListOf<String>().apply {
+            add("3408")
+            add("3168")
+        }
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item, groups
+        )
+        groupPltSpinner.adapter = adapter
     }
 
 }
