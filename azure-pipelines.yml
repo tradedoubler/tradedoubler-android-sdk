@@ -24,10 +24,10 @@ steps:
     tasks: 'assemble'
     
 - task: Gradle@2
-  displayName: 'Deploy sdk '
+  displayName: 'Build and deploy sdk '
   inputs:
     workingDirectory: ''
     gradleWrapperFile: 'gradlew'
     gradleOptions: '-Xmx3072m'
     publishJUnitResults: false
-    tasks: 'publish'
+    tasks: 'assemble publish'
