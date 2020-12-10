@@ -7,7 +7,7 @@ trigger:
 - azure
 
 pool:
-  vmImage: 'macOS-10.15'
+  vmImage: 'macOS-latest'
 
 steps:
 - script: echo Hello, world!
