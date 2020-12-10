@@ -14,8 +14,8 @@ steps:
   displayName: 'Run tradedoubler'
 
 - task: Gradle@2
+  displayName: 'Build sdk'
   inputs:
-    displayName: 'Build sdk'
     workingDirectory: ''
     gradleWrapperFile: 'gradlew'
     gradleOptions: '-Xmx3072m'
@@ -24,10 +24,10 @@ steps:
     tasks: 'assembleDebug'
     
 - task: Gradle@2
+  displayName: 'Deploy sdk '
   inputs:
-    displayName: 'Deploy sdk '
     workingDirectory: ''
     gradleWrapperFile: 'gradlew'
     gradleOptions: '-Xmx3072m'
     publishJUnitResults: false
-    tasks: 'assembleDebug'
+    tasks: 'publish'
