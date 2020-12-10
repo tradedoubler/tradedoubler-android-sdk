@@ -1,7 +1,37 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'maven-publish'
 }
+
+
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier "sources"
+}
+
+publishing {
+    publications {
+        bar(MavenPublication) {
+            groupId 'com.tradedoubler'
+            artifactId 'android-sdk'
+            version '0.1'
+            artifact(sourceJar)
+            artifact("$buildDir/outputs/aar/tradedoublerandroid-release.aar")
+        }
+    }
+    repositories {
+        maven {
+            url 'https://pkgs.dev.azure.com/tradedoubler-sdk/tradedoubler-android-sdk/_packaging/release-repo/maven/v1'
+            credentials {
+                username "Azure DevOps Services"
+                //The Azure DevOps Services build system will use the "SYSTEM_ACCESSTOKEN" to authenticate to Azure DevOps Services feeds
+                password System.getenv("AZURE_ARTIFACTS_ENV_ACCESS_TOKEN") != null ? System.getenv("AZURE_ARTIFACTS_ENV_ACCESS_TOKEN") : ""
+            }
+        }
+    }
+}
+
 
 android {
     compileSdkVersion 30
@@ -10,8 +40,6 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
