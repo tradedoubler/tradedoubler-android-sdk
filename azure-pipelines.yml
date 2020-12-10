@@ -15,9 +15,19 @@ steps:
 
 - task: Gradle@2
   inputs:
+    displayName: 'Build sdk'
     workingDirectory: ''
     gradleWrapperFile: 'gradlew'
     gradleOptions: '-Xmx3072m'
     publishJUnitResults: false
     testResultsFiles: '**/TEST-*.xml'
+    tasks: 'assembleDebug'
+    
+- task: Gradle@2
+  inputs:
+    displayName: 'Deploy sdk '
+    workingDirectory: ''
+    gradleWrapperFile: 'gradlew'
+    gradleOptions: '-Xmx3072m'
+    publishJUnitResults: false
     tasks: 'assembleDebug'
