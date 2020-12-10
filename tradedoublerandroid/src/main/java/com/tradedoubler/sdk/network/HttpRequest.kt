@@ -117,18 +117,18 @@ object HttpRequest {
         organizationId: String?,
         saleEventId: String,
         orderId: String,
-        currency: String,
+        currency: String?,
         tduid: String?,
         extId: String?,
         voucherCode: String?,
         basket: BasketInfo,
         secretCode: String
     ): String {
-        val checksum = TradeDoublerSdkUtils.generateCheckSum(secretCode, orderId, basket.getOverallPrice().format(2))
+        val checksum = TradeDoublerSdkUtils.generateCheckSum(secretCode, orderId, basket.getOrderValue().format(2))
         val queryParam = "?o($organizationId)" +
                 "event(${saleEventId})" +
                 "ordnum($orderId)" +
-                "curr($currency)" +
+                (if(currency != null) "curr(${currency ?: ""})" else "" ) +
                 (if(checksum != null) "chksum(${checksum ?: ""})" else "" ) +
                 "tduid(${tduid ?: ""})" +
                 "extid($extId)" +

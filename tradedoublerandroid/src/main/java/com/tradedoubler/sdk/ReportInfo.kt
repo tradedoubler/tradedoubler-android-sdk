@@ -28,7 +28,7 @@ data class ReportInfo(val reportEntries: List<ReportEntry>): Parcelable {
         return reportEntries.joinToString("|") { it.toEncodedString() }
     }
 
-    fun getOverallPrice(): Double{
+    fun getOrderValue(): Double{
         return reportEntries.sumByDouble { it.getOverallPrice() }
     }
 

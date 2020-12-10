@@ -72,10 +72,6 @@ class MainActivity : AppCompatActivity() {
             addItem("tduid: ${TradeDoublerSdk.getInstance().tduid}", "advertisingId: ${TradeDoublerSdk.getInstance().advertisingId}")
         }
 
-//        aaid.setOnClickListener {
-//            TradeDoublerSdk.getInstance().useAdvertisingId = true
-//        }
-
         referrer_btn.setOnClickListener {
             TradeDoublerSdk.getInstance().useInstallReferrer = true
 
@@ -125,7 +121,6 @@ class MainActivity : AppCompatActivity() {
             )
             TradeDoublerSdk.getInstance().trackSalePlt(basketSale,orderNumber, Currency.getInstance("PLN"),"13131313", reportInfo)
         }
-
     }
 
     private fun retrieveReferrer(){

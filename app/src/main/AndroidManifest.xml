@@ -19,6 +19,19 @@
         android:theme="@style/Theme.TradeDoublerSdk">
 
         <activity android:name="com.tradedoubler.MainActivity">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
+<!--                <data android:scheme="https" android:host="www.tradedoubler.com" android:pathPattern=".*"/>-->
+<!--            </intent-filter>-->
+        </activity>
+
+        <activity android:name="com.tradedoubler.MainViewActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -30,6 +43,25 @@
                 <data android:scheme="https" android:host="www.tradedoubler.com" android:pathPattern=".*"/>
             </intent-filter>
         </activity>
+
+
+        <activity android:name="com.tradedoubler.SettingsActivity">
+
+        </activity>
+
+        <activity android:name="com.tradedoubler.TrackingLeadActivity">
+
+        </activity>
+
+        <activity android:name="com.tradedoubler.TrackingSaleActivity">
+
+        </activity>
+
+        <activity android:name="com.tradedoubler.TrackingSalePltActivity">
+
+        </activity>
+
+
     </application>
 
 </manifest>

@@ -40,7 +40,6 @@ class OfflineDatabase(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
         val cValues = ContentValues()
         cValues.put(KEY_URL, url)
         val rowId = db.insert(TABLE_Offline, null, cValues)
-        db.close()
         return OfflineUrl(rowId,url)
     }
 
@@ -88,7 +87,6 @@ class OfflineDatabase(context: Context?) : SQLiteOpenHelper(context, DB_NAME, nu
     fun deleteUrl(urlId: Long) {
         val db = this.writableDatabase
         db.delete(TABLE_Offline, "$KEY_ID = ?", arrayOf(urlId.toString()))
-        db.close()
     }
 
     companion object {

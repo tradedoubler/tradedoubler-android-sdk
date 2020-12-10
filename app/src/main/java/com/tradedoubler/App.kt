@@ -18,16 +18,44 @@
 package com.tradedoubler
 
 import android.app.Application
+import android.os.Handler
+import android.util.Log
+import android.widget.Toast
+import androidx.core.os.trace
 import com.tradedoubler.sdk.TradeDoublerSdk
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
 
 class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
 
-        TradeDoublerSdk.create(this)
-        TradeDoublerSdk.getInstance().isLoggingEnabled = true
+        TradeDoublerSdk.create(applicationContext,initClient())
         TradeDoublerSdk.getInstance().organizationId = "945630"
-        //TradeDoublerSdk.getInstance().userEmail = "magdalena.dziesinska@britenet.com.pl"
+        TradeDoublerSdk.getInstance().secretCode = "12345678"
+
+        TradeDoublerSdk.getInstance().trackInstall("403761")
+        TradeDoublerSdk.getInstance().trackOpenApp()
+    }
+
+    private fun initClient(): OkHttpClient {
+        val appContext = applicationContext
+        val handler = Handler(appContext.mainLooper)
+        val loggingInterceptor = Interceptor{
+            handler.post {
+                Toast.makeText(appContext,it.request().url.toString(), Toast.LENGTH_LONG).show()
+            }
+            it.proceed(it.request())
+        }
+
+        return OkHttpClient.Builder()
+            .followRedirects(true)
+            .followSslRedirects(true)
+            .readTimeout(10000, TimeUnit.MILLISECONDS)
+            .connectTimeout(10000, TimeUnit.MILLISECONDS)
+            .addInterceptor(loggingInterceptor)
+            .build()
     }
 }
