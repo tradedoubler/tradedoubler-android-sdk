@@ -4,14 +4,52 @@
 # https://aka.ms/yaml
 
 trigger:
-- azure
+  batch: true
+  branches:
+    include:
+      - master
+      - develop
+      - azure
 
 pool:
   vmImage: 'macOS-latest'
 
+variables:
+- group: common_variables
+- name: GRADLE_USER_HOME
+  value: $(Pipeline.Workspace)/.gradle
+- name: isMasterBranch
+  value: $[ startsWith(variables['Build.SourceBranch'], 'refs/heads/master') ]
+
 steps:
 - script: echo Hello, world!
   displayName: 'Run tradedoubler'
+
+- task: Cache@2
+  inputs:
+    key: 'gradle | "$(Agent.OS)" | app/build.gradle'
+    restoreKeys: gradle
+    path: $(GRADLE_USER_HOME)
+  condition: eq ( variables['isReleaseCandidate'], 'False' )
+  displayName: Gradle build cache
+
+- task: CacheBeta@0
+  displayName: 'Caching System Images for AVD'
+  inputs:
+    key: 'AVD_IMAGES_PIXEL_28'
+    path: '$(ANDROID_HOME)/system-images'
+    cacheHitVar: 'AVD_IMAGES_RESTORED'
+  continueOnError: true
+
+- task: Bash@3
+  displayName: 'Creating System Images for AVD'
+  inputs:
+    filePath: 'create_emulator.sh'
+
+- task: Bash@3
+  displayName: 'Starting AVD'
+  inputs:
+    filePath: 'start_emulator.sh'
 
 - task: Gradle@2
   displayName: 'Build sdk'
