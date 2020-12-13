@@ -15,7 +15,6 @@ pool:
   vmImage: 'macOS-latest'
 
 variables:
-- group: common_variables
 - name: GRADLE_USER_HOME
   value: $(Pipeline.Workspace)/.gradle
 - name: isMasterBranch
