@@ -56,15 +56,6 @@ steps:
     workingDirectory: ''
     gradleWrapperFile: 'gradlew'
     gradleOptions: '-Xmx3072m'
-    publishJUnitResults: false
+    publishJUnitResults: true
     testResultsFiles: '**/TEST-*.xml'
     tasks: 'assemble connectedAndroidTest'
-    
-- task: Gradle@2
-  displayName: 'Build and deploy sdk '
-  inputs:
-    workingDirectory: ''
-    gradleWrapperFile: 'gradlew'
-    gradleOptions: '-Xmx3072m'
-    publishJUnitResults: false
-    tasks: 'assemble publish'
