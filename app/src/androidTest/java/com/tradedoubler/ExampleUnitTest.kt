@@ -1,4 +1,4 @@
-package com.tradedouble.tradedoublersdk
+package com.tradedoubler
 
 import org.junit.Test
 

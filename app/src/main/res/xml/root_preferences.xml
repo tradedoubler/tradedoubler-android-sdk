@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Connection">
+
+        <EditTextPreference
+            android:name="Timeout Preference"
+            android:defaultValue="5"
+            android:summary="Max time in seconds for a trackback connection to be established"
+            android:inputType="numberDecimal|numberSigned"
+            android:title="Timeout (s)"
+            android:key="editTextTimeout" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="General">
+
+        <EditTextPreference
+            android:name="Currency Preference"
+            android:summary="Three letter code (EUR, GPB, SEK, ...)"
+            android:defaultValue="EUR"
+            android:title="Currency"
+            android:key="editTextCurrency" />
+        <CheckBoxPreference
+            android:name="Test Mode Preference"
+            android:summary="If enabled, a random device identifier will be generated instead of the UDID"
+            android:defaultValue="false"
+            android:title="Test Mode"
+            android:key="checkBoxTestMode" />
+
+        <EditTextPreference
+            android:name="User Email"
+            android:summary="Please set user email."
+            android:title="User Email"
+            android:key="editTextCurrency" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="App Download Tracking">
+
+        <EditTextPreference
+            android:name="Organization Preference"
+            android:summary=""
+            android:defaultValue=""
+            android:inputType="numberDecimal|numberSigned"
+            android:title="Organization ID"
+            android:key="editTextOrganization" />
+        <EditTextPreference
+            android:name="Event Preference"
+            android:summary=""
+            android:defaultValue=""
+            android:inputType="numberDecimal|numberSigned"
+            android:title="Event ID"
+            android:key="editTextEvent" />
+        <EditTextPreference
+            android:name="Secret Code Preference"
+            android:summary=""
+            android:defaultValue=""
+            android:inputType="numberDecimal|numberSigned"
+            android:title="Secret Code"
+            android:key="editTextSecretCode" />
+        <CheckBoxPreference
+            android:name="Sale Preference"
+            android:summary="Track as 'sale' or 'lead'"
+            android:defaultValue="false"
+            android:title="Track as Sale"
+            android:key="checkBoxSale" />
+        <EditTextPreference
+            android:name="Order Value Preference"
+            android:summary="Price / Amount)"
+            android:defaultValue="7"
+            android:inputType="numberDecimal|numberSigned"
+            android:title="Order Value"
+            android:key="editTextOrderValue"
+            android:dependency="checkBoxSale" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Post-Download Tracking">
+
+        <EditTextPreference
+            android:name="Post-Download Event Preference"
+            android:summary=""
+            android:defaultValue=""
+            android:inputType="numberDecimal|numberSigned"
+            android:title="Post-Download Event ID"
+            android:key="editTextPostDownloadEvent" />
+
+        <EditTextPreference
+            android:name="Post-Download Order Value Preference"
+            android:summary="Price / Amount)"
+            android:defaultValue="7"
+            android:inputType="numberDecimal|numberSigned"
+            android:title="Post-Download Order Value"
+            android:key="editTextPostDownloadOrderValue" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="In-App Tracking">
+
+        <EditTextPreference
+            android:name="In-App Event Preference"
+            android:summary=""
+            android:defaultValue=""
+            android:inputType="numberDecimal|numberSigned"
+            android:title="In-App Event ID"
+            android:key="editTextInAppEvent" />
+
+        <EditTextPreference
+            android:name="In-App Order Value Preference"
+            android:summary="Price / Amount)"
+            android:defaultValue="1414"
+            android:inputType="numberDecimal|numberSigned"
+            android:title="In-App Order Value"
+            android:key="editTextInAppOrderValue" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
