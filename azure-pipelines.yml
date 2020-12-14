@@ -58,7 +58,7 @@ steps:
     gradleOptions: '-Xmx3072m'
     publishJUnitResults: false
     testResultsFiles: '**/TEST-*.xml'
-    tasks: 'assemble'
+    tasks: 'assemble connectedAndroidTest'
     
 - task: Gradle@2
   displayName: 'Build and deploy sdk '

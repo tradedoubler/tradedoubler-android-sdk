@@ -164,7 +164,7 @@ class TradeDoublerSdkTest {
     @Test
     fun retrieveTduidFromReferrer(){
         Assert.assertEquals("123123",TradeDoublerSdkUtils.extractTduidFromQuery("tduid=123123"))
-        Assert.assertEquals("123123",TradeDoublerSdkUtils.extractTduidFromQuery("TduId=723654"))
+        Assert.assertEquals("723654",TradeDoublerSdkUtils.extractTduidFromQuery("TduId=723654"))
         Assert.assertNull(TradeDoublerSdkUtils.extractTduidFromQuery("TduuId=723654"))
     }
 
