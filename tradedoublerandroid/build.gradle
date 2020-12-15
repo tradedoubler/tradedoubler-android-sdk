@@ -15,7 +15,7 @@ publishing {
         bar(MavenPublication) {
             groupId 'com.tradedoubler'
             artifactId 'android-sdk'
-            version '0.1.0-SNAPSHOT'
+            version gradle.ext.sdkVersion
             artifact(sourceJar)
             artifact("$buildDir/outputs/aar/tradedoublerandroid-release.aar")
         }
