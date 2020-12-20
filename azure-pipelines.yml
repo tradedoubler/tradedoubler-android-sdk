@@ -51,7 +51,7 @@ steps:
     filePath: 'start_emulator.sh'
 
 - task: Gradle@2
-  displayName: 'Build sdk'
+  displayName: 'Build and test sdk'
   inputs:
     workingDirectory: ''
     gradleWrapperFile: 'gradlew'

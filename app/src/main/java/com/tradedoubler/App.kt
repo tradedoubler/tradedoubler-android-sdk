@@ -19,9 +19,7 @@ package com.tradedoubler
 
 import android.app.Application
 import android.os.Handler
-import android.util.Log
 import android.widget.Toast
-import androidx.core.os.trace
 import com.tradedoubler.sdk.TradeDoublerSdk
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
