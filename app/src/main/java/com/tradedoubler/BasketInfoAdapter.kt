@@ -17,6 +17,8 @@ class BasketInfoAdapter : BaseAdapter<BasketEntry, BasketInfoAdapter.BasketInfoV
     override fun onBindViewHolder(holder: BasketInfoViewHolder, item: BasketEntry, position: Int) {
         holder.itemView.apply {
             val spanText = SpannableStringBuilder()
+            spanText.append("GroupId : ${item.group}")
+            spanText.append("\n")
             spanText.append("Id : ${item.id}")
             spanText.append("\n")
             spanText.append("Product :${item.productName}")

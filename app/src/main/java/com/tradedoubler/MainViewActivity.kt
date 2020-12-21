@@ -17,16 +17,13 @@ class MainViewActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main)
 
-        advertising_text.text = TradeDoublerSdk.getInstance().advertisingId
-        tduid_text.text = TradeDoublerSdk.getInstance().tduid
+        updateViewValues()
 
-        isLoggingCheckBox.isChecked = TradeDoublerSdk.getInstance().isLoggingEnabled
-        isLoggingCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+        isLoggingCheckBox.setOnCheckedChangeListener { _, isChecked ->
             TradeDoublerSdk.getInstance().isLoggingEnabled = isChecked
         }
 
-        isTrackingCheckBox.isChecked = TradeDoublerSdk.getInstance().isTrackingEnabled
-        isTrackingCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+        isTrackingCheckBox.setOnCheckedChangeListener { _, isChecked ->
             TradeDoublerSdk.getInstance().isTrackingEnabled = isChecked
         }
 
@@ -36,12 +33,29 @@ class MainViewActivity: AppCompatActivity() {
             startActivity(intent)
         }
 
-        clear_view.setOnClickListener {
-
-        }
-
         TradeDoublerSdk.getInstance().retrieveAndSetTduidFromIntent(intent)?.also {
             Toast.makeText(this@MainViewActivity, "new tduid $it",Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun updateViewValues() {
+        advertising_text.text = TradeDoublerSdk.getInstance().advertisingId
+        tduid_text.text = TradeDoublerSdk.getInstance().tduid
+        isLoggingCheckBox.isChecked = TradeDoublerSdk.getInstance().isLoggingEnabled
+        isTrackingCheckBox.isChecked = TradeDoublerSdk.getInstance().isTrackingEnabled
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshPeriodically()
+    }
+
+    private fun refreshPeriodically(){
+        window?.decorView?.postDelayed({
+            if(window?.decorView != null){
+                updateViewValues()
+                refreshPeriodically()
+            }
+        },2000)
     }
 }

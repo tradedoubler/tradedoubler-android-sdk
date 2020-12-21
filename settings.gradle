@@ -1,3 +1,4 @@
+gradle.ext.sdkVersion =  '1.0.1-SNPASHOT'
 include ':tradedoublerandroid'
 include ':app'
 rootProject.name = "TradeDoublerSdk"
