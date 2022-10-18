@@ -25,7 +25,7 @@ The next step is adding the library as the application dependency:
 
 ```
 dependencies {
-   implementation "com.tradedoubler:android-sdk:1.0.0"
+   implementation "com.tradedoubler:android-sdk:1.1.0"
 }
 ```
 
