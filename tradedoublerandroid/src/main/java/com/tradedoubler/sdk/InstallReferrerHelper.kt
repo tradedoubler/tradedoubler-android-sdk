@@ -33,6 +33,8 @@ internal object InstallReferrerHelper {
             override fun onInstallReferrerSetupFinished(responseCode: Int) {
                 when (responseCode) {
                     InstallReferrerClient.InstallReferrerResponse.OK -> {
+                        // because of play referrer library bug
+                        // https://issuetracker.google.com/issues/189820728
                         try {
                             val response: ReferrerDetails = referrerClient.installReferrer
                             val referrerUrl = response.installReferrer
