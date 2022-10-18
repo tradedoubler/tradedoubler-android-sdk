@@ -18,6 +18,7 @@
 package com.tradedoubler.sdk
 
 import android.content.Context
+import android.os.DeadObjectException
 import com.android.installreferrer.api.InstallReferrerClient
 import com.android.installreferrer.api.InstallReferrerStateListener
 import com.android.installreferrer.api.ReferrerDetails
@@ -25,16 +26,24 @@ import com.android.installreferrer.api.ReferrerDetails
 
 internal object InstallReferrerHelper {
 
-    fun retrieveReferrer(context: Context, successCallback: (String?) -> Unit, errorCallback: (String) -> Unit) {
+    fun retrieveReferrer(context: Context, successCallback: (String?) -> Unit, errorCallback: (String) -> Unit, retryCount: Int = 1) {
 
         val referrerClient = InstallReferrerClient.newBuilder(context).build()
         referrerClient.startConnection(object : InstallReferrerStateListener {
             override fun onInstallReferrerSetupFinished(responseCode: Int) {
                 when (responseCode) {
                     InstallReferrerClient.InstallReferrerResponse.OK -> {
-                        val response: ReferrerDetails = referrerClient.installReferrer
-                        val referrerUrl  = response.installReferrer
-                        successCallback.invoke(TradeDoublerSdkUtils.extractTduidFromQuery(referrerUrl))
+                        try {
+                            val response: ReferrerDetails = referrerClient.installReferrer
+                            val referrerUrl = response.installReferrer
+                            successCallback.invoke(TradeDoublerSdkUtils.extractTduidFromQuery(referrerUrl))
+                        } catch (e: DeadObjectException){
+                            if(retryCount > 0){
+                                retrieveReferrer(context, successCallback, errorCallback, retryCount - 1)
+                            }else{
+                                errorCallback.invoke("Install referrer, dead object exception")
+                            }
+                        }
                     }
 
                     InstallReferrerClient.InstallReferrerResponse.FEATURE_NOT_SUPPORTED -> {
