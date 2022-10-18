@@ -40,9 +40,14 @@ internal object AdvertisingIdHelper {
             } catch (e: GooglePlayServicesRepairableException) {
                 errorCallback.invoke("Could not fetch advertising id, Google Play Service need repairing")
             }
-            if (adInfo != null) {
+            if (adInfo != null ) {
                 try {
-                    successCallback.invoke(adInfo.id)
+                    val id = adInfo.id
+                    if(id != null) {
+                        successCallback.invoke(id)
+                    }else{
+                        errorCallback.invoke("Advertising id is null")
+                    }
                 } catch (e: ExecutionException) {
                     errorCallback.invoke("Could not fetch advertising id, ExecutionException")
                 } catch (e: InterruptedException) {
