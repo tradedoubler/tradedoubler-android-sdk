@@ -158,13 +158,12 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             return
         }
 
-        fun buildTrackLead(extId: String): String {
+        fun buildTrackLead(extId: String?): String {
             return HttpRequest.trackingLead(organizationId, leadEventId, leadId, tduid, extId)
         }
 
-        if (!userEmail.isNullOrEmpty()) {
-            appendRequest(buildTrackLead(userEmail))
-        }
+        appendRequest(buildTrackLead(userEmail))
+
     }
 
     /**
@@ -219,7 +218,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val tduid = settings.tduid
         val userEmail = settings.userEmail
 
-        fun buildTrackSaleUrl(extId: String): String {
+        fun buildTrackSaleUrl(extId: String?): String {
             return HttpRequest.trackingSale(
                 organizationId,
                 saleEventId,
@@ -234,9 +233,8 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             )
         }
 
-        if (!userEmail.isNullOrEmpty()) {
-            appendRequest(buildTrackSaleUrl(userEmail))
-        }
+        appendRequest(buildTrackSaleUrl(userEmail))
+
     }
 
     /**
@@ -279,7 +277,7 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             return
         }
 
-        fun buildTrackSalPltUrl(extId: String): String {
+        fun buildTrackSalPltUrl(extId: String?): String {
             return HttpRequest.trackingSalePLT(
                 organizationId,
                 saleEventId,
@@ -293,9 +291,8 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             )
         }
 
-        if (!userEmail.isNullOrEmpty()) {
-            appendRequest(buildTrackSalPltUrl(userEmail))
-        }
+        appendRequest(buildTrackSalPltUrl(userEmail))
+
     }
 
     /**
