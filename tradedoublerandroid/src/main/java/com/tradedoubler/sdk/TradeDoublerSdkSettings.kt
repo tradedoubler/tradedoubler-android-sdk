@@ -65,11 +65,6 @@ internal class TradeDoublerSdkSettings(private val context: Context) {
             return settings.getString(SECRET_CODE_VALUE, null)
         }
 
-    val advertisingIdentifier: String?
-        get() {
-            return settings.getString(GAID_VALUE, null)
-        }
-
     val wasInstallTracked: Boolean
         get() {
             return settings.getBoolean(WAS_INSTALL_TRACKED, false)

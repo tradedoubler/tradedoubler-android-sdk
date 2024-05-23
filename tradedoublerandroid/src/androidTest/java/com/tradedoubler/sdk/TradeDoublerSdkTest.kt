@@ -46,7 +46,6 @@ class TradeDoublerSdkTest {
     private val orgId = "945630"
     private val tdUid = "3e28242cd1c67ca5d9b19d2395e52941"
     private val email = "test24588444@tradedoubler.com"
-    private val advertisingId = "xsdedrf"
 
     @Test
     fun trackAppInstall() {
@@ -55,7 +54,6 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
-        tradeDoublerSdk.advertisingId = advertisingId
 
         tradeDoublerSdk.trackInstall(installEventId)
 
@@ -69,7 +67,6 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
-        tradeDoublerSdk.advertisingId = advertisingId
 
         tradeDoublerSdk.trackLead(leadEventId,"734")
 
@@ -84,7 +81,6 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
-        tradeDoublerSdk.advertisingId = advertisingId
         tradeDoublerSdk.secretCode = "12345678"
 
         val reportInfo = ReportInfo(
@@ -106,7 +102,6 @@ class TradeDoublerSdkTest {
         tradeDoublerSdk.tduid = tdUid
         tradeDoublerSdk.organizationId = orgId
         tradeDoublerSdk.userEmail = email
-        tradeDoublerSdk.advertisingId = advertisingId
         tradeDoublerSdk.secretCode = "12345678"
 
         val reportInfo = BasketInfo(
