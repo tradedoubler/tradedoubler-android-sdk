@@ -37,6 +37,8 @@ import com.tradedoubler.sdk.utils.Constant.ORGANIZATION
 import com.tradedoubler.sdk.utils.Constant.ORGANIZATION_ID
 import com.tradedoubler.sdk.utils.Constant.REPORT_INFO
 import com.tradedoubler.sdk.utils.Constant.TDUID
+import com.tradedoubler.sdk.utils.Constant.TTID
+import com.tradedoubler.sdk.utils.Constant.TTID_ANDROID_VALUE
 import com.tradedoubler.sdk.utils.Constant.VERIFY
 import com.tradedoubler.sdk.utils.Constant.VOUCHER
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -57,6 +59,7 @@ object HttpRequest {
         urlBuilder.addQueryParameter(TDUID, tduid)
         urlBuilder.addQueryParameter(EXT_TYP, "1")
         urlBuilder.addQueryParameter(EXT_ID, extId)
+        urlBuilder.addQueryParameter(TTID, TTID_ANDROID_VALUE)
         return urlBuilder.toString()
     }
 
@@ -74,6 +77,7 @@ object HttpRequest {
         urlBuilder.addQueryParameter(TDUID, tduid)
         urlBuilder.addQueryParameter(EXT_TYP, "1")
         urlBuilder.addQueryParameter(EXT_ID, extId)
+        urlBuilder.addQueryParameter(TTID, TTID_ANDROID_VALUE)
         return urlBuilder.toString()
     }
 
@@ -110,6 +114,7 @@ object HttpRequest {
         reportInfo?.let {
             urlBuilder.addQueryParameter(REPORT_INFO, it.toEncodedString())
         }
+        urlBuilder.addQueryParameter(TTID, TTID_ANDROID_VALUE)
         return urlBuilder.toString()
     }
 
@@ -135,6 +140,7 @@ object HttpRequest {
                 "exttype(1)" +
                 (if(voucherCode != null) "voucher(${voucherCode ?: ""})" else "" ) +
                 "enc(3)" +
+                "ttid(${TTID_ANDROID_VALUE})" +
                 basket.toEncodedString()
         return BASE_URL_SALE + queryParam
     }
