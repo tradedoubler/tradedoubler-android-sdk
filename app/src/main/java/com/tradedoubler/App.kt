@@ -35,7 +35,6 @@ class App : Application() {
         TradeDoublerSdk.getInstance().secretCode = "12345678"
 
         TradeDoublerSdk.getInstance().trackInstall("403761")
-        TradeDoublerSdk.getInstance().trackOpenApp()
     }
 
     private fun initClient(): OkHttpClient {

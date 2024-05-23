@@ -42,11 +42,6 @@ class SettingsActivity : AppCompatActivity() {
             }else{
                 TradeDoublerSdk.getInstance().userEmail = null
             }
-
-            if (!hasError){
-                TradeDoublerSdk.getInstance().trackOpenApp()
-            }
-
         }
 
 

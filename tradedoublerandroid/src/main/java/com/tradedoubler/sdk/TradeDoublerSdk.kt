@@ -158,46 +158,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
     }
 
     /**
-     * track opening app event
-     */
-    fun trackOpenApp() {
-        if (!isTrackingEnabled) {
-            return
-        }
-        val organizationId = settings.organizationId
-        val tduid = settings.tduid
-        val userEmail = settings.userEmail
-        val googleAdvertisingId = settings.advertisingIdentifier
-
-        if (!validateOrganizationId(organizationId)) {
-            return
-        }
-
-        if(tduid.isNullOrEmpty() && !settings.wasInstallTduidInvoked && useInstallReferrer){
-            retrieveInstallTduid()
-            queuedItems.add{ trackOpenApp() }
-            return
-        }
-
-        if(googleAdvertisingId.isNullOrEmpty()){
-            queuedItems.add{ trackOpenApp() }
-            return
-        }
-
-        fun buildTrackOpenUrl(extId: String): String {
-            return HttpRequest.trackingOpen(organizationId, extId, tduid, "1")
-        }
-
-        if (!userEmail.isNullOrEmpty()) {
-            appendRequest(buildTrackOpenUrl(userEmail))
-        }
-
-        if (!googleAdvertisingId.isNullOrEmpty()) {
-            appendRequest(buildTrackOpenUrl(googleAdvertisingId))
-        }
-    }
-
-    /**
      *  Track lead for given lead event.
      */
     fun trackLead(leadEventId: String, leadId: String) {

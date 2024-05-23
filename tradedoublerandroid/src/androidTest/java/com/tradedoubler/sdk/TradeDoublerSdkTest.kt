@@ -49,18 +49,6 @@ class TradeDoublerSdkTest {
     private val advertisingId = "xsdedrf"
 
     @Test
-    fun trackAppOpen() {
-        val tradeDoublerSdk = createSkdClient()
-
-        tradeDoublerSdk.tduid = tdUid
-        tradeDoublerSdk.organizationId = orgId
-        tradeDoublerSdk.userEmail = email
-        tradeDoublerSdk.advertisingId = advertisingId
-
-        tradeDoublerSdk.trackOpenApp()
-    }
-
-    @Test
     fun trackAppInstall() {
         val tradeDoublerSdk = createSkdClient()
 
