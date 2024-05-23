@@ -111,16 +111,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         }
 
     /**
-     * Advertising identifier of user, default implementations use Google Advertising Id.
-     */
-    var advertisingId: String?
-        get() = settings.advertisingIdentifier
-        set(googleAdvertisingId) {
-            val generateSHA56Hash = TradeDoublerSdkUtils.generateSHA56Hash(googleAdvertisingId)
-            settings.storeAdvertisingIdentifier(generateSHA56Hash)
-        }
-
-    /**
      *  Secret code, should be provided by Tradedoubler.
      */
     var secretCode: String?
@@ -153,10 +143,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             }
         }
 
-    init {
-        retrieveGoogleAdvertisingId()
-    }
-
     /**
      *  Track lead for given lead event.
      */
@@ -167,7 +153,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val organizationId = settings.organizationId
         val tduid = settings.tduid
         val userEmail = settings.userEmail
-        val googleAdvertisingId = settings.advertisingIdentifier
 
         if (!validateOrganizationId(organizationId)) {
             return
@@ -179,10 +164,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
 
         if (!userEmail.isNullOrEmpty()) {
             appendRequest(buildTrackLead(userEmail))
-        }
-
-        if (!googleAdvertisingId.isNullOrEmpty()) {
-            appendRequest(buildTrackLead(googleAdvertisingId))
         }
     }
 
@@ -237,7 +218,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
 
         val tduid = settings.tduid
         val userEmail = settings.userEmail
-        val googleAdvertisingId = settings.advertisingIdentifier
 
         fun buildTrackSaleUrl(extId: String): String {
             return HttpRequest.trackingSale(
@@ -256,9 +236,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
 
         if (!userEmail.isNullOrEmpty()) {
             appendRequest(buildTrackSaleUrl(userEmail))
-        }
-        if (!googleAdvertisingId.isNullOrEmpty()) {
-            appendRequest(buildTrackSaleUrl(googleAdvertisingId))
         }
     }
 
@@ -292,7 +269,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val organizationId = settings.organizationId
         val tduid = settings.tduid
         val userEmail = settings.userEmail
-        val googleAdvertisingId = settings.advertisingIdentifier
         val secretCode = settings.secretCode
 
         if(!validateOrganizationId(organizationId)){
@@ -320,9 +296,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         if (!userEmail.isNullOrEmpty()) {
             appendRequest(buildTrackSalPltUrl(userEmail))
         }
-        if (!googleAdvertisingId.isNullOrEmpty()) {
-            appendRequest(buildTrackSalPltUrl(googleAdvertisingId))
-        }
     }
 
     /**
@@ -339,7 +312,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
         val tduid = settings.tduid
         val organizationId = settings.organizationId
         val userEmail = settings.userEmail
-        val googleAdvertisingId = settings.advertisingIdentifier
         val leadNumber = TradeDoublerSdkUtils.getRandomString() + TradeDoublerSdkUtils.getInstallDate(context)
 
         if(!validateOrganizationId(organizationId)){
@@ -352,10 +324,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
             return
         }
 
-        if(googleAdvertisingId.isNullOrEmpty()){
-            queuedItems.add{ trackInstall( appInstallEventId) }
-            return
-        }
 
         fun buildInstallUrl(extId: String): String {
             return HttpRequest.trackingInstallation(organizationId, appInstallEventId, leadNumber, tduid, extId)
@@ -363,11 +331,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
 
         if (!userEmail.isNullOrEmpty()) {
             appendRequest(buildInstallUrl(userEmail))
-            settings.setInstallTracked(true)
-        }
-
-        if (!googleAdvertisingId.isNullOrEmpty()) {
-            appendRequest(buildInstallUrl(googleAdvertisingId))
             settings.setInstallTracked(true)
         }
     }
@@ -403,21 +366,6 @@ class TradeDoublerSdk constructor(private val context: Context, private val clie
                 logger.logError(errorMessage)
                 settings.setInstallReferrerChecked(true)
                 isReferrerInProgress = false
-                invokeQueuedItems()
-            })
-    }
-
-    private fun retrieveGoogleAdvertisingId() {
-        AdvertisingIdHelper.retrieveAdvertisingId(context,
-            { aaId ->
-                logger.logEvent("Android advertising id retrieved")
-                advertisingId = aaId
-                invokeQueuedItems()
-            },
-            { errorMessage ->
-                logger.logEvent("Android advertising not retrieved, performing fallback to android id")
-                logger.logError(errorMessage)
-                advertisingId = TradeDoublerSdkUtils.getAndroidId(context)
                 invokeQueuedItems()
             })
     }
