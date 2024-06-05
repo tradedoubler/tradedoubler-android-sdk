@@ -185,7 +185,6 @@ To learn more about testing installation referrers, check the Testing and Troubl
 
 On Android we have few possibilities to open the app with additional parameters using URLs, custom schema or deeplinks. As flow for each option could be different, SDK contains a set of methods that can help with TDUID retrieval. Each method from this set will try to retrieve TDUID from a given parameter. If TDUID is found, it is saved inside SDK storage. In most cases methods should be used in your start Activity or in Activity that is set as a target component for opening app links. TDUID is expected to be one of the query parameters of your app open URL.
 
-
 ```kotlin
 class MainViewActivity: AppCompatActivity() {
 
