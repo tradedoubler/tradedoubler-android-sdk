@@ -12,7 +12,7 @@ trigger:
       - azure
 
 pool:
-  vmImage: 'macOS-latest'
+  vmImage: 'macOS-11'
 
 variables:
 - name: GRADLE_USER_HOME
