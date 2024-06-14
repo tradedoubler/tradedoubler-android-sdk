@@ -32,23 +32,31 @@ steps:
   condition: eq ( variables['isReleaseCandidate'], 'False' )
   displayName: Gradle build cache
 
-- task: CacheBeta@0
-  displayName: 'Caching System Images for AVD'
-  inputs:
-    key: 'AVD_IMAGES_PIXEL_28'
-    path: '$(ANDROID_HOME)/system-images'
-    cacheHitVar: 'AVD_IMAGES_RESTORED'
-  continueOnError: true
-
-- task: Bash@3
-  displayName: 'Creating System Images for AVD'
-  inputs:
-    filePath: 'create_emulator.sh'
-
 - task: Bash@3
   displayName: 'Starting AVD'
   inputs:
-    filePath: 'start_emulator.sh'
+    targetType: 'inline'
+    script: |
+        #!/usr/bin/env bash
+          echo "Installing emulator"
+  
+          # Ensure Android SDK tools are updated
+          echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --update
+  
+          # Install AVD files
+          echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-28;google_apis_playstore;x86'
+  
+          # Create the emulator
+          echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n xamarin_android_emulator -k 'system-images;android-28;google_apis_playstore;x86' --force
+  
+          # Start the emulator in the background
+          nohup $ANDROID_HOME/emulator/emulator -avd xamarin_android_emulator -no-window -no-audio -no-boot-anim &
+  
+          # Wait for the emulator to start
+          echo "Waiting for emulator to start..."
+          $ANDROID_HOME/platform-tools/adb wait-for-device
+  
+          echo "Emulator started successfully"
 
 - task: Gradle@2
   displayName: 'Build and test sdk'
