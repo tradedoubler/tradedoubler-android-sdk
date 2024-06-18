@@ -39,7 +39,6 @@ class MainViewActivity: AppCompatActivity() {
     }
 
     private fun updateViewValues() {
-        advertising_text.text = TradeDoublerSdk.getInstance().advertisingId
         tduid_text.text = TradeDoublerSdk.getInstance().tduid
         isLoggingCheckBox.isChecked = TradeDoublerSdk.getInstance().isLoggingEnabled
         isTrackingCheckBox.isChecked = TradeDoublerSdk.getInstance().isTrackingEnabled

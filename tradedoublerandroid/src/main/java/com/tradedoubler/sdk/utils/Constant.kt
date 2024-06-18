@@ -39,6 +39,8 @@ object Constant {
     const val VOUCHER = "voucher"
     const val REPORT_INFO = "reportinfo"
     const val ORGANIZATION = "o"
+    const val CONVTAGTID = "convtagtid"
+    const val CONVTAGTID_VALUE = "45"
     const val VERIFY = "verify"
     const val CHECK_SUM = "checksum"
     const val Q = "q"
