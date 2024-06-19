@@ -44,18 +44,6 @@ android {
 }
 ```
 
-
-
-### Additional Transient Dependencies
-
-
-#### Play Services Ads Identifier
-
-SDK uses Google Play services to have access to Android Advertising Id that is recommended unique identifier for advertising purposes. If for some reason (for example, if an app is distributed outside Google Play store or Google Play services are outdated on device), SDK will fallback to the user Android Id as an unique device identifier.
-
-[https://developers.google.com/android/reference/com/google/android/gms/ads/identifier/AdvertisingIdClient](https://developers.google.com/android/reference/com/google/android/gms/ads/identifier/AdvertisingIdClient)
-
-
 #### Play Install Referrer Library
 
 SDK uses Install Referrer library services to securely retrieve referral content from Google Play.
@@ -100,12 +88,6 @@ class App : Application() {
 ### Identify User
 
 To perform tracking you may need to identify the user. By default, all identifiers are not used directly. SDK is working with SHA-256 digest of provided identifiers.
-
-
-#### Android Advertising Id
-
-The AAID is used as an advertising identifier by default. If for some reason the AAID is not available, SDK will fallback to use Android Id.
-
 
 #### User Email
 
@@ -296,49 +278,6 @@ class App : Application() {
    }
 }
 ```
-
-
-
-### Tracking the Opening of the Application
-
-SDK provides a method to track installation. Depending on your intentions it should be invoked in the onCreate method of the Application class after configuring the SDK instance or on the first creation of your entry activity. 
-
-By default, closing all activities will not kill the application, it will live in the background, so in some cases tapping the launcher icon will not create a new application but will bring application from the background to the foreground and because of that tracking opening app on Application class level may not be sufficient for your needs.
-
-
-```kotlin
-class App : Application() {
-
-   override fun onCreate() {
-       super.onCreate()
-
-       TradeDoublerSdk.create(applicationContext)
-       //setup here
-       //...
-       TradeDoublerSdk.getInstance().trackOpenApp()
-   }
-}
-```
-
-
-Second possibility is to track the opening app on your app start activity level. It gives you more flexibility in terms of control when events should be tracked.
-
-
-```kotlin
-class MainViewActivity: AppCompatActivity() {
-
-   override fun onCreate(savedInstanceState: Bundle?) {
-       super.onCreate(savedInstanceState)
-
-
-       if(savedInstanceState == null){
-           TradeDoublerSdk.getInstance().trackOpenApp()
-       }
-   }
-}
-```
-
-
 
 ### Track Leads
 
